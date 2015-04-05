@@ -1,10 +1,17 @@
-﻿Сборка начата 06.04.2015 1:17:23.
+﻿Сборка начата 06.04.2015 2:51:18.
      1>Проект "C:\Users\БАРС\Documents\Visual Studio 2013\Projects\DIRECTX_11_MEGADEMO\DIRECTX_11_MEGADEMO\DIRECTX_11_MEGADEMO.vcxproj" в узле 2 (целевые объекты Build).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t- /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Renderer.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t- /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ConstantBuffer.cpp Kernel.cpp Renderer.cpp main.cpp
+         main.cpp
          Renderer.cpp
      1>c:\users\барс\documents\visual studio 2013\projects\directx_11_megademo\directx_11_megademo\renderer.cpp(19): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-     1>c:\users\барс\documents\visual studio 2013\projects\directx_11_megademo\directx_11_megademo\renderer.cpp(222): warning C4305: +=: усечение из "double" к "float"
+     1>c:\users\барс\documents\visual studio 2013\projects\directx_11_megademo\directx_11_megademo\renderer.cpp(223): warning C4305: +=: усечение из "double" к "float"
+         Создание кода...
+         Компиляция...
+         Kernel.cpp
+         Создание кода...
+         Пропуск... (изменения не обнаружены)
+         ConstantBuffer.cpp
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\БАРС\Documents\Visual Studio 2013\Projects\DIRECTX_11_MEGADEMO\Debug\DIRECTX_11_MEGADEMO.exe" /INCREMENTAL /NOLOGO d3d11.lib d3dcompiler.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\БАРС\Documents\Visual Studio 2013\Projects\DIRECTX_11_MEGADEMO\Debug\DIRECTX_11_MEGADEMO.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\БАРС\Documents\Visual Studio 2013\Projects\DIRECTX_11_MEGADEMO\Debug\DIRECTX_11_MEGADEMO.lib" /MACHINE:X86 Debug\ConstantBuffer.obj
          Debug\DDSTextureLoader.obj
@@ -21,4 +28,4 @@
 
 Сборка успешно завершена.
 
-Затраченное время: 00:00:01.35
+Затраченное время: 00:00:03.42

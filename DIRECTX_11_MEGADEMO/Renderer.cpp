@@ -42,7 +42,7 @@ Renderer::Renderer(WindowDescriptor wd) : angle(0)
 	//ibuf = new IndexBuffer(device, star.i_buf);
 	//ibuf->bind();
 
-	
+	matrices = new ConstantBuffer < MatrixBuffer >(device) ;
 
 	D3D11_SAMPLER_DESC sampDesc;
 	ZeroMemory(&sampDesc, sizeof(sampDesc));
@@ -80,6 +80,7 @@ Renderer::~Renderer()
 {
 	delete shader;
 	delete buf;
+	delete matrices;
 	//delete ibuf;
 
 	if (deviceContext)    deviceContext->ClearState();
@@ -222,12 +223,15 @@ void Renderer::Render()
 	t += 0.0005;
 	world = XMMatrixRotationY(t);
 	
-	cb.world      = XMMatrixTranspose(world);
-	cb.view       = XMMatrixTranspose(view);
-	cb.projection = XMMatrixTranspose(projection);
+	matrices->data.world      = XMMatrixTranspose(world);
+	matrices->data.view = XMMatrixTranspose(view);
+	matrices->data.projection = XMMatrixTranspose(projection);
+	
+	matrices->update();
+	matrices->bind(0);
 	//cb.time     = angle;
-	deviceContext->UpdateSubresource(cbuf, 0, 0, &cb, 0, 0);
-	deviceContext->VSSetConstantBuffers(0, 1, &cbuf);
+	//deviceContext->UpdateSubresource(cbuf, 0, 0, &cb, 0, 0);
+	//deviceContext->VSSetConstantBuffers(0, 1, &cbuf);
 
 	//shader->bind(&cbuf);
 	//buf->bind();

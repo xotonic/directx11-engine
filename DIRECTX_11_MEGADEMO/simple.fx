@@ -39,8 +39,8 @@ PS_INPUT VS(VS_INPUT input)
 
 float4 PS(PS_INPUT input) : SV_TARGET
 {
-	const float4 ldir = float4(-0.577f, 0.0f, 0.0f, 1.0f);
-	const float4 lcol = float4(0.5f, 0.5f, 0.5f, 1.0f);
+	const float4 ldir = float4(-0.577f, 0.0f, -0.5f, 1.0f);
+	const float4 lcol = float4(1.0f, 1.0f, 1.0f, 1.0f);
 
 	float4 color = 0;
 	input.Norm = normalize(input.Norm);

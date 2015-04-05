@@ -3,7 +3,7 @@
 #include "common.h"
 #include "Shader.h"
 #include "VertexBuffer.h"
-//#include "ConstantBuffer.h"
+#include "ConstantBuffer.h"
 //#include "IndexBuffer.h"
 #include "debug.h"
 
@@ -57,6 +57,6 @@ private:
 
 	ID3D11Buffer* cbuf;
 	MatrixBuffer cb;
-	//ConstantBuffer<MatrixBuffer>* matrices;
+	ConstantBuffer<MatrixBuffer>* matrices;
 };
 
