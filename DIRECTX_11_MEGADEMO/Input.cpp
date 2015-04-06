@@ -8,7 +8,7 @@ Input::~Input()
 {
 }
 
-void Input::AddKeyboardHandler(KeyCode code, KeyState keyEvent, void(*func)())
+void Input::AddKeyboardHandler(KeyCode code, KeyState keyEvent, std::function<void()> func)
 {
 	KeyEvent e(code, keyEvent);
 
@@ -18,13 +18,14 @@ void Input::AddKeyboardHandler(KeyCode code, KeyState keyEvent, void(*func)())
 		keys[e].push_back(func);
 	else
 	{
-		std::vector<void(*)()> v;
+		std::vector<std::function<void()>> v;
 		v.push_back(func);
-		keys.insert(std::pair<KeyEvent, std::vector<void(*)()>>(e, v));
+		keys.insert(std::pair<KeyEvent, std::vector<std::function<void()>>>(e, v));
 	}
 }
 void Input::Run(unsigned int nMsg, WPARAM wParam, LPARAM lParam)
 {
+
 	KeyCode code = static_cast<KeyCode>(wParam);
 	KeyState state = (nMsg == WM_KEYDOWN) ? pressed : released;
 	KeyEvent e = { code, state };
@@ -32,12 +33,12 @@ void Input::Run(unsigned int nMsg, WPARAM wParam, LPARAM lParam)
 	auto it = keys.find(e);
 
 	//if ((it != keys.end()) & ((*it).first == e))
-	if ((*it).first == e)
+	if(it!=keys.end()) //if ((*it).first == e)
 	{
-		std::vector<void(*)()> v = keys[e];
-		for (auto iterator = v.begin(); iterator != v.end(); iterator++)
+		std::vector<std::function<void()>> v = keys[e];
+		for (auto iterator : v)
 		{
-			(*iterator)();
+			iterator();
 		}
 		//v.clear();
 	}

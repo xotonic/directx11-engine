@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <map>
+#include <functional>
 
 enum MouseKeyCode
 {
@@ -179,11 +180,11 @@ public:
 	KeyState state;
 	friend bool  operator==(const KeyEvent& left, const KeyEvent& right)
 	{
-		return (left.code == right.code) && (left.state == right.state);
+		return ((2 * left.code + left.state) == ( 2*right.code + right.state)); // (left.code == right.code)*(left.state == right.state);
 	};
 	friend bool  operator<(const KeyEvent& left, const KeyEvent& right)
 	{
-		return (left.code < right.code) & (left.state < right.state);
+		return ((2 * left.code + left.state) < (2 * right.code + right.state));//(left.code < right.code)*(left.state < right.state);
 	};
 };
 
@@ -194,8 +195,9 @@ public:
 	~Input();
 
 	//typedef (void(*)()) handler;
-	std::map<KeyEvent, std::vector<void(*)()>> keys;
+	//std::map<KeyEvent, std::vector<void(*)()>> keys;
+	std::map<KeyEvent, std::vector<std::function<void()>>> keys;
 
-	void AddKeyboardHandler(KeyCode code, KeyState keyEvent, void(*func)());
+	void AddKeyboardHandler(KeyCode code, KeyState keyEvent, std::function<void()> func);
 	void Run(unsigned int nMsg, WPARAM wParam, LPARAM lParam);
 };

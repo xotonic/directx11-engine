@@ -26,6 +26,7 @@ public:
 	{
 	_aligned_free(p);
 	}*/
+	Transformable transform;
 private:
 	D3D_DRIVER_TYPE driverType;
 
@@ -49,7 +50,6 @@ private:
 	Shader         *shader;
 	VertexBuffer   *buf;
 	Texture        *tex, *normal;
-	Transformable transform;
 	//IndexBuffer  *ibuf;
 
 	XMMATRIX world;

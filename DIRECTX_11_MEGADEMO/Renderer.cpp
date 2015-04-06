@@ -191,7 +191,7 @@ void Renderer::Render()
 	//t += 0.0005;
 	//world = XMMatrixRotationY(t);
 	
-	transform.RotateY(0.0005);
+	//transform.RotateY(0.0005);
 
 	matrices->data.world = transform.get();//XMMatrixTranspose(world);
 	matrices->data.view = XMMatrixTranspose(view);

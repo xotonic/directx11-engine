@@ -61,7 +61,9 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h)
 
 	renderer = new Renderer(wd);
 
-	//input.AddKeyboardHandler(KEY_SPACE, pressed, []() -> void { DEBUG("{EQ"); });
+	Renderer* r = renderer;
+
+	input.AddKeyboardHandler(KEY_W, pressed, [r]() -> void { r->transform.RotateY(0.5f); });
 	input.AddKeyboardHandler(KEY_ESCAPE, released, []() -> void { PostQuitMessage(0); });
 }
 
