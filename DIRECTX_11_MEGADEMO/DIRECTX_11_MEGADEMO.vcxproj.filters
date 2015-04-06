@@ -45,7 +45,10 @@
     <ClCompile Include="DDSTextureLoader\DDSTextureLoader.cpp">
       <Filter>DDS</Filter>
     </ClCompile>
-    <ClCompile Include="ConstantBuffer.cpp">
+    <ClCompile Include="Texture.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="DeviceDependent.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
   </ItemGroup>
@@ -81,6 +84,12 @@
       <Filter>DDS</Filter>
     </ClInclude>
     <ClInclude Include="ConstantBuffer.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceDependent.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>

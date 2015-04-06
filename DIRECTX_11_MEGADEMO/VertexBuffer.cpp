@@ -1,33 +1,29 @@
 #include "VertexBuffer.h"
 
-VertexBuffer::VertexBuffer(ID3D11Device* dev, vector<TexNormVertex> &data) : device(dev),
-	v_buf(data)
+VertexBuffer::VertexBuffer(ID3D11Device* dev, vector<TexNormVertex> &data) : DeviceDependent(dev),
+v_buf(data)
 {
-	dev->GetImmediateContext(&deviceContext);
-
-
+	//dev->GetImmediateContext(&deviceContext);
 
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
-	bd.Usage          = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth      = data.size()*sizeof(TexNormVertex);
-	bd.BindFlags      = D3D11_BIND_VERTEX_BUFFER;
+	bd.Usage = D3D11_USAGE_DEFAULT;
+	bd.ByteWidth = data.size()*sizeof(TexNormVertex);
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 
 	D3D11_SUBRESOURCE_DATA sd;
 	ZeroMemory(&sd, sizeof(sd));
 	sd.pSysMem = data.data();
 
-	CHECK_HRESULT(dev->CreateBuffer(&bd, &sd, &vertexBuffer), "Error creating vertex buffer");
+	CHECK_HRESULT(device->CreateBuffer(&bd, &sd, &vertexBuffer), "Error creating vertex buffer");
 }
 
-VertexBuffer::VertexBuffer(ID3D11Device* dev, string filename)
+VertexBuffer::VertexBuffer(ID3D11Device* dev, string filename) : DeviceDependent(dev)
 {
 	ReadFromOBJ(filename);
 
-	dev->GetImmediateContext(&deviceContext);
-
-
+	//dev->GetImmediateContext(&deviceContext);
 
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
@@ -40,7 +36,7 @@ VertexBuffer::VertexBuffer(ID3D11Device* dev, string filename)
 	ZeroMemory(&sd, sizeof(sd));
 	sd.pSysMem = v_buf.data();
 
-	CHECK_HRESULT(dev->CreateBuffer(&bd, &sd, &vertexBuffer), "Error creating vertex buffer from file");
+	CHECK_HRESULT(device->CreateBuffer(&bd, &sd, &vertexBuffer), "Error creating vertex buffer from file");
 }
 
 VertexBuffer::~VertexBuffer()
@@ -49,7 +45,6 @@ VertexBuffer::~VertexBuffer()
 }
 int VertexBuffer::getSize()
 {
-
 	return v_buf.size()*sizeof(TexNormVertex);
 }
 
@@ -64,7 +59,6 @@ void VertexBuffer::bind()
 	UINT offset = 0;
 	deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &i, &offset);
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
 }
 
 bool VertexBuffer::ReadFromOBJ(string filename)
@@ -87,8 +81,6 @@ bool VertexBuffer::ReadFromOBJ(string filename)
 	filein >> vnum;
 	unique_vertices.reserve(vnum);
 
-
-
 	for (int i = 0; i < vnum; i++)
 	{
 		float x, y, z, nx, ny, nz;
@@ -98,7 +90,6 @@ bool VertexBuffer::ReadFromOBJ(string filename)
 		TexNormVertex v{ { x, y, z }, { nx, ny, nz }, { 0.0f, 0.0f } };
 
 		unique_vertices.push_back(v);
-
 	}
 
 	int inum;
@@ -116,12 +107,9 @@ bool VertexBuffer::ReadFromOBJ(string filename)
 			>> second_uv_x >> second_uv_y
 			>> third_uv_x >> third_uv_y;
 
-
-
 		v_buf.push_back({ unique_vertices[first].pos, unique_vertices[first].normal, { first_uv_x, first_uv_y } });
 		v_buf.push_back({ unique_vertices[second].pos, unique_vertices[second].normal, { second_uv_x, second_uv_y } });
 		v_buf.push_back({ unique_vertices[third].pos, unique_vertices[third].normal, { third_uv_x, third_uv_y } });
-
 	}
 
 	return true;

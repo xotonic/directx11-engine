@@ -1,11 +1,10 @@
 #include "Shader.h"
 
-
 Shader::Shader(ID3D11Device* dev, LPCWSTR file)
-	: device(dev)
+	: DeviceDependent(dev)
 {
-	 dev->GetImmediateContext(&deviceContext);
-	
+	//dev->GetImmediateContext(&deviceContext);
+
 	ID3D10Blob* vsBlob = NULL;
 	ID3D10Blob* psBlob = NULL;
 	compileFromFile(file, VS_entryPoint, VS_model, &vsBlob);
@@ -18,9 +17,9 @@ Shader::Shader(ID3D11Device* dev, LPCWSTR file)
 
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
-		{ "POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,                            D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "NORMAL",    0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 
 	dev->CreateInputLayout(layout, ARRAYSIZE(layout), vsBlob->GetBufferPointer(),
@@ -35,7 +34,6 @@ Shader::Shader(ID3D11Device* dev, LPCWSTR file)
 	deviceContext->IASetInputLayout(inputLayout);
 }
 
-
 Shader::~Shader()
 {
 	if (inputLayout) inputLayout->Release();
@@ -47,7 +45,6 @@ Shader::~Shader()
 
 void Shader::compileFromFile(LPCWSTR fileName, const LPCSTR ep, const LPCSTR model, ID3D10Blob** blob)
 {
-
 	HRESULT hr = S_OK;
 	ID3DBlob* errorBlob = NULL;
 
@@ -70,5 +67,4 @@ void Shader::bind()
 	deviceContext->VSSetShader(vertexShader, 0, 0);
 	//deviceContext->VSSetConstantBuffers(0, 1, constBuf);
 	deviceContext->PSSetShader(pixelShader, 0, 0);
-
 }

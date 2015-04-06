@@ -15,9 +15,7 @@ void Kernel::Run()
 			renderer->Render();
 		}
 	}
-
 }
-
 
 Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h)
 {
@@ -25,33 +23,32 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h)
 	ZeroMemory(&wcex, sizeof(wcex));
 	wcex.cbSize = sizeof(wcex);
 	wcex.style = CS_HREDRAW | CS_VREDRAW;
-	wcex.lpfnWndProc = &WinMessage;     // points to window procedure 
-	wcex.cbClsExtra = 0;                // no extra class memory 
-	wcex.cbWndExtra = 0;                // no extra window memory 
-	wcex.hInstance = hInst;         // handle to instance 
+	wcex.lpfnWndProc = &WinMessage;     // points to window procedure
+	wcex.cbClsExtra = 0;                // no extra class memory
+	wcex.cbWndExtra = 0;                // no extra window memory
+	wcex.hInstance = hInst;         // handle to instance
 	wcex.hIcon = LoadIcon(NULL,
-		IDI_APPLICATION);              // predefined app. icon 
+		IDI_APPLICATION);              // predefined app. icon
 	wcex.hCursor = LoadCursor(NULL,
-		IDC_ARROW);                    // predefined arrow               
-	wcex.lpszMenuName = "MainMenu";    // name of menu resource 
-	wcex.lpszClassName = "MainWClass";  // name of window class 
-	wcex.hIconSm = 0; 
+		IDC_ARROW);                    // predefined arrow
+	wcex.lpszMenuName = "MainMenu";    // name of menu resource
+	wcex.lpszClassName = "MainWClass";  // name of window class
+	wcex.hIconSm = 0;
 	if (!RegisterClassEx(&wcex)) DEBUG("UNABLE TO REGISTER WINAPI CLASS\n");
-
 
 	hInstance = hInst;
 	hWnd = CreateWindow(
-		"MainWClass",        // name of window class 
-		"1st kernel",            // title-bar string 
-		WS_OVERLAPPEDWINDOW | WS_VISIBLE, // top-level window 
-		CW_USEDEFAULT,       // default horizontal position 
-		CW_USEDEFAULT,       // default vertical position 
-		w,       // default width 
-		h,       // default height 
-		(HWND)NULL,         // no owner window 
-		(HMENU)NULL,        // use class menu 
-		hInstance,           // handle to application instance 
-		this);      // no window-creation data 
+		"MainWClass",        // name of window class
+		"1st kernel",            // title-bar string
+		WS_OVERLAPPEDWINDOW | WS_VISIBLE, // top-level window
+		CW_USEDEFAULT,       // default horizontal position
+		CW_USEDEFAULT,       // default vertical position
+		w,       // default width
+		h,       // default height
+		(HWND)NULL,         // no owner window
+		(HMENU)NULL,        // use class menu
+		hInstance,           // handle to application instance
+		this);      // no window-creation data
 
 	SetWindowLong(hWnd, GWL_USERDATA, (long int)this);
 
@@ -67,7 +64,6 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h)
 	//input.AddKeyboardHandler(KEY_SPACE, pressed, []() -> void { DEBUG("{EQ"); });
 	input.AddKeyboardHandler(KEY_ESCAPE, released, []() -> void { PostQuitMessage(0); });
 }
-
 
 Kernel::~Kernel()
 {
@@ -104,16 +100,16 @@ long int Kernel::Message(HWND _window, unsigned int _message, WPARAM _wParam, LP
 		PostQuitMessage(0);
 		break;
 
-	/*case WM_MOUSEMOVE: 
-	case WM_LBUTTONUP: 
-	case WM_LBUTTONDOWN: 
-	case WM_MBUTTONUP: 
-	case WM_MBUTTONDOWN: 
-	case WM_RBUTTONUP: 
-	case WM_RBUTTONDOWN: 
-	case WM_MOUSEWHEEL:*/ 
+		/*case WM_MOUSEMOVE:
+		case WM_LBUTTONUP:
+		case WM_LBUTTONDOWN:
+		case WM_MBUTTONUP:
+		case WM_MBUTTONDOWN:
+		case WM_RBUTTONUP:
+		case WM_RBUTTONDOWN:
+		case WM_MOUSEWHEEL:*/
 	case WM_KEYUP:
-	case WM_KEYDOWN: 
+	case WM_KEYDOWN:
 		input.Run(_message, _wParam, _lParam);
 		// TODO обработчик картой функций
 		break;

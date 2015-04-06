@@ -3,7 +3,6 @@
 #include <vector>
 #include <map>
 
-
 enum MouseKeyCode
 {
 	MOUSE_LEFT = 0,
@@ -172,10 +171,10 @@ enum KeyCode
 
 enum KeyState{ pressed, released };
 
-class KeyEvent 
+class KeyEvent
 {
 public:
-	KeyEvent(KeyCode c, KeyState s): code(c),state(s) { };
+	KeyEvent(KeyCode c, KeyState s) : code(c), state(s) { };
 	KeyCode code;
 	KeyState state;
 	friend bool  operator==(const KeyEvent& left, const KeyEvent& right)
@@ -193,11 +192,10 @@ class Input
 public:
 	Input();
 	~Input();
-	
+
 	//typedef (void(*)()) handler;
 	std::map<KeyEvent, std::vector<void(*)()>> keys;
 
 	void AddKeyboardHandler(KeyCode code, KeyState keyEvent, void(*func)());
 	void Run(unsigned int nMsg, WPARAM wParam, LPARAM lParam);
-
 };

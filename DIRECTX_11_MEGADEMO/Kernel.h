@@ -18,4 +18,3 @@ private:
 	static long int _stdcall WinMessage(HWND _window, unsigned int _message, WPARAM _wParam, LPARAM _lParam);
 	long int Message(HWND _window, unsigned int _message, WPARAM _wParam, LPARAM _lParam);
 };
-

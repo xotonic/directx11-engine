@@ -1,4 +1,3 @@
-
 cbuffer ConstantBuffer : register(b0)
 {
 	matrix World;
@@ -6,7 +5,9 @@ cbuffer ConstantBuffer : register(b0)
 	matrix Projection;
 };
 
-Texture2D ObjTexture;
+Texture2D ObjTexture : register(t0);
+Texture2D ObjNormal : register(t1);
+
 SamplerState ObjSamplerState;
 
 struct VS_INPUT
@@ -43,9 +44,11 @@ float4 PS(PS_INPUT input) : SV_TARGET
 	const float4 lcol = float4(1.0f, 1.0f, 1.0f, 1.0f);
 
 	float4 color = 0;
-	input.Norm = normalize(input.Norm);
+	
+	float3 tex_norm = (float3)ObjNormal.Sample(ObjSamplerState, input.UV);
+	input.Norm = normalize(input.Norm*tex_norm);
 
 	color += saturate(dot((float3)ldir, input.Norm) * lcol* ObjTexture.Sample(ObjSamplerState, input.UV));
 
-	return  color; //float4(1.0f, 1.0f, 1.0f, 1.0f);
+	return  color;
 }

@@ -5,13 +5,14 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <Windows.h>
+#include <string>
 #include "debug.h"
 
 using namespace DirectX;
 
 struct WindowSize
 {
-	int width,height;
+	int width, height;
 };
 
 struct WindowDescriptor
@@ -20,57 +21,58 @@ struct WindowDescriptor
 	WindowSize size;
 };
 
+struct Vertex
+{
+	XMFLOAT3 pos = { 0.0, 0.0, 0.0 };
+};
 
-	struct Vertex
-	{
-		XMFLOAT3 pos = { 0.0, 0.0, 0.0 };
-	};
+struct ColVertex
+{
+	XMFLOAT3 pos;
+	XMFLOAT4 color;
+};
 
-	struct ColVertex
-	{
-		XMFLOAT3 pos;
-		XMFLOAT4 color;
-	};
+struct ColNormVertex
+{
+	XMFLOAT3 pos;
+	XMFLOAT4 color;
+	XMFLOAT2 normal;
+};
 
-	struct ColNormVertex
-	{
-		XMFLOAT3 pos;
-		XMFLOAT4 color;
-		XMFLOAT2 normal;
-	};
+struct NormVertex
+{
+	XMFLOAT3 pos;
+	XMFLOAT3 normal;
+};
 
-	struct NormVertex
-	{
-		XMFLOAT3 pos;
-		XMFLOAT3 normal;
-	};
+struct TexNormVertex
+{
+	XMFLOAT3 pos;
+	XMFLOAT3 normal;
+	XMFLOAT2 uv;
+};
 
-	struct TexNormVertex
-	{
-		XMFLOAT3 pos;
-		XMFLOAT3 normal;
-		XMFLOAT2 uv;
-	};
+struct MatrixBuffer
+{
+	XMMATRIX world;
+	XMMATRIX view;
+	XMMATRIX projection;
+};
 
+/*LPCWSTR stringToLPCWSTR(std::string str)
+{
+std::wstring temp = std::wstring(str.begin(), str.end());
+return temp.c_str();
+}*/
+/*struct perFrameCBuffer
+{
+XMMATRIX view;
+XMMATRIX projection;
+};
 
-	struct MatrixBuffer
-	{
-		XMMATRIX world;
-		XMMATRIX view;
-		XMMATRIX projection;
-	};
-
-	/*struct perFrameCBuffer
-	{
-		XMMATRIX view;
-		XMMATRIX projection;
-	};
-
-	struct perObjectCBuffer
-	{
-		XMMATRIX world = XMMatrixIdentity();
-	};*/
-
-
+struct perObjectCBuffer
+{
+XMMATRIX world = XMMatrixIdentity();
+};*/
 
 //#endif

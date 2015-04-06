@@ -6,10 +6,9 @@
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int CmdShow)
 {
-	Kernel kernel(hInstance,CmdShow);
+	Kernel kernel(hInstance, CmdShow);
 
 	kernel.Run();
-	
+
 	return 0;
 }
-

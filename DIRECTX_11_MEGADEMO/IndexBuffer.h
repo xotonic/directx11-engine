@@ -19,4 +19,3 @@ protected:
 	ID3D11DeviceContext* deviceContext;
 	ID3D11Buffer*         indexBuffer = NULL;
 };
-

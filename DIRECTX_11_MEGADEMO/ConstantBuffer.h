@@ -1,26 +1,27 @@
 #pragma once
 #include "common.h"
+#include "DeviceDependent.h"
 
 template <typename T>
-class ConstantBuffer
+class ConstantBuffer : private DeviceDependent
 {
 public:
-	ConstantBuffer(ID3D11Device* device);
+	ConstantBuffer(ID3D11Device* dev);
 
 	void update();
 	void bind(unsigned int slot);
 	//~ConstantBuffer();
 	T data;
 private:
-	ID3D11Device* dev;
-	ID3D11DeviceContext* deviceContext;
+	//ID3D11Device* dev;
+	//ID3D11DeviceContext* deviceContext;
 	ID3D11Buffer* cbuf;
 };
 
 template <typename T>
-ConstantBuffer<T>::ConstantBuffer(ID3D11Device* device) : dev(device)
+ConstantBuffer<T>::ConstantBuffer(ID3D11Device* dev) : DeviceDependent(dev)
 {
-	dev->GetImmediateContext(&deviceContext);
+	//device->GetImmediateContext(&deviceContext);
 
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
@@ -29,15 +30,12 @@ ConstantBuffer<T>::ConstantBuffer(ID3D11Device* device) : dev(device)
 	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	bd.CPUAccessFlags = 0;
 
-	CHECK_HRESULT(dev->CreateBuffer(&bd, NULL, &cbuf), "Error creating constant buffer");
+	CHECK_HRESULT(device->CreateBuffer(&bd, NULL, &cbuf), "Error creating constant buffer");
 }
-
-
 
 template <typename T>
 void ConstantBuffer<T>::bind(unsigned int slot)
 {
-
 	deviceContext->VSSetConstantBuffers(0, 1, &cbuf);
 }
 
@@ -45,5 +43,4 @@ template <typename T>
 void ConstantBuffer<T>::update()
 {
 	deviceContext->UpdateSubresource(cbuf, 0, 0, &data, 0, 0);
-
 }
