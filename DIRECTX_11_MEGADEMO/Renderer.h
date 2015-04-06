@@ -5,6 +5,7 @@
 #include "VertexBuffer.h"
 #include "ConstantBuffer.h"
 #include "Texture.h"
+#include "Transformable.h"
 //#include "IndexBuffer.h"
 #include "debug.h"
 
@@ -48,6 +49,7 @@ private:
 	Shader         *shader;
 	VertexBuffer   *buf;
 	Texture        *tex, *normal;
+	Transformable transform;
 	//IndexBuffer  *ibuf;
 
 	XMMATRIX world;

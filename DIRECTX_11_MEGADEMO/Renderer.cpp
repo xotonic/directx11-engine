@@ -187,11 +187,13 @@ void Renderer::Render()
 	deviceContext->ClearRenderTargetView(renderTargetView, clearColor);
 	deviceContext->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0, 0);
 
-	static float t = 0.0f;
-	t += 0.0005;
-	world = XMMatrixRotationY(t);
+	//static float t = 0.0f;
+	//t += 0.0005;
+	//world = XMMatrixRotationY(t);
+	
+	transform.RotateY(0.0005);
 
-	matrices->data.world = XMMatrixTranspose(world);
+	matrices->data.world = transform.get();//XMMatrixTranspose(world);
 	matrices->data.view = XMMatrixTranspose(view);
 	matrices->data.projection = XMMatrixTranspose(projection);
 

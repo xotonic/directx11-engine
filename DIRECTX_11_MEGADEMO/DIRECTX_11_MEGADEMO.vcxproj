@@ -78,6 +78,7 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Kernel.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Transformable.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
@@ -95,6 +96,7 @@
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Kernel.h" />
+    <ClInclude Include="Movable.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderManager.h" />

@@ -39,7 +39,7 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h)
 	hInstance = hInst;
 	hWnd = CreateWindow(
 		"MainWClass",        // name of window class
-		"1st kernel",            // title-bar string
+		"Копатели Онлайн",            // title-bar string
 		WS_OVERLAPPEDWINDOW | WS_VISIBLE, // top-level window
 		CW_USEDEFAULT,       // default horizontal position
 		CW_USEDEFAULT,       // default vertical position

@@ -51,6 +51,9 @@
     <ClCompile Include="DeviceDependent.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
+    <ClCompile Include="Transformable.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="debug.h">
@@ -90,6 +93,9 @@
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
     <ClInclude Include="DeviceDependent.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="Movable.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>
