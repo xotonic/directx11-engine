@@ -11,15 +11,15 @@ Renderer::Renderer(WindowDescriptor wd) : angle(0)
 		XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
 	projection = XMMatrixPerspectiveFovLH(XM_PIDIV2, wd.size.width / wd.size.height, 0.01f, 100.0f);
 
-	shader = new Shader(device, L"simple.fx");
+	shader = new Shader(device, "simple.fx");
 
 	buf = new VertexBuffer(device, "untitled.mesh");
 	buf->bind();
 
 	matrices = new ConstantBuffer < MatrixBuffer >(device);
 
-	tex = new Texture(device, L"texture.dds");
-	normal = new Texture(device, L"normal.dds");
+	tex = new Texture(device, "texture.dds");
+	normal = new Texture(device, "normal.dds");
 	/*D3D11_SAMPLER_DESC sampDesc;
 	ZeroMemory(&sampDesc, sizeof(sampDesc));
 	sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;

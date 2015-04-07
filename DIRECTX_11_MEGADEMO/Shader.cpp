@@ -1,13 +1,13 @@
 #include "Shader.h"
 
-Shader::Shader(ID3D11Device* dev, LPCWSTR file)
+Shader::Shader(ID3D11Device* dev, std::string filename)
 	: DeviceDependent(dev)
 {
 	//dev->GetImmediateContext(&deviceContext);
 
 	ID3D10Blob* vsBlob = NULL;
 	ID3D10Blob* psBlob = NULL;
-	compileFromFile(file, VS_entryPoint, VS_model, &vsBlob);
+	compileFromFile(filename, VS_entryPoint, VS_model, &vsBlob);
 
 	dev->CreateVertexShader(
 		vsBlob->GetBufferPointer(),
@@ -27,7 +27,7 @@ Shader::Shader(ID3D11Device* dev, LPCWSTR file)
 
 	vsBlob->Release();
 
-	compileFromFile(file, PS_entryPoint, PS_model, &psBlob);
+	compileFromFile(filename, PS_entryPoint, PS_model, &psBlob);
 	dev->CreatePixelShader(psBlob->GetBufferPointer(), psBlob->GetBufferSize(), NULL, &pixelShader);
 
 	psBlob->Release();
@@ -43,12 +43,16 @@ Shader::~Shader()
 	if (pixelShader) pixelShader->Release();
 }
 
-void Shader::compileFromFile(LPCWSTR fileName, const LPCSTR ep, const LPCSTR model, ID3D10Blob** blob)
+void Shader::compileFromFile(std::string fileName, const LPCSTR ep, const LPCSTR model, ID3D10Blob** blob)
 {
 	HRESULT hr = S_OK;
 	ID3DBlob* errorBlob = NULL;
 
-	hr = D3DCompileFromFile(fileName, 0, 0, ep, model, 0, 0, blob, &errorBlob);
+	//MESSAGE(fileName);
+
+	//LPCWSTR s = (LPCWSTR)stringToLPCWSTR(fileName) + L'\0';
+	//std::wstring s(L"simple.fx");
+	hr = D3DCompileFromFile(stringToWstring(fileName).c_str(), 0, 0, ep, model, 0, 0, blob, &errorBlob);
 
 	if (FAILED(hr))
 	{
@@ -58,6 +62,12 @@ void Shader::compileFromFile(LPCWSTR fileName, const LPCSTR ep, const LPCSTR mod
 			MESSAGE((char*)errorBlob->GetBufferPointer());
 			errorBlob->Release();
 			return;
+		}
+		else
+		{
+			MESSAGE("error compiling shader from file");
+			return;
+			//throw "can't compile shader from ";
 		}
 	}
 }

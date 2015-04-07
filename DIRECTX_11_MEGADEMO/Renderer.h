@@ -1,5 +1,5 @@
 #include <memory>
-#include "DDSTextureLoader\DDSTextureLoader.h"
+
 #include "common.h"
 #include "Shader.h"
 #include "VertexBuffer.h"
@@ -28,6 +28,8 @@ public:
 	}*/
 	Transformable transform;
 private:
+
+
 	D3D_DRIVER_TYPE driverType;
 
 	ID3D11Device*        device;

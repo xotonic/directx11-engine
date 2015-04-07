@@ -5,7 +5,7 @@
 class Shader : private DeviceDependent
 {
 public:
-	Shader(ID3D11Device* dev, LPCWSTR file);
+	Shader(ID3D11Device* dev, std::string filename);
 	~Shader();
 
 	void bind();
@@ -15,7 +15,7 @@ public:
 
 private:
 
-	void compileFromFile(LPCWSTR fileName,
+	void compileFromFile(std::string fileName,
 		const LPCSTR ep,
 		const LPCSTR model,
 		ID3D10Blob** blob);

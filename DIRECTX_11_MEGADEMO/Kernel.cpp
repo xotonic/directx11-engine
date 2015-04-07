@@ -63,7 +63,11 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h)
 
 	Renderer* r = renderer;
 
-	input.AddKeyboardHandler(KEY_W, pressed, [r]() -> void { r->transform.RotateY(0.5f); });
+	input.AddKeyboardHandler(KEY_W, pressed, [r]() -> void { r->transform.RotateX(0.5f); });
+	input.AddKeyboardHandler(KEY_S, pressed, [r]() -> void { r->transform.RotateX(-0.5f); });
+	input.AddKeyboardHandler(KEY_A, pressed, [r]() -> void { r->transform.RotateY(0.5f); });
+	input.AddKeyboardHandler(KEY_D, pressed, [r]() -> void { r->transform.RotateY(-0.5f); });
+
 	input.AddKeyboardHandler(KEY_ESCAPE, released, []() -> void { PostQuitMessage(0); });
 }
 

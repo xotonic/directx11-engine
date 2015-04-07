@@ -1,10 +1,12 @@
 #include "Texture.h"
 
-Texture::Texture(ID3D11Device* dev, LPCWSTR filename) : DeviceDependent(dev)
+Texture::Texture(ID3D11Device* dev, std::string filename) : DeviceDependent(dev)
 {
 	//dev->GetImmediateContext(&deviceContext);
 
-	CHECK_HRESULT(CreateDDSTextureFromFile(device, filename, nullptr, &textureRV),
+
+
+	CHECK_HRESULT(CreateDDSTextureFromFile(device, stringToWstring(filename).c_str(), nullptr, &textureRV),
 		"ERROR creating dds texture from file");
 }
 
