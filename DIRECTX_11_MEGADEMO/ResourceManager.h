@@ -13,20 +13,20 @@ class ResourceManager : private DeviceDependent
 {
 public:
 	ResourceManager(ID3D11Device *dev) : DeviceDependent(dev){};
-	//~ResourceManager() {}
+	~ResourceManager();
 
 	void loadMesh(string name, string filename);
 	void loadTexture(string name, string filename);
 	void loadShader(string name, string filename);
 
-	VertexBuffer& mesh(string name);
-	Texture& texture(string name);
-	Shader& shader(string name);
+	VertexBuffer* mesh(string name);
+	Texture* texture(string name);
+	Shader* shader(string name);
 
 private:
-	map<string, VertexBuffer> vertexBuffers;
-	map<string, Texture> textures;
-	map<string, Shader> shaders;
+	map<string, VertexBuffer*> vertexBuffers;
+	map<string, Texture*> textures;
+	map<string, Shader*> shaders;
 
 };
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "common.h"
+
 class Transformable
 {
 public:
@@ -21,7 +22,7 @@ public:
 	void Scale(float value);
 
 	XMMATRIX get() { return XMMatrixTranspose(world); }
-private:
+	XMFLOAT3 getPos();// { return XMFLOAT3(world._14, world._24, world._34); }
 	XMMATRIX world;
 };
 

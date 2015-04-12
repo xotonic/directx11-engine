@@ -2,6 +2,7 @@
 
 Renderer::Renderer(WindowDescriptor wd) : angle(0)
 {
+
 	createDevice(wd);
 
 	world = XMMatrixIdentity();
@@ -11,15 +12,30 @@ Renderer::Renderer(WindowDescriptor wd) : angle(0)
 		XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
 	projection = XMMatrixPerspectiveFovLH(XM_PIDIV2, wd.size.width / wd.size.height, 0.01f, 100.0f);
 
-	shader = new Shader(device, "simple.fx");
+	resMgr = new ResourceManager(device);
 
-	buf = new VertexBuffer(device, "untitled.mesh");
-	buf->bind();
+	resMgr->loadShader("simple","simple.fx");
+	resMgr->loadMesh("cube", "untitled.mesh");
+	resMgr->loadTexture("diffuse", "texture.dds");
+	resMgr->loadTexture("normal", "normal.dds");
+
+	resMgr->mesh("cube")->bind();
+	resMgr->shader("simple")->bind();
+
+	camera.Translate(0.0f, 1.0, -5.0);
+	
+	//camera.LookAt(XMFLOAT3(0.0f , 1.0f , 0.0f));
+	//shader = new Shader(device, "simple.fx");
+
+	//buf = new VertexBuffer(device, "untitled.mesh");
+	//buf->bind();
 
 	matrices = new ConstantBuffer < MatrixBuffer >(device);
 
-	tex = new Texture(device, "texture.dds");
-	normal = new Texture(device, "normal.dds");
+	tr.Translate(4.0f, 4.0, 0.0);
+	//tex = new Texture(device, "texture.dds");
+	//normal = new Texture(device, "normal.dds");
+
 	/*D3D11_SAMPLER_DESC sampDesc;
 	ZeroMemory(&sampDesc, sizeof(sampDesc));
 	sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -34,8 +50,10 @@ Renderer::Renderer(WindowDescriptor wd) : angle(0)
 	CHECK_HRESULT(CreateDDSTextureFromFile(device, L"texture.dds", nullptr, &textureRV),
 	"ERROR creating dds texture from file");*/
 
-	deviceContext->VSSetShader(shader->vertex(), 0, 0);
-	deviceContext->PSSetShader(shader->pixel(), 0, 0);
+
+
+	//deviceContext->VSSetShader(shader->vertex(), 0, 0);
+	//deviceContext->PSSetShader(shader->pixel(), 0, 0);
 
 	/*D3D11_RASTERIZER_DESC noCulling;
 	ID3D11RasterizerState* noCullingState;
@@ -50,11 +68,12 @@ Renderer::Renderer(WindowDescriptor wd) : angle(0)
 
 Renderer::~Renderer()
 {
-	delete shader;
-	delete buf;
+	//delete shader;
+	//delete buf;
 	delete matrices;
-	delete tex;
-	delete normal;
+	//delete tex;
+	//delete normal;
+	delete resMgr;
 	//delete ibuf;
 
 	if (deviceContext)    deviceContext->ClearState();
@@ -193,19 +212,37 @@ void Renderer::Render()
 	
 	//transform.RotateY(0.0005);
 
+	/*XMMATRIX w = XMMatrixTranspose(world);
+	XMMATRIX v = XMMatrixTranspose(view);
+
+	XMMATRIX Cw = transform.get();
+	XMMATRIX Cv = camera.get();*/
+
 	matrices->data.world = transform.get();//XMMatrixTranspose(world);
-	matrices->data.view = XMMatrixTranspose(view);
+	matrices->data.view = camera.get();// XMMatrixTranspose(view);
 	matrices->data.projection = XMMatrixTranspose(projection);
 
 	matrices->update();
 	matrices->bind(0);
 
-	tex->bind(0);
-	normal->bind(1);
+	//tex->bind(0);
+	//normal->bind(1);
+	
+	resMgr->texture("diffuse")->bind(0);
+	resMgr->texture("normal")->bind(1);
+
 	//deviceContext->PSSetShaderResources(0, 1, &textureRV);
 	//deviceContext->PSSetSamplers(0, 0, 0);
+	deviceContext->Draw(resMgr->mesh("cube")->getCount(), 0);
 
-	deviceContext->Draw(buf->getCount(), 0);
+	matrices->data.world = tr.get();//XMMatrixTranspose(world);
+	matrices->data.view = camera.get();// XMMatrixTranspose(view);
+	matrices->data.projection = XMMatrixTranspose(projection);
+
+	matrices->update();
+	matrices->bind(0);
+
+	deviceContext->Draw(resMgr->mesh("cube")->getCount(), 0);
 
 	swapChain->Present(0, 0);
 }

@@ -3,6 +3,7 @@
 Shader::Shader(ID3D11Device* dev, std::string filename)
 	: DeviceDependent(dev)
 {
+
 	//dev->GetImmediateContext(&deviceContext);
 
 	ID3D10Blob* vsBlob = NULL;

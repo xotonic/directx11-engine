@@ -1,21 +1,32 @@
 #include "ResourceManager.h"
 
+ResourceManager::~ResourceManager()
+{
+	for (auto it : vertexBuffers)
+		delete it.second;
+	for (auto it : shaders)
+		delete it.second;
+	for (auto it : textures)
+		delete it.second;
+
+}
+
 void ResourceManager::loadMesh(string name, string filename)
 {
-	vertexBuffers.insert(pair<string, VertexBuffer>(name, VertexBuffer(device,filename)));
+	vertexBuffers.insert(pair<string, VertexBuffer*>(name, new VertexBuffer(device,filename)));
 }
 
 void ResourceManager::loadTexture(string name, string filename)
 {
-	textures.insert(pair<string, Texture>(name, Texture(device, filename)));
+	textures.insert(pair<string, Texture*>(name, new Texture(device, filename)));
 }
 
 void ResourceManager::loadShader(string name, string filename)
 {
-	shaders.insert(pair<string, Shader>(name, Shader(device, filename)));
+	shaders.insert(pair<string, Shader*>(name, new Shader(device, filename)));
 }
 
-VertexBuffer& ResourceManager::mesh(string name)
+VertexBuffer* ResourceManager::mesh(string name)
 {
 	auto it = vertexBuffers.find(name);
 	
@@ -24,7 +35,7 @@ VertexBuffer& ResourceManager::mesh(string name)
 	return it->second;
 }
 
-Texture& ResourceManager::texture(string name)
+Texture* ResourceManager::texture(string name)
 {
 	auto it = textures.find(name);
 
@@ -33,7 +44,7 @@ Texture& ResourceManager::texture(string name)
 	return it->second;
 }
 
-Shader& ResourceManager::shader(string name)
+Shader* ResourceManager::shader(string name)
 {
 	auto it = shaders.find(name);
 

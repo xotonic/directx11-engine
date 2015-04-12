@@ -1,3 +1,4 @@
+#pragma once
 #include <memory>
 
 #include "common.h"
@@ -6,6 +7,8 @@
 #include "ConstantBuffer.h"
 #include "Texture.h"
 #include "Transformable.h"
+#include "Camera.h"
+#include "ResourceManager.h"
 //#include "IndexBuffer.h"
 #include "debug.h"
 
@@ -27,6 +30,10 @@ public:
 	_aligned_free(p);
 	}*/
 	Transformable transform;
+	Transformable tr;
+	Camera camera;
+	ResourceManager *resMgr;
+
 private:
 
 
@@ -49,7 +56,7 @@ private:
 	void createDevice(WindowDescriptor wd);
 
 	
-	Shader         *shader;
+	//Shader         *shader;
 	VertexBuffer   *buf;
 	Texture        *tex, *normal;
 	//IndexBuffer  *ibuf;
