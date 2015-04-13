@@ -1,6 +1,6 @@
 #include "Shader.h"
 
-Shader::Shader(ID3D11Device* dev, std::string filename)
+Shader::Shader(ID3D11Device* dev, std::string vs_name, std::string ps_name)
 	: DeviceDependent(dev)
 {
 
@@ -8,7 +8,7 @@ Shader::Shader(ID3D11Device* dev, std::string filename)
 
 	ID3D10Blob* vsBlob = NULL;
 	ID3D10Blob* psBlob = NULL;
-	compileFromFile(filename, VS_entryPoint, VS_model, &vsBlob);
+	compileFromFile(vs_name, VS_entryPoint, VS_model, &vsBlob);
 
 	dev->CreateVertexShader(
 		vsBlob->GetBufferPointer(),
@@ -28,7 +28,7 @@ Shader::Shader(ID3D11Device* dev, std::string filename)
 
 	vsBlob->Release();
 
-	compileFromFile(filename, PS_entryPoint, PS_model, &psBlob);
+	compileFromFile(ps_name, PS_entryPoint, PS_model, &psBlob);
 	dev->CreatePixelShader(psBlob->GetBufferPointer(), psBlob->GetBufferSize(), NULL, &pixelShader);
 
 	psBlob->Release();
@@ -78,4 +78,9 @@ void Shader::bind()
 	deviceContext->VSSetShader(vertexShader, 0, 0);
 	//deviceContext->VSSetConstantBuffers(0, 1, constBuf);
 	deviceContext->PSSetShader(pixelShader, 0, 0);
+}
+
+void Shader::setConstantBuffers(ID3D11Buffer** bufs)
+{
+
 }

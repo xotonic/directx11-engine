@@ -14,7 +14,7 @@ Renderer::Renderer(WindowDescriptor wd) : angle(0)
 
 	resMgr = new ResourceManager(device);
 
-	resMgr->loadShader("simple","simple.fx");
+	resMgr->loadShader("simple","shader.vs","shader.ps");
 	resMgr->loadMesh("cube", "untitled.mesh");
 	resMgr->loadTexture("diffuse", "texture.dds");
 	resMgr->loadTexture("normal", "normal.dds");
@@ -31,6 +31,15 @@ Renderer::Renderer(WindowDescriptor wd) : angle(0)
 	//buf->bind();
 
 	matrices = new ConstantBuffer < MatrixBuffer >(device);
+	light = new ConstantBuffer<DirLightBuffer>(device);
+
+	light->data.color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	light->data.dir = XMFLOAT4(-0.577f, 0.0f, -0.5f, 1.0f);
+
+	light->update();
+	light->bind_PS(0);
+	/*light->update();
+	light->bind_PS(1);*/
 
 	tr.Translate(4.0f, 4.0, 0.0);
 	//tex = new Texture(device, "texture.dds");
@@ -71,6 +80,7 @@ Renderer::~Renderer()
 	//delete shader;
 	//delete buf;
 	delete matrices;
+	delete light;
 	//delete tex;
 	//delete normal;
 	delete resMgr;
@@ -206,8 +216,8 @@ void Renderer::Render()
 	deviceContext->ClearRenderTargetView(renderTargetView, clearColor);
 	deviceContext->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0, 0);
 
-	//static float t = 0.0f;
-	//t += 0.0005;
+	static float t = 0.0f;
+	t += 0.0005;
 	//world = XMMatrixRotationY(t);
 	
 	//transform.RotateY(0.0005);
@@ -217,13 +227,22 @@ void Renderer::Render()
 
 	XMMATRIX Cw = transform.get();
 	XMMATRIX Cv = camera.get();*/
+	//static float t;
+
+	//light->data.dir.x = cos(t);
+
+	light->update();
+	light->bind_PS(0);
 
 	matrices->data.world = transform.get();//XMMatrixTranspose(world);
 	matrices->data.view = camera.get();// XMMatrixTranspose(view);
 	matrices->data.projection = XMMatrixTranspose(projection);
 
 	matrices->update();
-	matrices->bind(0);
+	matrices->bind_VS(0);
+	
+	/*light->update();
+	light->bind_PS(0);+*/
 
 	//tex->bind(0);
 	//normal->bind(1);
@@ -240,7 +259,14 @@ void Renderer::Render()
 	matrices->data.projection = XMMatrixTranspose(projection);
 
 	matrices->update();
-	matrices->bind(0);
+	matrices->bind_VS(0);
+	light->bind_PS(0);
+
+
+	//light->update();
+
+	//light->update();
+	//light->bind(1);
 
 	deviceContext->Draw(resMgr->mesh("cube")->getCount(), 0);
 

@@ -21,9 +21,9 @@ void ResourceManager::loadTexture(string name, string filename)
 	textures.insert(pair<string, Texture*>(name, new Texture(device, filename)));
 }
 
-void ResourceManager::loadShader(string name, string filename)
+void ResourceManager::loadShader(string name, string vs_name, string ps_name)
 {
-	shaders.insert(pair<string, Shader*>(name, new Shader(device, filename)));
+	shaders.insert(pair<string, Shader*>(name, new Shader(device, vs_name, ps_name)));
 }
 
 VertexBuffer* ResourceManager::mesh(string name)

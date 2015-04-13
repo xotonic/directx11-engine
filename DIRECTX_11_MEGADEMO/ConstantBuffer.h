@@ -9,7 +9,8 @@ public:
 	ConstantBuffer(ID3D11Device* dev);
 
 	void update();
-	void bind(unsigned int slot);
+	void bind_VS(unsigned int slot);
+	void bind_PS(unsigned int slot);
 	//~ConstantBuffer();
 	T data;
 private:
@@ -18,6 +19,17 @@ private:
 	ID3D11Buffer* cbuf;
 };
 
+template <typename T>
+void ConstantBuffer<T>::bind_PS(unsigned int slot)
+{
+	deviceContext->PSSetConstantBuffers(slot, 1, &cbuf);
+}
+
+template <typename T>
+void ConstantBuffer<T>::bind_VS(unsigned int slot)
+{
+	deviceContext->VSSetConstantBuffers(slot, 1, &cbuf);
+}
 template <typename T>
 ConstantBuffer<T>::ConstantBuffer(ID3D11Device* dev) : DeviceDependent(dev)
 {
@@ -33,14 +45,10 @@ ConstantBuffer<T>::ConstantBuffer(ID3D11Device* dev) : DeviceDependent(dev)
 	CHECK_HRESULT(device->CreateBuffer(&bd, NULL, &cbuf), "Error creating constant buffer");
 }
 
-template <typename T>
-void ConstantBuffer<T>::bind(unsigned int slot)
-{
-	deviceContext->VSSetConstantBuffers(0, 1, &cbuf);
-}
 
 template <typename T>
 void ConstantBuffer<T>::update()
 {
+
 	deviceContext->UpdateSubresource(cbuf, 0, 0, &data, 0, 0);
 }

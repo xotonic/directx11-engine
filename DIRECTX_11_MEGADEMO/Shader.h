@@ -5,11 +5,11 @@
 class Shader : private DeviceDependent
 {
 public:
-	Shader(ID3D11Device* dev, std::string filename);
+	Shader(ID3D11Device* dev, std::string vs_name, std::string ps_name);
 	~Shader();
 
 	void bind();
-
+	void setConstantBuffers(ID3D11Buffer** bufs);
 	ID3D11VertexShader* vertex() { return vertexShader; }
 	ID3D11PixelShader* pixel() { return pixelShader; }
 

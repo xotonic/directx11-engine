@@ -22,7 +22,7 @@
 	hr = x;\
 	if (FAILED(hr)) {\
 std::stringstream msg; \
-	msg << y << "\nError code : " << hr;\
+	msg << y << "\nError code : 0x" << std::hex << hr;\
 MESSAGE(msg.str().c_str());}\
 		}
 

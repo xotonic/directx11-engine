@@ -103,5 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="simple.fx" />
+    <None Include="shader.ps" />
+    <None Include="shader.vs" />
   </ItemGroup>
 </Project>

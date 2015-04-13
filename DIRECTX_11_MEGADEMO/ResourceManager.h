@@ -17,7 +17,7 @@ public:
 
 	void loadMesh(string name, string filename);
 	void loadTexture(string name, string filename);
-	void loadShader(string name, string filename);
+	void loadShader(string name, string vs_name, string ps_name);
 
 	VertexBuffer* mesh(string name);
 	Texture* texture(string name);

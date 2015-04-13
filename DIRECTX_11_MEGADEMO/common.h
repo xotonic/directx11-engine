@@ -61,7 +61,7 @@ struct MatrixBuffer
 
 struct DirLightBuffer
 {
-	XMFLOAT3 dir;
+	XMFLOAT4 dir;
 	XMFLOAT4 color;
 };
 /*LPCWSTR stringToLPCWSTR(std::string str)

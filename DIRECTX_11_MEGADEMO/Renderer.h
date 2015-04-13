@@ -68,4 +68,5 @@ private:
 	float angle;
 
 	ConstantBuffer<MatrixBuffer>* matrices;
+	ConstantBuffer<DirLightBuffer>* light;
 };
