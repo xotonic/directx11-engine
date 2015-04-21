@@ -13,6 +13,7 @@ public:
 	int getSize();
 	int getCount();
 	void bind();
+	void draw();
 protected:
 
 	bool ReadFromOBJ(string filename);

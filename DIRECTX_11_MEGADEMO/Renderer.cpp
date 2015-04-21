@@ -2,7 +2,6 @@
 
 Renderer::Renderer(WindowDescriptor wd) : angle(0)
 {
-
 	createDevice(wd);
 
 	world = XMMatrixIdentity();
@@ -14,7 +13,9 @@ Renderer::Renderer(WindowDescriptor wd) : angle(0)
 
 	resMgr = new ResourceManager(device);
 
-	resMgr->loadShader("simple","shader.vs","shader.ps");
+	terrain = new Terrain(device, "out.terrain");
+
+	resMgr->loadShader("simple", "shader.vsh", "shader.psh");
 	resMgr->loadMesh("cube", "untitled.mesh");
 	resMgr->loadTexture("diffuse", "texture.dds");
 	resMgr->loadTexture("normal", "normal.dds");
@@ -23,7 +24,7 @@ Renderer::Renderer(WindowDescriptor wd) : angle(0)
 	resMgr->shader("simple")->bind();
 
 	camera.Translate(0.0f, 1.0, -5.0);
-	
+
 	//camera.LookAt(XMFLOAT3(0.0f , 1.0f , 0.0f));
 	//shader = new Shader(device, "simple.fx");
 
@@ -59,15 +60,13 @@ Renderer::Renderer(WindowDescriptor wd) : angle(0)
 	CHECK_HRESULT(CreateDDSTextureFromFile(device, L"texture.dds", nullptr, &textureRV),
 	"ERROR creating dds texture from file");*/
 
-
-
 	//deviceContext->VSSetShader(shader->vertex(), 0, 0);
 	//deviceContext->PSSetShader(shader->pixel(), 0, 0);
 
 	/*D3D11_RASTERIZER_DESC noCulling;
 	ID3D11RasterizerState* noCullingState;
 	ZeroMemory(&noCulling, sizeof(D3D11_RASTERIZER_DESC));
-	noCulling.FillMode = D3D11_FILL_SOLID;
+	noCulling.FillMode = D3D11_FILL_WIREFRAME;
 	noCulling.CullMode = D3D11_CULL_NONE;
 	CHECK_HRESULT(
 	device->CreateRasterizerState(&noCulling, &noCullingState),
@@ -81,6 +80,7 @@ Renderer::~Renderer()
 	//delete buf;
 	delete matrices;
 	delete light;
+	delete terrain;
 	//delete tex;
 	//delete normal;
 	delete resMgr;
@@ -218,18 +218,8 @@ void Renderer::Render()
 
 	static float t = 0.0f;
 	t += 0.0005;
-	//world = XMMatrixRotationY(t);
-	
-	//transform.RotateY(0.0005);
 
-	/*XMMATRIX w = XMMatrixTranspose(world);
-	XMMATRIX v = XMMatrixTranspose(view);
-
-	XMMATRIX Cw = transform.get();
-	XMMATRIX Cv = camera.get();*/
-	//static float t;
-
-	//light->data.dir.x = cos(t);
+	resMgr->mesh("cube")->bind();
 
 	light->update();
 	light->bind_PS(0);
@@ -240,19 +230,13 @@ void Renderer::Render()
 
 	matrices->update();
 	matrices->bind_VS(0);
-	
-	/*light->update();
-	light->bind_PS(0);+*/
 
-	//tex->bind(0);
-	//normal->bind(1);
-	
 	resMgr->texture("diffuse")->bind(0);
 	resMgr->texture("normal")->bind(1);
 
 	//deviceContext->PSSetShaderResources(0, 1, &textureRV);
 	//deviceContext->PSSetSamplers(0, 0, 0);
-	deviceContext->Draw(resMgr->mesh("cube")->getCount(), 0);
+	resMgr->mesh("cube")->draw();
 
 	matrices->data.world = tr.get();//XMMatrixTranspose(world);
 	matrices->data.view = camera.get();// XMMatrixTranspose(view);
@@ -267,8 +251,16 @@ void Renderer::Render()
 
 	//light->update();
 	//light->bind(1);
+	resMgr->mesh("cube")->draw();
 
-	deviceContext->Draw(resMgr->mesh("cube")->getCount(), 0);
+	terrain->bind();
+
+	matrices->data.world = transform.get();
+	matrices->update();
+	matrices->bind_VS(0);
+
+	terrain->draw();
+//	deviceContext->Draw(resMgr->mesh("cube")->getCount(), 0);
 
 	swapChain->Present(0, 0);
 }

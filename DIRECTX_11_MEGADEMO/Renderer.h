@@ -10,6 +10,7 @@
 #include "Camera.h"
 #include "ResourceManager.h"
 //#include "IndexBuffer.h"
+#include "Terrain.h"
 #include "debug.h"
 
 class Renderer
@@ -33,9 +34,8 @@ public:
 	Transformable tr;
 	Camera camera;
 	ResourceManager *resMgr;
-
+	Terrain* terrain;
 private:
-
 
 	D3D_DRIVER_TYPE driverType;
 
@@ -55,7 +55,6 @@ private:
 	ID3D11RasterizerState* noCullingState;
 	void createDevice(WindowDescriptor wd);
 
-	
 	//Shader         *shader;
 	VertexBuffer   *buf;
 	Texture        *tex, *normal;

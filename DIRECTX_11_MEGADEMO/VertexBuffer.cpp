@@ -61,6 +61,11 @@ void VertexBuffer::bind()
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
+void VertexBuffer::draw()
+{
+	deviceContext->Draw(getCount(), 0);
+}
+
 bool VertexBuffer::ReadFromOBJ(string filename)
 {
 	if (filename.find(".mesh") == string::npos)
@@ -112,5 +117,6 @@ bool VertexBuffer::ReadFromOBJ(string filename)
 		v_buf.push_back({ unique_vertices[third].pos, unique_vertices[third].normal, { third_uv_x, third_uv_y } });
 	}
 
+	filein.close();
 	return true;
 }
