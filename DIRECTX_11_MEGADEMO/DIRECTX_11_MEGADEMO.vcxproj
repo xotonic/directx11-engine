@@ -110,11 +110,19 @@
     <ClInclude Include="VertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="monkey.mesh" />
+    <None Include="out.terrain" />
     <None Include="shader.psh">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</DeploymentContent>
     </None>
     <None Include="shader.vsh" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="grass.dds" />
+    <Image Include="grass_normal.dds" />
+    <Image Include="normal.dds" />
+    <Image Include="texture.dds" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
