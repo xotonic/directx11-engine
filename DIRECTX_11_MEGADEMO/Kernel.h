@@ -14,7 +14,7 @@ public:
 	HWND hWnd;
 private:
 	HINSTANCE hInstance;
-	Input input;
+	Input *input;
 	static long int _stdcall WinMessage(HWND _window, unsigned int _message, WPARAM _wParam, LPARAM _lParam);
 	long int Message(HWND _window, unsigned int _message, WPARAM _wParam, LPARAM _lParam);
 };

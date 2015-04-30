@@ -6,6 +6,11 @@
 #include "VertexBuffer.h"
 #include "DeviceDependent.h"
 
+static const XMFLOAT3 operator-(XMFLOAT3 x, XMFLOAT3 y)
+	{
+	return XMFLOAT3{x.x-y.x, x.y - y.y, x.z - y.z};
+	}
+
 class Terrain : DeviceDependent
 {
 public:
@@ -22,4 +27,5 @@ public:
 	ID3D11Buffer*         vertexBuffer = nullptr;
 private:
 	bool ReadFromFile(std::string name);
+
 };

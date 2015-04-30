@@ -9,27 +9,21 @@ Renderer::Renderer(WindowDescriptor wd) : angle(0)
 		XMVectorSet(0.0f, 1.0f, -5.0f, 0.0f),
 		XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f),
 		XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
-	projection = XMMatrixPerspectiveFovLH(XM_PIDIV2, wd.size.width / wd.size.height, 0.01f, 100.0f);
+	projection = XMMatrixPerspectiveFovLH(XM_PIDIV2, wd.size.width / wd.size.height, 0.01f, 1000.0f);
 
 	resMgr = new ResourceManager(device);
 
 	terrain = new Terrain(device, "out.terrain");
 
 	resMgr->loadShader("simple", "shader.vsh", "shader.psh");
-	resMgr->loadMesh("cube", "untitled.mesh");
-	resMgr->loadTexture("diffuse", "texture.dds");
-	resMgr->loadTexture("normal", "normal.dds");
+	resMgr->loadMesh("cube", "mon.mesh");
+	resMgr->loadTexture("diffuse", "grass.dds");
+	resMgr->loadTexture("normal", "grass_normal.dds");
 
 	resMgr->mesh("cube")->bind();
 	resMgr->shader("simple")->bind();
 
 	camera.Translate(0.0f, 1.0, -5.0);
-
-	//camera.LookAt(XMFLOAT3(0.0f , 1.0f , 0.0f));
-	//shader = new Shader(device, "simple.fx");
-
-	//buf = new VertexBuffer(device, "untitled.mesh");
-	//buf->bind();
 
 	matrices = new ConstantBuffer < MatrixBuffer >(device);
 	light = new ConstantBuffer<DirLightBuffer>(device);

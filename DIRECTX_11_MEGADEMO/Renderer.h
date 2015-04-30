@@ -35,6 +35,7 @@ public:
 	Camera camera;
 	ResourceManager *resMgr;
 	Terrain* terrain;
+	ConstantBuffer<DirLightBuffer>* light;
 private:
 
 	D3D_DRIVER_TYPE driverType;
@@ -67,5 +68,4 @@ private:
 	float angle;
 
 	ConstantBuffer<MatrixBuffer>* matrices;
-	ConstantBuffer<DirLightBuffer>* light;
 };
