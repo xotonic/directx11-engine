@@ -71,6 +71,9 @@
     <ClCompile Include="Terrain.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer2D.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="debug.h">
@@ -119,6 +122,9 @@
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="Terrain.h">
+      <Filter>h</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer2D.h">
       <Filter>h</Filter>
     </ClInclude>
   </ItemGroup>

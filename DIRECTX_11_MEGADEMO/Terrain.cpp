@@ -79,7 +79,7 @@ bool Terrain::ReadFromFile(std::string filename)
 			float tx = float(i);
 			float tz = float(j);
 
-			TexNormVertex v{ { tx, ty, tz }, { -1.0f, -1.0f, -1.0f }, { 0.0f, 0.0f } };
+			TexNormVertex v{ { tx, ty, tz }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f } };
 
 			unique_vertices.push_back(v);
 		}
@@ -87,8 +87,9 @@ bool Terrain::ReadFromFile(std::string filename)
 	int face_num = 2 * vx * vy;
 
 	// calculating normals
-	vector<XMVECTOR> face_normals;
-	face_normals.reserve(face_num);
+	vector<XMVECTOR> normals;
+	//normals.reserve(vy*vx);
+	normals.resize(vy*vx);
 
 	for (int i = 0; i < vy - 1; i++)
 	{
@@ -105,35 +106,27 @@ bool Terrain::ReadFromFile(std::string filename)
 
 			XMVECTOR normal = XMVector3Cross(edge1, edge2);
 			normal = XMVector3Normalize(normal);
-			face_normals.push_back(normal);
+			normals[index_1] += normal;
+			normals[index_2] += normal;
+			normals[index_3] += normal;
 
 			normal = XMVector3Cross(edge3, edge1);
 			normal = XMVector3Normalize(normal);
-			face_normals.push_back(normal);
+			normals[index_1] += normal;
+			normals[index_3] += normal;
+			normals[index_4] += normal;
 
 		}
 	}
+	// normalizing normals
+	for (int i = 0; i < normals.size(); i++)
+	{
+		XMVECTOR n = normals[i];
+		n = XMVector3Normalize(n);
+		XMStoreFloat3(&unique_vertices[i].normal, n);
+	}
 
-	for (int i = 1; i < (vx - 1); i++)
-		for (int j = 1; j < (vy - 3); j++)
-		{
-		
-			int n = i + vy*j;
-			int bot = 2 * n - 1;
-			int top = bot + vx;
-				XMVECTOR normal = XMVector3Normalize(
-					face_normals[bot]
-					+ face_normals[bot + 1]
-					+ face_normals[bot + 2]
-					+ face_normals[bot + 3]
-					+ face_normals[top]
-					+ face_normals[top + 1]
-					+ face_normals[top + 2]
-					+ face_normals[top + 3]);
-			XMStoreFloat3(&unique_vertices[n].normal, normal);
-		
-		}
-
+	
 	// forming vertex buffer
 
 	v_buf.reserve(face_num * 3 * 2);

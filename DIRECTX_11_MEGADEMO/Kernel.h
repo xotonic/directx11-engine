@@ -2,6 +2,7 @@
 #include "common.h"
 //#endif
 #include "Renderer.h"
+#include "Renderer2D.h"
 #include "Input.h"
 class Kernel
 {
@@ -9,6 +10,7 @@ public:
 	Kernel(HINSTANCE hInst, int nCmdShow, int w = 640, int h = 480);
 	//LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	Renderer *renderer;
+	Renderer2D *renderer2D;
 	void Run();
 	~Kernel();
 	HWND hWnd;

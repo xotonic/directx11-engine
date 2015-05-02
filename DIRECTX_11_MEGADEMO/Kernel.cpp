@@ -14,6 +14,7 @@ void Kernel::Run()
 		{
 			input->Update();
 			renderer->Render();
+			renderer2D->Render();
 		}
 	}
 }
@@ -37,13 +38,19 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h) //: input(w,h)
 	wcex.hIconSm = 0;
 	if (!RegisterClassEx(&wcex)) DEBUG("UNABLE TO REGISTER WINAPI CLASS\n");
 
+	int y_max = GetSystemMetrics(SM_CYSCREEN);
+	int x_max = GetSystemMetrics(SM_CXSCREEN);
+
+	int x_pos = (x_max - w) / 2;
+	int y_pos = (y_max - h) / 2;
+
 	hInstance = hInst;
 	hWnd = CreateWindow(
 		"MainWClass",        // name of window class
 		"Копатели Онлайн",            // title-bar string
 		WS_OVERLAPPEDWINDOW | WS_VISIBLE, // top-level window
-		CW_USEDEFAULT,       // default horizontal position
-		CW_USEDEFAULT,       // default vertical position
+		x_pos,       // default horizontal position
+		y_pos,       // default vertical position
 		w,       // default width
 		h,       // default height
 		(HWND)NULL,         // no owner window
@@ -60,9 +67,11 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h) //: input(w,h)
 	
 	input = new Input(hInstance, hWnd, w, h);
 
+
 	WindowDescriptor wd = { hWnd, w, h };
 
 	renderer = new Renderer(wd);
+	renderer2D = new Renderer2D(hWnd);
 
 	Renderer* r = renderer;
 
@@ -100,6 +109,7 @@ Kernel::~Kernel()
 {
 	delete renderer;
 	delete input;
+	delete renderer2D;
 }
 
 long int _stdcall Kernel::WinMessage(HWND _window, unsigned int _message, WPARAM _wParam, LPARAM _lParam)
