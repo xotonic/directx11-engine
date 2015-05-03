@@ -229,5 +229,83 @@ void DeviceResources::AdaptToWindow(WindowDescriptor wd)
 			);
 	}
 
-    /// продолжить
+	ComPtr<ID3D11Texture2D> backBuffer;
+	CHECK_HRESULT(device->CreateRenderTargetView(
+		backBuffer.Get(),
+		nullptr,
+		&renderTargetView),
+		"error creating render target view");
+
+	// Создание представления трафарета глубины для использования с трехмерной прорисовкой, если это необходимо.
+	CD3D11_TEXTURE2D_DESC depthStencilDesc(
+		DXGI_FORMAT_D24_UNORM_S8_UINT,
+		width,
+		height,
+		1, // Это представление трафарета глубины содержит только одну текстуру.
+		1, // Использование одного уровня MIP-карт.
+		D3D11_BIND_DEPTH_STENCIL
+		);
+
+	ComPtr<ID3D11Texture2D> depthStencil;
+	CHECK_HRESULT(
+		device->CreateTexture2D(
+		&depthStencilDesc,
+		nullptr,
+		&depthStencil),
+		"error creating depth stencil 2d texture"
+		);
+
+	CD3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc(D3D11_DSV_DIMENSION_TEXTURE2D);
+	CHECK_HRESULT(
+		device->CreateDepthStencilView(
+		depthStencil.Get(),
+		&depthStencilViewDesc,
+		&depthStencilView),
+		"error creating depth stencil view"
+		);
+
+	// Установка в качестве окна просмотра трехмерной прорисовки всего окна.
+	viewport = CD3D11_VIEWPORT(
+		0.0f,
+		0.0f,
+		width,
+		height
+		);
+
+	devcon->RSSetViewports(1, &viewport);
+
+	// Создание целевого точечного рисунка Direct2D, связанного с
+	// задним буфером цепочки буферов, и установка его в качестве текущего целевого объекта.
+	D2D1_BITMAP_PROPERTIES1 bitmapProperties =
+		D2D1::BitmapProperties1(
+		D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
+		D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_PREMULTIPLIED),
+		12.0f/72.0f*96.0f,
+		12.0f / 72.0f*96.0f
+		);
+
+	ComPtr<IDXGISurface2> dxgiBackBuffer;
+	CHECK_HRESULT(
+		swapChain->GetBuffer(0, IID_PPV_ARGS(&dxgiBackBuffer)),
+		"error getting buffer from swap chain"
+		);
+
+	CHECK_HRESULT(
+		d2dDevcon->CreateBitmapFromDxgiSurface(
+		dxgiBackBuffer.Get(),
+		&bitmapProperties,
+		&d2dTargetBitmap),
+		"error creaing bitmap from dxgi surface"
+		);
+
+	d2dDevcon->SetTarget(d2dTargetBitmap.Get());
+
+	// Сглаживание текста в оттенках серого рекомендуется для всех приложений для Магазина Windows.
+	d2dDevcon->SetTextAntialiasMode(D2D1_TEXT_ANTIALIAS_MODE_GRAYSCALE);
+}
+
+void DeviceResources::Present()
+{
+	CHECK_HRESULT(swapChain->Present(1, 0),
+		"Error swapChain->Present()");
 }

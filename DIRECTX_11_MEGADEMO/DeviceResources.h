@@ -23,9 +23,12 @@ public:
 	// Обьекты DirectWrite
 	ComPtr<IDWriteFactory2> dwriteFactory;
 	ComPtr<IWICImagingFactory2> wicFactory;
-
+	
+	D3D11_VIEWPORT		viewport;
 	D3D_FEATURE_LEVEL featureLevel;
+	
 	void AdaptToWindow(WindowDescriptor wd);
+	void Present();
 private:
 	void CreateFactories();
 	void CreateDeviceResources();
