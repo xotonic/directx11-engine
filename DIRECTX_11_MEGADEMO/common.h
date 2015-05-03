@@ -2,8 +2,15 @@
 //#ifndef COMMON_H_
 //#define COMMON_H_
 #define _XM_NO_INTRINSICS_
-#include <d3d11.h>
+#include <wrl.h>
+#include <wrl/client.h>
+
+#include <d3d11_2.h>
+#include <d2d1_2.h>
+#include <dwrite_2.h>
+#include <wincodec.h>
 #include <DirectXMath.h>
+
 #include <Windows.h>
 #include <string>
 #include "debug.h"
