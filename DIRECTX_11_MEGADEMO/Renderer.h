@@ -9,6 +9,7 @@
 #include "Transformable.h"
 #include "Camera.h"
 #include "ResourceManager.h"
+#include "DXResources.h"
 //#include "IndexBuffer.h"
 #include "Terrain.h"
 #include "debug.h"
@@ -16,7 +17,7 @@
 class Renderer
 {
 public:
-	Renderer(WindowDescriptor wd);
+	Renderer(DXResources* dx);
 	~Renderer();
 	void Render();
 
@@ -38,23 +39,23 @@ public:
 	ConstantBuffer<DirLightBuffer>* light;
 private:
 
-	D3D_DRIVER_TYPE driverType;
+	//D3D_DRIVER_TYPE driverType;
 
-	ID3D11Device*        device;
-	ID3D11DeviceContext* deviceContext;
-	IDXGISwapChain*      swapChain;
+	//ID3D11Device*        device;
+	//ID3D11DeviceContext* deviceContext;
+	//IDXGISwapChain*      swapChain;
 
-	ID3D11RenderTargetView* renderTargetView = nullptr;
-	ID3D11Texture2D*        depthTexture = nullptr;         // Текстура буфера глубин
-	ID3D11DepthStencilView* depthStencilView = nullptr;     // Объект вида, буфер глубин
+	//ID3D11RenderTargetView* renderTargetView = nullptr;
+	//ID3D11Texture2D*        depthTexture = nullptr;         // Текстура буфера глубин
+	//ID3D11DepthStencilView* depthStencilView = nullptr;     // Объект вида, буфер глубин
 
-	//ID3D11ShaderResourceView *textureRV = nullptr;
-	//ID3D11SamplerState *sampler = nullptr;
+	////ID3D11ShaderResourceView *textureRV = nullptr;
+	////ID3D11SamplerState *sampler = nullptr;
 
-	DXGI_SWAP_CHAIN_DESC swapChainDescriptor;
+	//DXGI_SWAP_CHAIN_DESC swapChainDescriptor;
 
-	ID3D11RasterizerState* noCullingState;
-	void createDevice(WindowDescriptor wd);
+	//ID3D11RasterizerState* noCullingState;
+	//void createDevice(WindowDescriptor wd);
 
 	//Shader         *shader;
 	VertexBuffer   *buf;

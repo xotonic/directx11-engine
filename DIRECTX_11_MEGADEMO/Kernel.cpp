@@ -13,8 +13,10 @@ void Kernel::Run()
 		else
 		{
 			input->Update();
+			dx->ClearView();
 			renderer->Render();
-			renderer2D->Render();
+			dx->Present();
+			//renderer2D->Render();
 		}
 	}
 }
@@ -70,8 +72,9 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h) //: input(w,h)
 
 	WindowDescriptor wd = { hWnd, w, h };
 
-	renderer = new Renderer(wd);
-	renderer2D = new Renderer2D(hWnd);
+	dx = new DXResources(wd);
+	renderer = new Renderer(dx);
+	//renderer2D = new Renderer2D(hWnd);
 
 	Renderer* r = renderer;
 
@@ -109,7 +112,8 @@ Kernel::~Kernel()
 {
 	delete renderer;
 	delete input;
-	delete renderer2D;
+	delete dx;
+	//delete renderer2D;
 }
 
 long int _stdcall Kernel::WinMessage(HWND _window, unsigned int _message, WPARAM _wParam, LPARAM _lParam)

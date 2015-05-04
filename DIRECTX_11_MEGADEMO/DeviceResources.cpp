@@ -8,6 +8,29 @@ DeviceResources::DeviceResources()
 }
 
 
+DeviceResources::~DeviceResources()
+{
+	if (backBuffer) backBuffer->Release();
+	if (depthStencil) depthStencil->Release();
+	if (dxgiBackBuffer) dxgiBackBuffer->Release();
+
+	if (renderTargetView) renderTargetView->Release();
+	if (swapChain) swapChain->Release();
+		if(depthStencilView) depthStencilView->Release(); 
+		if(d2dFactory	   ) d2dFactory      ->Release(); 
+		if(d2dDevice	   ) d2dDevice       ->Release(); 
+		if(d2dDevcon	   ) d2dDevcon       ->Release(); 
+		if(d2dTargetBitmap ) d2dTargetBitmap ->Release(); 
+		if(dwriteFactory   ) dwriteFactory   ->Release(); 
+		if(wicFactory	   ) wicFactory      ->Release(); 
+		if (dev) dev->Release();
+		if (context) context->Release();
+		if(devcon		   ) devcon       	 ->Release();
+		if (device) device->Release();
+		if (dxgiDevice) dxgiDevice->Release();
+
+}
+
 void DeviceResources::CreateFactories()
 {
 	// Инициализация ресурсов Direct2D.
@@ -25,7 +48,7 @@ void DeviceResources::CreateFactories()
 		D2D1_FACTORY_TYPE_SINGLE_THREADED,
 		__uuidof(ID2D1Factory2),
 		&options,
-		&d2dFactory),
+		reinterpret_cast<void **>(&d2dFactory)),
 		"error creating Direct2d factory"
 		);
 
@@ -34,19 +57,19 @@ void DeviceResources::CreateFactories()
 		DWriteCreateFactory(
 		DWRITE_FACTORY_TYPE_SHARED,
 		__uuidof(IDWriteFactory2),
-		&dwriteFactory),
+		reinterpret_cast<IUnknown **>(&dwriteFactory)),
 		"error creating DirectWrite factory"
 		);
 
 	// Инициализация фабрики компонента обработки изображений Windows (WIC).
-	    CHECK_HRESULT(
+	    /*CHECK_HRESULT(
 		CoCreateInstance(
 		CLSID_WICImagingFactory2,
 		nullptr,
 		CLSCTX_INPROC_SERVER,
 		IID_PPV_ARGS(&wicFactory)),
 		"error creating WIC factory"
-		);
+		);*/
 
 }
 
@@ -80,8 +103,8 @@ void DeviceResources::CreateDeviceResources()
 	};
 
 	// Создание объекта устройства API Direct3D 11 и соответствующего контекста.
-	ComPtr<ID3D11Device> dev;
-	ComPtr<ID3D11DeviceContext> context;
+	//ID3D11Device* dev;
+	//ID3D11DeviceContext* context;
 
 	HRESULT hr = D3D11CreateDevice(
 		nullptr,					// Указание nullptr для использования адаптера по умолчанию.
@@ -118,21 +141,24 @@ void DeviceResources::CreateDeviceResources()
 
 	// Сохранение указателей на устройство API Direct3D 11.1 и мгновенный контекст.
 	CHECK_HRESULT(
-		dev.As(&device), "error converting 11.0 device to 11.1"
+		dev->QueryInterface(__uuidof(ID3D11Device2), reinterpret_cast<void**>(&device)),
+		"error converting 11.0 device to 11.1"
 		);
 
 	CHECK_HRESULT(
-		context.As(&devcon), "error converting 11.0 context to 11.1"
+		context->QueryInterface(__uuidof(ID3D11DeviceContext2), reinterpret_cast<void**>(&devcon)), "error converting 11.0 context to 11.1"
 		);
 
 	// Создание объекта устройства Direct2D и соответствующего контекста.
-	ComPtr<IDXGIDevice3> dxgiDevice;
+	//IDXGIDevice3* dxgiDevice;
 	CHECK_HRESULT(
-		device.As(&dxgiDevice), "error creating dxgi device"
+		device->QueryInterface(__uuidof(IDXGIDevice3), reinterpret_cast<void**>(&dxgiDevice)), "error creating dxgi device"
 		);
 
+	//CHECK_HRESULT(d2dFactory->QueryInterface(__uuidof(ID2D1Factory2), reinterpret_cast<void**>(&d2dFactory2)),
+	//	"error 2d factory to 2d factory2");
 	CHECK_HRESULT(
-		d2dFactory->CreateDevice(dxgiDevice.Get(), &d2dDevice),
+		d2dFactory->CreateDevice(dxgiDevice, &d2dDevice),
 		"error creating dxgi device"
 		);
 
@@ -146,6 +172,7 @@ void DeviceResources::CreateDeviceResources()
 
 void DeviceResources::AdaptToWindow(WindowDescriptor wd)
 {
+	winDesc = wd;
 	ID3D11RenderTargetView* nullViews[] = { nullptr };
 	devcon->OMSetRenderTargets(ARRAYSIZE(nullViews), nullViews, nullptr);
 	renderTargetView = nullptr;
@@ -192,34 +219,37 @@ void DeviceResources::AdaptToWindow(WindowDescriptor wd)
 		swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
 
 		// Эта последовательность получает фабрику DXGI, которая использовалась для создания вышеуказанного устройства Direct3D.
-		ComPtr<IDXGIDevice3> dxgiDevice;
+		//ComPtr<IDXGIDevice3> dxgiDevice;
 		CHECK_HRESULT(
-			device.As(&dxgiDevice), 
+			device->QueryInterface(__uuidof(IDXGIDevice3), reinterpret_cast<void**>(&dxgiDevice)), 
 			"error interpreting d11 device as dxgi device"
 			);
 
-		ComPtr<IDXGIAdapter> dxgiAdapter;
+		IDXGIAdapter* dxgiAdapter;
 		CHECK_HRESULT(
 			dxgiDevice->GetAdapter(&dxgiAdapter), 
 			"error getting dxgi adapter"
 			);
 
-		ComPtr<IDXGIFactory2> dxgiFactory;
+		IDXGIFactory2* dxgiFactory;
 		CHECK_HRESULT(
 			dxgiAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory)), 
 			"error getting dxgi factory from dxgi adapter"
 			);
 
 		CHECK_HRESULT(
-		dxgiFactory->CreateSwapChainForHwnd(
-			device.Get(),
+			dxgiFactory->CreateSwapChainForHwnd(
+			device,
 			wd.hWnd,
 			&swapChainDesc,
 			nullptr,
 			nullptr,
 			&swapChain),
-			" error creating swap chain from hWnd"
-			);
+			" error creating swap chain from hWnd");
+
+			//if (dxgiFactory) dxgiFactory->Release();
+			//if (dxgiAdapter) dxgiAdapter->Release();
+			
 
 		// Проверка того, что DXGI не помещает в очередь более одного кадра одновременно. Это позволяет уменьшить задержку и
 		// гарантировать, что приложение будет выполнять прорисовку только после каждой виртуальной синхронизации, что снижает энергопотребление.
@@ -229,9 +259,12 @@ void DeviceResources::AdaptToWindow(WindowDescriptor wd)
 			);
 	}
 
-	ComPtr<ID3D11Texture2D> backBuffer;
+	//ID3D11Texture2D* backBuffer;
+	CHECK_HRESULT(swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer),
+		"error getting back buffer");
+
 	CHECK_HRESULT(device->CreateRenderTargetView(
-		backBuffer.Get(),
+		backBuffer,
 		nullptr,
 		&renderTargetView),
 		"error creating render target view");
@@ -246,7 +279,7 @@ void DeviceResources::AdaptToWindow(WindowDescriptor wd)
 		D3D11_BIND_DEPTH_STENCIL
 		);
 
-	ComPtr<ID3D11Texture2D> depthStencil;
+	//ID3D11Texture2D* depthStencil;
 	CHECK_HRESULT(
 		device->CreateTexture2D(
 		&depthStencilDesc,
@@ -258,7 +291,7 @@ void DeviceResources::AdaptToWindow(WindowDescriptor wd)
 	CD3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc(D3D11_DSV_DIMENSION_TEXTURE2D);
 	CHECK_HRESULT(
 		device->CreateDepthStencilView(
-		depthStencil.Get(),
+		depthStencil,
 		&depthStencilViewDesc,
 		&depthStencilView),
 		"error creating depth stencil view"
@@ -284,7 +317,7 @@ void DeviceResources::AdaptToWindow(WindowDescriptor wd)
 		12.0f / 72.0f*96.0f
 		);
 
-	ComPtr<IDXGISurface2> dxgiBackBuffer;
+	//IDXGISurface2* dxgiBackBuffer;
 	CHECK_HRESULT(
 		swapChain->GetBuffer(0, IID_PPV_ARGS(&dxgiBackBuffer)),
 		"error getting buffer from swap chain"
@@ -292,13 +325,13 @@ void DeviceResources::AdaptToWindow(WindowDescriptor wd)
 
 	CHECK_HRESULT(
 		d2dDevcon->CreateBitmapFromDxgiSurface(
-		dxgiBackBuffer.Get(),
+		dxgiBackBuffer,
 		&bitmapProperties,
 		&d2dTargetBitmap),
 		"error creaing bitmap from dxgi surface"
 		);
 
-	d2dDevcon->SetTarget(d2dTargetBitmap.Get());
+	d2dDevcon->SetTarget(d2dTargetBitmap);
 
 	// Сглаживание текста в оттенках серого рекомендуется для всех приложений для Магазина Windows.
 	d2dDevcon->SetTextAntialiasMode(D2D1_TEXT_ANTIALIAS_MODE_GRAYSCALE);
@@ -308,4 +341,11 @@ void DeviceResources::Present()
 {
 	CHECK_HRESULT(swapChain->Present(1, 0),
 		"Error swapChain->Present()");
+}
+
+void DeviceResources::ClearView()
+{
+	float clearColor[4] = { 0.30f, 0.30f, 0.30f, 1.0f };
+	devcon->ClearRenderTargetView(renderTargetView, clearColor);
+	devcon->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0, 0);
 }

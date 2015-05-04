@@ -1,7 +1,7 @@
 #include "DXResources.h"
 
 
-DXResources::DXResources(WindowDescriptor& wd) //: adapded(false)
+DXResources::DXResources(WindowDescriptor& wd) : winDesc(wd) //: adapded(false)
 {
 	ZeroMemory(&swapChainDescriptor, sizeof(swapChainDescriptor));
 	swapChainDescriptor.BufferCount = 1;
@@ -17,7 +17,7 @@ DXResources::DXResources(WindowDescriptor& wd) //: adapded(false)
 	swapChainDescriptor.Windowed = TRUE;
 
 	driverType = D3D_DRIVER_TYPE_HARDWARE;
-	UINT flags = NULL;
+	UINT flags = D3D10_CREATE_DEVICE_BGRA_SUPPORT;
 	D3D_FEATURE_LEVEL fl;
 
 	D3D_FEATURE_LEVEL featureLevels[] =
@@ -94,10 +94,10 @@ DXResources::DXResources(WindowDescriptor& wd) //: adapded(false)
 	descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	descDSV.Texture2D.MipSlice = 0;
 
-	CHECK_HRESULT(device->CreateDepthStencilView(depthTexture.Get, &descDSV, &depthStencilView),
+	CHECK_HRESULT(device->CreateDepthStencilView(depthTexture, &descDSV, &depthStencilView),
 		"Error creating depth stencil view");
 
-	deviceContext->OMSetRenderTargets(1, &renderTargetView, depthStencilView.Get);
+	deviceContext->OMSetRenderTargets(1, &renderTargetView, depthStencilView);
 
 	D3D11_VIEWPORT vp;
 	vp.Height = (float)wd.size.width;
@@ -107,11 +107,22 @@ DXResources::DXResources(WindowDescriptor& wd) //: adapded(false)
 	vp.TopLeftX = 0;
 	vp.TopLeftY = 0;
 	deviceContext->RSSetViewports(1, &vp);
+	
+	swapChain->GetBuffer(0, __uuidof(IDXGISurface2), (void**)&dxgiBackBuffer);
+
+	Init2d();
 }
 
 
 DXResources::~DXResources()
 {
+	if (depthStencilView) depthStencilView->Release();
+	if (depthTexture) depthTexture->Release();
+	if (renderTargetView) renderTargetView->Release();
+	if (swapChain) swapChain->Release();
+	if (deviceContext) deviceContext->Release();
+	if (device) device->Release();
+
 }
 
 /*void DXResources::AdaptToWindow(WindowDescriptor& wd)
@@ -119,12 +130,48 @@ DXResources::~DXResources()
 
 void DXResources::Present()
 {
+	d2dRT->BeginDraw();
+	d2dRT->FillEllipse(ellipse, pBrush);
+	d2dRT->EndDraw();
+
 	CHECK_HRESULT(swapChain->Present(1, 0), "Present() error");
 }
 
 void DXResources::ClearView()
 {
 	float clearColor[4] = { 0.30f, 0.30f, 0.30f, 1.0f };
-	deviceContext->ClearRenderTargetView(renderTargetView.Get(), clearColor);
-	deviceContext->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0, 0);
+	deviceContext->ClearRenderTargetView(renderTargetView, clearColor);
+	deviceContext->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0, 0);
+
+	//swapChain->GetBuffer(0, __uuidof(IDXGISurface2), (void**)&dxgiBackBuffer);
+}
+
+void DXResources::Init2d()
+{
+	
+	CHECK_HRESULT(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &d2dFactory), "");
+	
+	FLOAT dpiX;
+	FLOAT dpiY;
+	d2dFactory->GetDesktopDpi(&dpiX, &dpiY);
+
+	D2D1_RENDER_TARGET_PROPERTIES props =
+		D2D1::RenderTargetProperties(
+		D2D1_RENDER_TARGET_TYPE_DEFAULT,
+		D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED),
+		dpiX,
+		dpiY
+		);
+
+	if (!d2dFactory) MESSAGE("2d factory is null");
+
+	d2dFactory->CreateDxgiSurfaceRenderTarget(
+		dxgiBackBuffer,
+		&props,
+		&d2dRT
+		);
+	
+	const D2D1_COLOR_F color = D2D1::ColorF(1.0f, 1.0f, 0);
+	 d2dRT->CreateSolidColorBrush(color, &pBrush);
+	 ellipse = D2D1::Ellipse(D2D1::Point2F(800.0f, 250.0f), 20, 20);
 }

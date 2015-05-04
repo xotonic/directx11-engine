@@ -1,6 +1,6 @@
-//#ifndef COMMON_H_
+
 #include "common.h"
-//#endif
+#include "DXResources.h"
 #include "Renderer.h"
 #include "Renderer2D.h"
 #include "Input.h"
@@ -10,7 +10,8 @@ public:
 	Kernel(HINSTANCE hInst, int nCmdShow, int w = 640, int h = 480);
 	//LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	Renderer *renderer;
-	Renderer2D *renderer2D;
+	DXResources* dx;
+	//Renderer2D *renderer2D;
 	void Run();
 	~Kernel();
 	HWND hWnd;

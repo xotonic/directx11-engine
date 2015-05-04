@@ -1,19 +1,19 @@
 #include "Renderer.h"
 
-Renderer::Renderer(WindowDescriptor wd) : angle(0)
+Renderer::Renderer(DXResources* dx) : angle(0)
 {
-	createDevice(wd);
+	//createDevice(wd);
 
 	world = XMMatrixIdentity();
 	view = XMMatrixLookAtLH(
 		XMVectorSet(0.0f, 1.0f, -5.0f, 0.0f),
 		XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f),
 		XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
-	projection = XMMatrixPerspectiveFovLH(XM_PIDIV2, wd.size.width / wd.size.height, 0.01f, 1000.0f);
+	projection = XMMatrixPerspectiveFovLH(XM_PIDIV2, dx->winDesc.size.width / dx->winDesc.size.height, 0.01f, 1000.0f);
 
-	resMgr = new ResourceManager(device);
+	resMgr = new ResourceManager(dx->getDevice());
 
-	terrain = new Terrain(device, "out.terrain");
+	terrain = new Terrain(dx->getDevice(), "out.terrain");
 
 	resMgr->loadShader("simple", "shader.vsh", "shader.psh");
 	resMgr->loadMesh("cube", "mon.mesh");
@@ -25,8 +25,8 @@ Renderer::Renderer(WindowDescriptor wd) : angle(0)
 
 	camera.Translate(0.0f, 1.0, -5.0);
 
-	matrices = new ConstantBuffer < MatrixBuffer >(device);
-	light = new ConstantBuffer<DirLightBuffer>(device);
+	matrices = new ConstantBuffer < MatrixBuffer >(dx->getDevice());
+	light = new ConstantBuffer<DirLightBuffer>(dx->getDevice());
 
 	light->data.color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	light->data.dir = XMFLOAT4(-0.577f, 0.0f, -0.5f, 1.0f);
@@ -80,16 +80,16 @@ Renderer::~Renderer()
 	delete resMgr;
 	//delete ibuf;
 
-	if (deviceContext)    deviceContext->ClearState();
+	/*if (deviceContext)    deviceContext->ClearState();
 	if (depthTexture)     depthTexture->Release();
 	if (depthStencilView) depthStencilView->Release();
 	if (renderTargetView) renderTargetView->Release();
 	if (swapChain)        swapChain->Release();
 	if (deviceContext)    deviceContext->Release();
-	if (device)           device->Release();
+	if (device)           device->Release();*/
 }
 
-void Renderer::createDevice(WindowDescriptor wd)
+/*void Renderer::createDevice(WindowDescriptor wd)
 {
 	ZeroMemory(&swapChainDescriptor, sizeof(swapChainDescriptor));
 	swapChainDescriptor.BufferCount = 1;
@@ -202,14 +202,14 @@ void Renderer::createDevice(WindowDescriptor wd)
 	vp.TopLeftY = 0;
 	deviceContext->RSSetViewports(1, &vp);
 }
-
+*/
 void Renderer::Render()
 {
-	float clearColor[4] = { 0.30f, 0.30f, 0.30f, 1.0f };
+	/*float clearColor[4] = { 0.30f, 0.30f, 0.30f, 1.0f };
 
 	deviceContext->ClearRenderTargetView(renderTargetView, clearColor);
 	deviceContext->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0, 0);
-
+	*/
 	static float t = 0.0f;
 	t += 0.0005;
 
@@ -256,5 +256,5 @@ void Renderer::Render()
 	terrain->draw();
 //	deviceContext->Draw(resMgr->mesh("cube")->getCount(), 0);
 
-	swapChain->Present(0, 0);
+	//swapChain->Present(0, 0);
 }
