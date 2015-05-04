@@ -77,6 +77,9 @@
     <ClCompile Include="DeviceResources.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
+    <ClCompile Include="DXResources.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="debug.h">
@@ -131,6 +134,9 @@
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="DeviceResources.h">
+      <Filter>h</Filter>
+    </ClInclude>
+    <ClInclude Include="DXResources.h">
       <Filter>h</Filter>
     </ClInclude>
   </ItemGroup>
