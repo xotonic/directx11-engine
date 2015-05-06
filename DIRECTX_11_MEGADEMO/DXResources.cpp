@@ -116,6 +116,7 @@ DXResources::DXResources(WindowDescriptor& wd) : winDesc(wd) //: adapded(false)
 
 DXResources::~DXResources()
 {
+	if (dwFactory) dwFactory->Release();
 	if (depthStencilView) depthStencilView->Release();
 	if (depthTexture) depthTexture->Release();
 	if (renderTargetView) renderTargetView->Release();
@@ -125,15 +126,8 @@ DXResources::~DXResources()
 
 }
 
-/*void DXResources::AdaptToWindow(WindowDescriptor& wd)
-{}*/
-
 void DXResources::Present()
 {
-	d2dRT->BeginDraw();
-	d2dRT->FillEllipse(ellipse, pBrush);
-	d2dRT->EndDraw();
-
 	CHECK_HRESULT(swapChain->Present(1, 0), "Present() error");
 }
 
@@ -142,8 +136,6 @@ void DXResources::ClearView()
 	float clearColor[4] = { 0.30f, 0.30f, 0.30f, 1.0f };
 	deviceContext->ClearRenderTargetView(renderTargetView, clearColor);
 	deviceContext->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0, 0);
-
-	//swapChain->GetBuffer(0, __uuidof(IDXGISurface2), (void**)&dxgiBackBuffer);
 }
 
 void DXResources::Init2d()
@@ -163,15 +155,17 @@ void DXResources::Init2d()
 		dpiY
 		);
 
-	if (!d2dFactory) MESSAGE("2d factory is null");
-
 	d2dFactory->CreateDxgiSurfaceRenderTarget(
 		dxgiBackBuffer,
 		&props,
 		&d2dRT
 		);
-	
-	const D2D1_COLOR_F color = D2D1::ColorF(1.0f, 1.0f, 0);
-	 d2dRT->CreateSolidColorBrush(color, &pBrush);
-	 ellipse = D2D1::Ellipse(D2D1::Point2F(800.0f, 250.0f), 20, 20);
+
+	CHECK_HRESULT(
+		DWriteCreateFactory(
+		DWRITE_FACTORY_TYPE_SHARED,
+		__uuidof(dwFactory),
+		reinterpret_cast<IUnknown **>(&dwFactory)),
+		"error creating DirectWrite Factory"
+		);
 }

@@ -1,14 +1,14 @@
 #pragma once
 #include "common.h"
 #include "debug.h"
-//using namespace Microsoft::WRL;
 
 class DXResources
 {
 public:
 	DXResources(WindowDescriptor& wd);
 	~DXResources();
-
+	
+	//Основные обьекты и обьекты для Direct3D
 	ID3D11Device          *        device           ;
 	ID3D11DeviceContext   *        deviceContext    ;
 	IDXGISwapChain        *        swapChain        ;
@@ -18,22 +18,19 @@ public:
 
 	WindowDescriptor winDesc;
 
-	//void AdaptToWindow(WindowDescriptor& wd);
+	ID3D11Device* getDevice() { return device; }
 	void Present();
 	void ClearView();
-	ID3D11Device* getDevice() { return device; }
 
-	/////////////////
+	// Обьекты для Direct2D
 	ID2D1Factory         * d2dFactory;
 	IDXGISurface      *   dxgiBackBuffer;
 	ID2D1RenderTarget* d2dRT;
 
-	ID2D1SolidColorBrush    *pBrush;
-	D2D1_ELLIPSE            ellipse;
-
-	void Init2d();
+	// Обьекты для DirectWrite
+	IDWriteFactory* dwFactory;
 private:
-	//bool adapded;
+	void Init2d();
 	DXGI_SWAP_CHAIN_DESC swapChainDescriptor;
 	D3D_DRIVER_TYPE driverType;
 };

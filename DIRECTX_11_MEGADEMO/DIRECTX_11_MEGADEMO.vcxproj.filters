@@ -47,9 +47,6 @@
     <ClCompile Include="VertexBuffer.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
-    <ClCompile Include="IndexBuffer.cpp">
-      <Filter>cpp</Filter>
-    </ClCompile>
     <ClCompile Include="DDSTextureLoader\DDSTextureLoader.cpp">
       <Filter>DDS</Filter>
     </ClCompile>
@@ -74,10 +71,10 @@
     <ClCompile Include="Renderer2D.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
-    <ClCompile Include="DeviceResources.cpp">
+    <ClCompile Include="DXResources.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
-    <ClCompile Include="DXResources.cpp">
+    <ClCompile Include="Console.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
   </ItemGroup>
@@ -101,9 +98,6 @@
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="VertexBuffer.h">
-      <Filter>h</Filter>
-    </ClInclude>
-    <ClInclude Include="IndexBuffer.h">
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="DDSTextureLoader\DDSTextureLoader.h">
@@ -133,10 +127,10 @@
     <ClInclude Include="Renderer2D.h">
       <Filter>h</Filter>
     </ClInclude>
-    <ClInclude Include="DeviceResources.h">
+    <ClInclude Include="DXResources.h">
       <Filter>h</Filter>
     </ClInclude>
-    <ClInclude Include="DXResources.h">
+    <ClInclude Include="Console.h">
       <Filter>h</Filter>
     </ClInclude>
   </ItemGroup>

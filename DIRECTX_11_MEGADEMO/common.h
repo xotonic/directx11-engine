@@ -71,20 +71,9 @@ struct DirLightBuffer
 	XMFLOAT4 dir;
 	XMFLOAT4 color;
 };
-/*LPCWSTR stringToLPCWSTR(std::string str)
-{
-std::wstring temp = std::wstring(str.begin(), str.end());
-return temp.c_str();
-}*/
-/*struct perFrameCBuffer
-{
-XMMATRIX view;
-XMMATRIX projection;
-};
 
-struct perObjectCBuffer
+static std::wstring stringToWstring(std::string str)
 {
-XMMATRIX world = XMMatrixIdentity();
-};*/
-
-//#endif
+	std::wstring temp = std::wstring(str.begin(), str.end());
+	return temp;
+}

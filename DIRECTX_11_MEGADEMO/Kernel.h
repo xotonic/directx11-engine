@@ -11,7 +11,7 @@ public:
 	//LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	Renderer *renderer;
 	DXResources* dx;
-	//Renderer2D *renderer2D;
+	Renderer2D *renderer2D;
 	void Run();
 	~Kernel();
 	HWND hWnd;

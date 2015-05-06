@@ -39,25 +39,6 @@ public:
 	ConstantBuffer<DirLightBuffer>* light;
 private:
 
-	//D3D_DRIVER_TYPE driverType;
-
-	//ID3D11Device*        device;
-	//ID3D11DeviceContext* deviceContext;
-	//IDXGISwapChain*      swapChain;
-
-	//ID3D11RenderTargetView* renderTargetView = nullptr;
-	//ID3D11Texture2D*        depthTexture = nullptr;         // Текстура буфера глубин
-	//ID3D11DepthStencilView* depthStencilView = nullptr;     // Объект вида, буфер глубин
-
-	////ID3D11ShaderResourceView *textureRV = nullptr;
-	////ID3D11SamplerState *sampler = nullptr;
-
-	//DXGI_SWAP_CHAIN_DESC swapChainDescriptor;
-
-	//ID3D11RasterizerState* noCullingState;
-	//void createDevice(WindowDescriptor wd);
-
-	//Shader         *shader;
 	VertexBuffer   *buf;
 	Texture        *tex, *normal;
 	//IndexBuffer  *ibuf;

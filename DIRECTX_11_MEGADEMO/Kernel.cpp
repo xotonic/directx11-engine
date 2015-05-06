@@ -15,8 +15,8 @@ void Kernel::Run()
 			input->Update();
 			dx->ClearView();
 			renderer->Render();
+			renderer2D->Render();
 			dx->Present();
-			//renderer2D->Render();
 		}
 	}
 }
@@ -74,19 +74,21 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h) //: input(w,h)
 
 	dx = new DXResources(wd);
 	renderer = new Renderer(dx);
-	//renderer2D = new Renderer2D(hWnd);
+	renderer2D = new Renderer2D(dx);
 
 	Renderer* r = renderer;
+	Renderer2D* r2d = renderer2D;
 
 	input->AddKeyboardHandler(KEY_D, pressed, [r]() -> void { r->camera.Translate(0.5f, 0.f, 0.f); });
 	input->AddKeyboardHandler(KEY_W, pressed, [r]() -> void { r->camera.Translate(0.0f, 0.f, 0.5f); });
 	input->AddKeyboardHandler(KEY_A, pressed, [r]() -> void { r->camera.Translate(-0.5f, 0.f, 0.f); });
 	input->AddKeyboardHandler(KEY_S, pressed, [r]() -> void { r->camera.Translate(0.f, 0.f, -0.5f); });
 	
-	input->AddKeyboardHandler(KEY_1, pressed, [r]() -> void { 
+	input->AddKeyboardHandler(KEY_1, pressed, [r, r2d]() -> void { 
 		XMVECTOR v = XMLoadFloat4(&r->light->data.dir);
 		v = XMVector3Rotate(v, XMVectorSet( 0.01f, 0.0f, 0.0f, 1.0f ));
 		XMStoreFloat4(&r->light->data.dir, v);
+		r2d->console->SetMessage(L"Клавиша 1 нажата");
 	});
 
 	input->AddKeyboardHandler(KEY_2, pressed, [r]() -> void {
@@ -110,10 +112,10 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h) //: input(w,h)
 
 Kernel::~Kernel()
 {
+	delete renderer2D;
 	delete renderer;
 	delete input;
 	delete dx;
-	//delete renderer2D;
 }
 
 long int _stdcall Kernel::WinMessage(HWND _window, unsigned int _message, WPARAM _wParam, LPARAM _lParam)
