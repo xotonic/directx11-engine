@@ -2,9 +2,8 @@
 
 Renderer2D::Renderer2D(DXResources* _dx): dx(_dx)
 {
-	console = new Console(dx);
+	console = std::make_shared<Console>(dx);
 
-	console->SetParam("param1", L"new param");
 }
 
 void Renderer2D::Render()

@@ -26,6 +26,30 @@ void Console::SetParam(string name, wstring value)
 	else params[name] = value;
 }
 
+void Console::SetParam(string name, wstring caption, int value)
+{
+	wostringstream os;
+	os << caption << value << endl;
+	SetParam(name, os.str());
+}
+
+void Console::SetParam(string name, wstring caption, float value)
+{
+	wostringstream os;
+	os << caption << value << endl;
+	SetParam(name, os.str());
+}
+
+void Console::SetParam(string name, wstring caption, XMFLOAT3 xyz)
+{
+	wostringstream os;
+	os << caption << endl <<
+		"x: " << xyz.x << endl <<
+		"y: " << xyz.y << endl <<
+		"z: " << xyz.z << endl;
+	SetParam(name, os.str());
+}
+
 void Console::SetMessage(wstring value)
 {
 	messages.push_back(value);

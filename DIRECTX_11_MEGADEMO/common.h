@@ -13,6 +13,7 @@
 
 #include <Windows.h>
 #include <string>
+#include <memory>
 #include "debug.h"
 
 using namespace DirectX;

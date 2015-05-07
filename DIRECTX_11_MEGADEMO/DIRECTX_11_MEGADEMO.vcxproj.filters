@@ -77,6 +77,9 @@
     <ClCompile Include="Console.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="debug.h">
@@ -131,6 +134,9 @@
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="Console.h">
+      <Filter>h</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
       <Filter>h</Filter>
     </ClInclude>
   </ItemGroup>

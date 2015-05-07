@@ -16,9 +16,14 @@ public:
 	Console(DXResources* _dx);
 	
 	void SetParam(string name, wstring value);
-	void SetMessage(wstring value);
+	void SetParam(string name, wstring caption, int value);
+	void SetParam(string name, wstring caption, float value);
+	void SetParam(string name, wstring caption, XMFLOAT3 xyz);
 
+	void SetMessage(wstring value);
+	
 	void Update();
+	
 private:
 	// параметры, которые будут выводиться всегда
 	DXResources* dx;
@@ -32,6 +37,5 @@ private:
 	UINT t;
 	IDWriteTextFormat* textFormat;
 	ID2D1SolidColorBrush* brush;
-
 };
 

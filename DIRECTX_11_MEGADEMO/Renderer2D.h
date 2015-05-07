@@ -8,10 +8,10 @@ class Renderer2D
 {
 public:
 	Renderer2D(DXResources* _dx);
-	~Renderer2D() { delete console; }
+	//~Renderer2D() { delete console; }
 
 	void Render();
-	Console* console;
+	std::shared_ptr<Console> console;
 private:
 	DXResources* dx;
 };

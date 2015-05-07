@@ -12,11 +12,18 @@ void Kernel::Run()
 		}
 		else
 		{
+			timer.reset();
+			timer.doBefore();
+
+			//renderer2D->console->SetParam("cam", L"camera", renderer->camera.getPos());
 			input->Update();
 			dx->ClearView();
 			renderer->Render();
 			renderer2D->Render();
 			dx->Present();
+
+			timer.doAfter();
+
 		}
 	}
 }
@@ -67,17 +74,18 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h) //: input(w,h)
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
 	
-	input = new Input(hInstance, hWnd, w, h);
 
 
 	WindowDescriptor wd = { hWnd, w, h };
 
-	dx = new DXResources(wd);
-	renderer = new Renderer(dx);
-	renderer2D = new Renderer2D(dx);
+	input = std::make_shared<Input>(hInstance, hWnd, w, h);
+	dx = std::make_shared<DXResources>(wd);
+	renderer = std::make_shared<Renderer>(dx.get());
+	renderer2D = std::make_shared<Renderer2D>(dx.get());
 
-	Renderer* r = renderer;
-	Renderer2D* r2d = renderer2D;
+	Renderer* r = renderer.get();
+	Renderer2D* r2d = renderer2D.get();
+	Timer* t = &timer;
 
 	input->AddKeyboardHandler(KEY_D, pressed, [r]() -> void { r->camera.Translate(0.5f, 0.f, 0.f); });
 	input->AddKeyboardHandler(KEY_W, pressed, [r]() -> void { r->camera.Translate(0.0f, 0.f, 0.5f); });
@@ -88,7 +96,10 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h) //: input(w,h)
 		XMVECTOR v = XMLoadFloat4(&r->light->data.dir);
 		v = XMVector3Rotate(v, XMVectorSet( 0.01f, 0.0f, 0.0f, 1.0f ));
 		XMStoreFloat4(&r->light->data.dir, v);
-		r2d->console->SetMessage(L"Клавиша 1 нажата");
+
+		wostringstream os ;
+
+		//r2d->console->SetParam(L"");
 	});
 
 	input->AddKeyboardHandler(KEY_2, pressed, [r]() -> void {
@@ -108,14 +119,12 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h) //: input(w,h)
 	//input.AddMouseHandler(MOUSE_LEFT, released, [r](const unsigned int x, const unsigned int y) -> void{ r->camera.RotateX(0.5f); });
 	input->AddMouseMoveHandler([r](const int dx, const int dy) -> void{ r->camera.RotateX(-dy*0.001); r->camera.RotateY(-dx*0.001); });
 
-}
-
-Kernel::~Kernel()
-{
-	delete renderer2D;
-	delete renderer;
-	delete input;
-	delete dx;
+	timer.addAfterHandler("fps", [t, r2d, r]() -> void 
+	{ 
+		r2d->console->SetParam("fps", L"FPS: ", 1000/(!t->getDeltaTime() ? 1 : t->getDeltaTime()));
+		r2d->console->SetParam("cam", L"camera", r->camera.getPos());
+		
+	});
 }
 
 long int _stdcall Kernel::WinMessage(HWND _window, unsigned int _message, WPARAM _wParam, LPARAM _lParam)
