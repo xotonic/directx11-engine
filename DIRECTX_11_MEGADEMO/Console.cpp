@@ -50,6 +50,18 @@ void Console::SetParam(string name, wstring caption, XMFLOAT3 xyz)
 	SetParam(name, os.str());
 }
 
+void Console::SetParam(string name, wstring caption, XMMATRIX& mat)
+{
+	wostringstream os;
+	os << caption << endl << std::fixed //<< std::setrecision(2) 
+		<< mat._11 << ' ' << mat._12 << ' ' << mat._13 << ' ' << mat._14 << endl
+		<< mat._21 << ' ' << mat._22 << ' ' << mat._23 << ' ' << mat._24 << endl
+		<< mat._31 << ' ' << mat._32 << ' ' << mat._33 << ' ' << mat._34 << endl
+		<< mat._41 << ' ' << mat._42 << ' ' << mat._43 << ' ' << mat._44 << endl;
+
+		SetParam(name, os.str());
+}
+
 void Console::SetMessage(wstring value)
 {
 	messages.push_back(value);
@@ -80,7 +92,7 @@ void Console::Update()
 	//dx->d2dRT->Clear(D2D1::ColorF(D2D1::ColorF::White));
 
 		dx->d2dRT->DrawText(os.str().c_str(), os.str().size(), textFormat,
-		D2D1::RectF(10, 10, 200.0f, 100.0f), brush);
+			D2D1::RectF(10, 10, float(dx->winDesc.size.width / 2), float(dx->winDesc.size.height / 2)), brush);
 
 }
 

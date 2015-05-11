@@ -205,13 +205,13 @@ public:
 	Input(HINSTANCE, HWND, int w, int h);
 	~Input();
 	using func_void = std::function < void() > ;
-	using func_coords = std::function < void(const unsigned int x, const unsigned int y) > ;
-	using func_delta_coords = std::function < void(const int dx, const int dy) >;
+	using func_coords = std::function < void(const int x, const int y) > ;
+	using func_move = std::function < void(const int dx, const int dy, const int x, const int y) >;
 
 
 	using func_vector = std::vector < func_void >;
 	using func_vector_coords = std::vector < func_coords > ;
-	using func_vector_delta_coords = std::vector < func_delta_coords > ;
+	using func_vector_delta_coords = std::vector < func_move > ;
 
 
 	/* keyboard */
@@ -227,7 +227,7 @@ public:
 	func_vector_delta_coords move_funcs;
 
 	void AddMouseHandler(MouseKeyCode code, KeyState state, func_coords func);
-	void AddMouseMoveHandler(func_coords func);
+	void AddMouseMoveHandler(func_move func);
 
 	//void RunMouse(WPARAM wParam, LPARAM lParam, MouseKeyCode, KeyState = released);
 
@@ -249,4 +249,6 @@ private:
 	int width, height;
 	int x, y;
 	int dx, dy;
+
+	HWND hwnd;
 };

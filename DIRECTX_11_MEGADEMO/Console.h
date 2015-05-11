@@ -19,7 +19,7 @@ public:
 	void SetParam(string name, wstring caption, int value);
 	void SetParam(string name, wstring caption, float value);
 	void SetParam(string name, wstring caption, XMFLOAT3 xyz);
-
+	void SetParam(string name, wstring caption, XMMATRIX& mat);
 	void SetMessage(wstring value);
 	
 	void Update();

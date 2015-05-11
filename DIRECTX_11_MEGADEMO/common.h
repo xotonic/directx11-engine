@@ -73,8 +73,37 @@ struct DirLightBuffer
 	XMFLOAT4 color;
 };
 
-static std::wstring stringToWstring(std::string str)
+static std::wstring stringToWstring(const std::string str)
 {
 	std::wstring temp = std::wstring(str.begin(), str.end());
 	return temp;
+}
+
+inline XMVECTOR to(const XMFLOAT3& x)
+{
+	return XMLoadFloat3(&x);
+}
+
+inline XMFLOAT3 to(const XMVECTOR& x)
+{
+	XMFLOAT3 val;
+	XMStoreFloat3(&val, x);
+	return val;
+}
+
+inline XMFLOAT4X4 to(const XMMATRIX& x)
+{
+	XMFLOAT4X4 val;
+	XMStoreFloat4x4(&val, x);
+	return val;
+}
+
+inline XMMATRIX to(const XMFLOAT4X4& x)
+{
+	return XMLoadFloat4x4(&x);	
+}
+
+inline XMFLOAT3 to(const XMFLOAT4& x)
+{
+	return XMFLOAT3(x.x,x.y, x.z);
 }

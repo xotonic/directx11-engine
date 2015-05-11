@@ -139,6 +139,9 @@
     <ClInclude Include="Timer.h">
       <Filter>h</Filter>
     </ClInclude>
+    <ClInclude Include="Transformable.h">
+      <Filter>h</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="monkey.mesh">
@@ -153,6 +156,7 @@
     <None Include="out.terrain">
       <Filter>resources\terrains</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="grass.dds">

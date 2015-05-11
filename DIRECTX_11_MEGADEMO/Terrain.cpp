@@ -105,13 +105,13 @@ bool Terrain::ReadFromFile(std::string filename)
 			XMVECTOR edge3 = XMLoadFloat3(&(unique_vertices[index_1].pos - unique_vertices[index_4].pos)); 
 
 			XMVECTOR normal = XMVector3Cross(edge1, edge2);
-			normal = XMVector3Normalize(normal);
+			normal = XMVector3Normalize(-normal);
 			normals[index_1] += normal;
 			normals[index_2] += normal;
 			normals[index_3] += normal;
 
 			normal = XMVector3Cross(edge3, edge1);
-			normal = XMVector3Normalize(normal);
+			normal = XMVector3Normalize(-normal);
 			normals[index_1] += normal;
 			normals[index_3] += normal;
 			normals[index_4] += normal;
@@ -140,13 +140,41 @@ bool Terrain::ReadFromFile(std::string filename)
 			int index_3 = (i + 1)*vy + j + 1;
 			int index_4 = (i + 1)*vy + j;
 
-			v_buf.push_back({ { unique_vertices[index_1].pos }, { unique_vertices[index_1].normal }, { 0.0f, 0.0f } });
-			v_buf.push_back({ { unique_vertices[index_2].pos }, { unique_vertices[index_2].normal }, { 1.0f, 0.0f } });
-			v_buf.push_back({ { unique_vertices[index_3].pos }, { unique_vertices[index_3].normal }, { 1.0f, 1.0f } });
+			//XMVECTOR edge1 = XMLoadFloat3(&(unique_vertices[index_1].pos - unique_vertices[index_3].pos)); // диагональ
+			//XMVECTOR edge2 = XMLoadFloat3(&(unique_vertices[index_1].pos - unique_vertices[index_2].pos));
+			//XMVECTOR normal = XMVector3Cross(edge1, edge2);
+			//normal = XMVector3Normalize(-normal);
+			XMVECTOR n1 = to(unique_vertices[index_1].normal);
+			XMVECTOR n2 = to(unique_vertices[index_2].normal);
+			XMVECTOR n4 = to(unique_vertices[index_4].normal);
+			XMVECTOR n3 = to(unique_vertices[index_3].normal);
+/*
+			float a12 = XMVector3AngleBetweenVectors(n1, n2).vector4_f32[0];
+			float a13 = XMVector3AngleBetweenVectors(n1, n3).vector4_f32[0];
+			float a23 = XMVector3AngleBetweenVectors(n2, n3).vector4_f32[0];
 
-			v_buf.push_back({ { unique_vertices[index_1].pos }, { unique_vertices[index_1].normal }, { 0.0f, 0.0f } });
-			v_buf.push_back({ { unique_vertices[index_3].pos }, { unique_vertices[index_3].normal }, { 1.0f, 1.0f } });
-			v_buf.push_back({ { unique_vertices[index_4].pos }, { unique_vertices[index_4].normal }, { 0.0f, 1.0f } });
+			if (a12 > 0.7) if (a12 > a23) n1 = n2; else n2 = n1;
+			if (a13 > 0.7) if (a13 > a23) n1 = n3; else n3 = n1;
+			if (a23 > 0.7) if (a23 > a13) n2 = n3; else n3 = n2;
+*/
+
+			v_buf.push_back({ { unique_vertices[index_1].pos }, { to(n1) }, { 0.0f, 0.0f } });
+			v_buf.push_back({ { unique_vertices[index_2].pos }, { to(n2) }, { 1.0f, 0.0f } });
+			v_buf.push_back({ { unique_vertices[index_3].pos }, { to(n3) }, { 1.0f, 1.0f } });
+
+		/*	XMVECTOR edge3 = XMLoadFloat3(&(unique_vertices[index_1].pos - unique_vertices[index_4].pos));
+			normal = XMVector3Cross(edge3, edge1);
+			normal = XMVector3Normalize(-normal);*/
+			/*float a41 = XMVector3AngleBetweenVectors(n1, n1).vector4_f32[0];
+			float a43 = XMVector3AngleBetweenVectors(n4, n3).vector4_f32[0];
+
+			if (a41 > 0.7) if (a41 > a43) n1 = n4; else n4 = n1;
+			if (a13 > 0.7) if (a13 > a43) n1 = n3; else n3 = n1;
+			if (a43 > 0.7) if (a43 > a13) n4 = n3; else n3 = n4;
+*/
+			v_buf.push_back({ { unique_vertices[index_1].pos }, { to(n1) }, { 0.0f, 0.0f } });
+			v_buf.push_back({ { unique_vertices[index_3].pos }, { to(n3) }, { 1.0f, 1.0f } });
+			v_buf.push_back({ { unique_vertices[index_4].pos }, { to(n4) }, { 0.0f, 1.0f } });
 		}
 	}
 

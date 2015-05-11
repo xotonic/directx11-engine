@@ -1,7 +1,7 @@
 #include "Input.h"
 
 
-Input::Input(HINSTANCE hinst, HWND hwnd, int w, int h) : 
+Input::Input(HINSTANCE hinst, HWND _hwnd, int w, int h) : hwnd(_hwnd),
 width(w), height(h),
 x(0), y(0)
 {
@@ -108,7 +108,7 @@ void Input::AddMouseHandler(MouseKeyCode code, KeyState state, func_coords func)
 
 }
 
-void Input::AddMouseMoveHandler(func_coords func)
+void Input::AddMouseMoveHandler(func_move func)
 {
 	move_funcs.push_back(func);
 }
@@ -131,7 +131,15 @@ void Input::Update()
 	}
 
 	for (auto it : move_funcs)
-		it(dx, dy);
+		it(dx, dy,x,y);
+	if (mouseState.rgbButtons[0] & 0x80)
+	{
+		for (auto it : left_button_down_funcs)
+			it(x, y);
+		for (auto it : left_button_up_funcs)
+			it(x, y);
+	}
+
 }
 
 void Input::ReadKeyboard()
@@ -166,8 +174,12 @@ void Input::ReadMouse()
 
 void Input::ProcessInput()
 {
-	x += mouseState.lX;
-	y += mouseState.lY;
+	POINT point;
+	GetCursorPos(&point);
+	ScreenToClient(hwnd,&point);
+
+	x = point.x;
+	y = point.y;
 
 	dx = mouseState.lX;
 	dy = mouseState.lY;

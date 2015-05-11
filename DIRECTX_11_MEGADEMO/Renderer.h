@@ -37,6 +37,7 @@ public:
 	ResourceManager *resMgr;
 	Terrain* terrain;
 	ConstantBuffer<DirLightBuffer>* light;
+	XMMATRIX projection;
 private:
 
 	VertexBuffer   *buf;
@@ -45,7 +46,6 @@ private:
 
 	XMMATRIX world;
 	XMMATRIX view;
-	XMMATRIX projection;
 
 	float angle;
 

@@ -87,19 +87,22 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h) //: input(w,h)
 	Renderer2D* r2d = renderer2D.get();
 	Timer* t = &timer;
 
-	input->AddKeyboardHandler(KEY_D, pressed, [r]() -> void { r->camera.Translate(0.5f, 0.f, 0.f); });
-	input->AddKeyboardHandler(KEY_W, pressed, [r]() -> void { r->camera.Translate(0.0f, 0.f, 0.5f); });
-	input->AddKeyboardHandler(KEY_A, pressed, [r]() -> void { r->camera.Translate(-0.5f, 0.f, 0.f); });
-	input->AddKeyboardHandler(KEY_S, pressed, [r]() -> void { r->camera.Translate(0.f, 0.f, -0.5f); });
+	r->camera.Move({0,25,0});
+	r->camera.Rotate({ 1, 0, 0 }, 60);
+	
+	r->light->data.dir = {0.12f, 0.42f, -0.81f, 1.0f};
+
+	input->AddKeyboardHandler(KEY_D, pressed, [r]() -> void { r->camera.Move({0.5f, 0.f, 0.f });});
+	input->AddKeyboardHandler(KEY_W, pressed, [r]() -> void { r->camera.Move({0.0f, 0.f, 0.5f});});
+	input->AddKeyboardHandler(KEY_A, pressed, [r]() -> void { r->camera.Move({-0.5f, 0.f, 0.f});});
+	input->AddKeyboardHandler(KEY_S, pressed, [r]() -> void { r->camera.Move({0.f, 0.f, -0.5f});});
 	
 	input->AddKeyboardHandler(KEY_1, pressed, [r, r2d]() -> void { 
 		XMVECTOR v = XMLoadFloat4(&r->light->data.dir);
 		v = XMVector3Rotate(v, XMVectorSet( 0.01f, 0.0f, 0.0f, 1.0f ));
 		XMStoreFloat4(&r->light->data.dir, v);
 
-		wostringstream os ;
-
-		//r2d->console->SetParam(L"");
+		wostringstream os;
 	});
 
 	input->AddKeyboardHandler(KEY_2, pressed, [r]() -> void {
@@ -116,15 +119,42 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h) //: input(w,h)
 
 	input->AddKeyboardHandler(KEY_ESCAPE, released, []() -> void { PostQuitMessage(0); });
 
-	//input.AddMouseHandler(MOUSE_LEFT, released, [r](const unsigned int x, const unsigned int y) -> void{ r->camera.RotateX(0.5f); });
-	input->AddMouseMoveHandler([r](const int dx, const int dy) -> void{ r->camera.RotateX(-dy*0.001); r->camera.RotateY(-dx*0.001); });
+	input->AddMouseHandler(MOUSE_LEFT, released, [r, r2d](const  int x, const  int y) -> void
+	{  
+		XMVECTOR RayOrigin = to(r->camera.Position());
+		XMVECTOR CursorScreenSpace = XMVectorSet(x, y, 0.0f, 0.0f);
+		XMVECTOR CursorObjectSpace = XMVector3Unproject(CursorScreenSpace, 0, 0, 1600, 900, 0.0f, 1.0f,
+			to(r->camera.Proj()), to(r->camera.View()), XMMatrixIdentity());
+		XMVECTOR RayDir = CursorObjectSpace + RayOrigin;
+		//RayDir = XMVector3Normalize(RayDir);
+		
+		XMVECTOR plane = XMPlaneFromPoints(XMVectorSet(1, 0, 0, 0), XMVectorSet(0, 0, 1, 0), XMVectorSet(1, 0, 1, 0));
+		XMVECTOR pos =XMPlaneIntersectLine(plane, RayOrigin, RayDir);
+		r2d->console->SetParam("intersection", L"Точка", to(pos));
+		r->transform.Translate(r->transform.getPos() - to(pos));
+		// XMStoreFloat4(&r->light->data.dir,-RayDir);
+	});
+
+	input->AddMouseMoveHandler([r2d](const int dx, const int dy, const int x, const int y) -> void
+	{ 
+		//r->camera.Rotate({ 0, 1, 0 }, dx*0.1); r->camera.Rotate({ 1, 0, 0 }, dy*0.1); 
+		wostringstream os; os << L"dx : " << dx << L" dy : " << dy << endl
+			                  << L"x : " << x << L" y : " << y << endl;
+		r2d->console->SetParam("mouse", os.str());
+
+	}
+	);
 
 	timer.addAfterHandler("fps", [t, r2d, r]() -> void 
 	{ 
 		r2d->console->SetParam("fps", L"FPS: ", 1000/(!t->getDeltaTime() ? 1 : t->getDeltaTime()));
-		r2d->console->SetParam("cam", L"camera", r->camera.getPos());
-		
+		r2d->console->SetParam("cam", L"camera position", r->camera.Position());
+		r2d->console->SetParam("ldir", L"light dir", to(r->light->data.dir));
 	});
+
+	//r2d->console->SetParam("render proj",L"из renderer", r->projection);
+	//r2d->console->SetParam("cam proj", L"из camera", to(r->camera.Proj()));
+
 }
 
 long int _stdcall Kernel::WinMessage(HWND _window, unsigned int _message, WPARAM _wParam, LPARAM _lParam)

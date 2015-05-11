@@ -3,47 +3,52 @@
 Transformable::Transformable()
 {
 	world = XMMatrixIdentity();
-	//world *= XMMatrixTranslation(x, y, z);
+	pos = XMVectorSet(0, 0, 0, 1.0f);
+	dir = base_dir;
+	rot = XMVectorSet(0, 0, 0, 1);
+	scale = XMVectorSet(1, 1, 1, 1);
 }
 
-Transformable::Transformable(const float x /*= 0.0f*/, const float y /*= 0.0f*/, const float z /*= 0.0f*/)
-{
-	world = XMMatrixIdentity();
-	world *= XMMatrixTranslation(x, y, z);
-}
 
-void Transformable::Translate(const float x /*= 0.0f*/, const float y /*= 0.0f*/, const float z /*= 0.0f*/)
+void Transformable::Translate(XMFLOAT3 vec)
 {
 	
-	world *= XMMatrixTranslation(x, y, z);
+	world *= XMMatrixTranslationFromVector(to(vec));
+	pos += XMVector3Rotate(to(vec), dir2angles(dir));
 }
 
 
 void Transformable::RotateX(const float angle)
 {
 	world *= XMMatrixRotationX(angle);
+	//rot += XMVectorSet(angle, 0, 0, 1);
+	dir += XMVector3Rotate(dir, XMVectorSet(angle, 0, 0, 1));
 }
 
 void Transformable::RotateY(const float angle)
 {
 	world *= XMMatrixRotationY(angle);
+	//rot += XMVectorSet(0, angle, 0, 1);
+	dir += XMVector3Rotate(dir, XMVectorSet(0, angle, 0, 1));
 }
 
 void Transformable::RotateZ(const float angle)
 {
 	world *= XMMatrixRotationZ(angle);
+	//rot += XMVectorSet(0, 0, angle, 1);
+	dir += XMVector3Rotate(dir, XMVectorSet(0, 0, angle, 1));
 }
 
 void Transformable::LookAt(const XMFLOAT3 focus)
 {
-	float x = world.r[3].vector4_f32[0];
-	float y = world.r[3].vector4_f32[1];
-	float z = world.r[3].vector4_f32[2];
+	
+	XMVECTOR v = XMLoadFloat3(&focus);
+	dir = XMVector3Normalize(v);
+	
 	world *= XMMatrixLookAtLH(
-		XMVectorSet(x, y, z, 0.0f),
-		XMVectorSet(focus.x, focus.y, focus.z, 0.0f),
+		pos,
+		v,
 		XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
-
 }
 
 void Transformable::Scale(float value)
@@ -53,8 +58,23 @@ void Transformable::Scale(float value)
 
 XMFLOAT3 Transformable::getPos() 
 { 
-	float x = world.r[3].vector4_f32[0];
-	float y = world.r[3].vector4_f32[1];
-	float z = world.r[3].vector4_f32[2];
-	return XMFLOAT3(x, y, z);
+	float x = world.r[0].vector4_f32[3];
+	float y = world.r[1].vector4_f32[3];
+	float z = world.r[2].vector4_f32[3];
+	XMFLOAT3 p(x,y,z);
+	//XMStoreFloat3(&p, pos);
+	return p;
+}
+
+XMVECTOR& Transformable::dir2angles(XMVECTOR& dir)
+{
+	XMVECTOR q;
+	q = XMVector3Cross(base_dir, dir);
+
+	float a = XMVector3LengthSq(base_dir).vector4_f32[0];
+	float b = XMVector3LengthSq(dir).vector4_f32[0];
+	float dot = XMVector3Dot(base_dir, dir).vector4_f32[0];
+	q.vector4_f32[3] = sqrtf(a * b) + dot;
+
+	return XMQuaternionNormalize(q);
 }
