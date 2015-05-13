@@ -1,18 +1,20 @@
 #pragma once
 #include "common.h"
+#include "debug.h"
 #include "DeviceDependent.h"
+#include <vector>
 #include <d3dcompiler.h>
 class Shader : private DeviceDependent
 {
 public:
-	Shader(ID3D11Device* dev, std::string vs_name, std::string ps_name);
+	Shader(ID3D11Device* dev, std::string vs_name, std::string ps_name, bool, bool, bool);
 	~Shader();
 
 	void bind();
-	void setConstantBuffers(ID3D11Buffer** bufs);
 	ID3D11VertexShader* vertex() { return vertexShader; }
 	ID3D11PixelShader* pixel() { return pixelShader; }
-
+	ID3D11InputLayout* layout() { return inputLayout; }
+	
 private:
 
 	void compileFromFile(std::string fileName,
@@ -25,13 +27,7 @@ private:
 	const LPCSTR VS_model = "vs_4_0";
 	const LPCSTR PS_model = "ps_4_0";
 
-	//ID3D11Device *device;
-	//ID3D11DeviceContext *deviceContext;
-
 	ID3D11VertexShader* vertexShader = NULL;
 	ID3D11PixelShader* pixelShader = NULL;
 	ID3D11InputLayout* inputLayout = NULL;
-
-	//ID3D10Blob* vsBlob;
-	//ID3D10Blob* psBlob;
 };

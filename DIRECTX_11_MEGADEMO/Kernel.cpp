@@ -97,6 +97,12 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h) //: input(w,h)
 	input->AddKeyboardHandler(KEY_A, pressed, [r]() -> void { r->camera.Move({-0.5f, 0.f, 0.f});});
 	input->AddKeyboardHandler(KEY_S, pressed, [r]() -> void { r->camera.Move({0.f, 0.f, -0.5f});});
 	
+	input->AddKeyboardHandler(KEY_LEFT, pressed, [r]() -> void { r->transform.Move({ -0.5f, 0.f, 0.f }); });
+	input->AddKeyboardHandler(KEY_UP, pressed, [r]() -> void { r->transform.Move({ 0.f, 0.f, 0.5f }); });
+	input->AddKeyboardHandler(KEY_RIGHT, pressed, [r]() -> void { r->transform.Move({ 0.5f, 0.f, 0.f }); });
+	input->AddKeyboardHandler(KEY_DOWN, pressed, [r]() -> void { r->transform.Move({ 0.f, 0.f, -0.5f }); });
+
+
 	input->AddKeyboardHandler(KEY_1, pressed, [r, r2d]() -> void { 
 		XMVECTOR v = XMLoadFloat4(&r->light->data.dir);
 		v = XMVector3Rotate(v, XMVectorSet( 0.01f, 0.0f, 0.0f, 1.0f ));
@@ -122,16 +128,22 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h) //: input(w,h)
 	input->AddMouseHandler(MOUSE_LEFT, released, [r, r2d](const  int x, const  int y) -> void
 	{  
 		XMVECTOR RayOrigin = to(r->camera.Position());
-		XMVECTOR CursorScreenSpace = XMVectorSet(x, y, 0.0f, 0.0f);
-		XMVECTOR CursorObjectSpace = XMVector3Unproject(CursorScreenSpace, 0, 0, 1600, 900, 0.0f, 1.0f,
-			to(r->camera.Proj()), to(r->camera.View()), XMMatrixIdentity());
+		XMVECTOR CursorScreenSpace = XMVectorSet(x, -y, 0.0f, 0.0f);
+		XMVECTOR CursorObjectSpace = XMVector3Unproject(CursorScreenSpace, 0, 0, 1600, 900, 0.01f, 1.0f,
+			r->camera.Proj(), r->camera.View(), XMMatrixIdentity());
+
+		
 		XMVECTOR RayDir = CursorObjectSpace + RayOrigin;
 		//RayDir = XMVector3Normalize(RayDir);
 		
 		XMVECTOR plane = XMPlaneFromPoints(XMVectorSet(1, 0, 0, 0), XMVectorSet(0, 0, 1, 0), XMVectorSet(1, 0, 1, 0));
 		XMVECTOR pos =XMPlaneIntersectLine(plane, RayOrigin, RayDir);
 		r2d->console->SetParam("intersection", L"Точка", to(pos));
-		r->transform.Translate(r->transform.getPos() - to(pos));
+
+		XMVectorSetZ(pos,-XMVectorGetZ(pos));
+		
+
+		r->transform.Position(to(pos + XMVectorSet(0., .0, 40.0, 0.)));//Position(to(r->transform.Position() - to(pos)));
 		// XMStoreFloat4(&r->light->data.dir,-RayDir);
 	});
 

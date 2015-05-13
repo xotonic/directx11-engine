@@ -1,80 +1,94 @@
 #include "Transformable.h"
 
-Transformable::Transformable()
+Transformable::Transformable(void)
 {
-	world = XMMatrixIdentity();
-	pos = XMVectorSet(0, 0, 0, 1.0f);
-	dir = base_dir;
-	rot = XMVectorSet(0, 0, 0, 1);
-	scale = XMVectorSet(1, 1, 1, 1);
+	mPosition = XMFLOAT3(0.0f, 0.0f, -1.0f);
+	mTarget = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	mUp = to(to(mPosition) + to(XMFLOAT3(0, 1, 0)));
+	this->initWorldMatrix();
+
+	mWorld = XMMatrixIdentity();
+
 }
 
-
-void Transformable::Translate(XMFLOAT3 vec)
+Transformable::Transformable(const Transformable& Transformable)
 {
+	*this = Transformable;
+}
+
+Transformable& Transformable::operator=(const Transformable& Transformable)
+{
+	mPosition = Transformable.mPosition;
+	mTarget = Transformable.mTarget;
+	mUp = Transformable.mUp;
+
+	mWorld = Transformable.mWorld;
 	
-	world *= XMMatrixTranslationFromVector(to(vec));
-	pos += XMVector3Rotate(to(vec), dir2angles(dir));
+	return *this;
 }
 
-
-void Transformable::RotateX(const float angle)
+void Transformable::initWorldMatrix()
 {
-	world *= XMMatrixRotationX(angle);
-	//rot += XMVectorSet(angle, 0, 0, 1);
-	dir += XMVector3Rotate(dir, XMVectorSet(angle, 0, 0, 1));
+	XMVECTOR pos = to(mPosition);
+	XMVECTOR eye = to(mTarget);
+	XMVECTOR up = to(mUp);
+
+	//XMVectorSetW(pos, 1.0f);
+	//XMVectorSetW(eye, 1.0f);
+	//XMVectorSetW(up, 1.0f);
+
+	//eye = XMVector3Normalize(eye);
+	//up = XMVector3Normalize(up);
+
+	if (XMVector3Equal(up, XMVectorZero()))
+	{
+	up = XMVectorSet(0.0f, 1.0f, 0.0f ,0.0f);
+	}
+	mWorld = XMMatrixLookAtLH(pos, eye, up);
 }
 
-void Transformable::RotateY(const float angle)
+
+void Transformable::Move(XMFLOAT3 direction)
 {
-	world *= XMMatrixRotationY(angle);
-	//rot += XMVectorSet(0, angle, 0, 1);
-	dir += XMVector3Rotate(dir, XMVectorSet(0, angle, 0, 1));
+	//XMVECTOR v = to(direction);
+	//mPosition = to(to(mPosition) + v);
+	//mTarget = to(to(mTarget) + v);
+	//mUp = to(to(mUp) + v);
+	XMMATRIX m =XMMatrixTranslation(direction.x, direction.y, direction.z);
+	mPosition = to(XMVector3TransformCoord(to(mPosition),m));
+	mWorld *= m;
 }
 
-void Transformable::RotateZ(const float angle)
+void Transformable::Rotate(XMFLOAT3 axis, float degrees)
 {
-	world *= XMMatrixRotationZ(angle);
-	//rot += XMVectorSet(0, 0, angle, 1);
-	dir += XMVector3Rotate(dir, XMVectorSet(0, 0, angle, 1));
+	if (XMVector3Equal(to(axis), XMVectorZero()) ||
+		degrees == 0.0f)
+		return;
+
+	// rotate vectors
+	XMFLOAT3 look_at_target = to(to(mTarget) - to(mPosition));
+	XMFLOAT3 look_at_up = to(to(mUp) - to(mPosition));
+	look_at_target = to(XMVector3TransformCoord(to(look_at_target),
+		XMMatrixRotationAxis(to(axis), XMConvertToRadians(degrees))));
+	look_at_up = to(XMVector3TransformCoord(to(look_at_up),
+		XMMatrixRotationAxis(to(axis), XMConvertToRadians(degrees))));
+
+	// restore vectors's end points mTarget and mUp from new rotated vectors
+	mTarget = to(to(mPosition) + to(look_at_target));
+	mUp = to(to(mPosition) + to(look_at_up));
+
+	this->initWorldMatrix();
 }
 
-void Transformable::LookAt(const XMFLOAT3 focus)
+// Set Transformable position
+void Transformable::Position(XMFLOAT3& new_position)
 {
-	
-	XMVECTOR v = XMLoadFloat3(&focus);
-	dir = XMVector3Normalize(v);
-	
-	world *= XMMatrixLookAtLH(
-		pos,
-		v,
-		XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
+	mPosition = new_position;
+	XMMATRIX m = XMMatrixTranslationFromVector(to(new_position));
+	mWorld = m;
+	//initWorldMatrix();
+	//this->Move(move_vector);
+	//this->Target(target);
 }
 
-void Transformable::Scale(float value)
-{
-	world *= XMMatrixScaling(value, value, value);
-}
 
-XMFLOAT3 Transformable::getPos() 
-{ 
-	float x = world.r[0].vector4_f32[3];
-	float y = world.r[1].vector4_f32[3];
-	float z = world.r[2].vector4_f32[3];
-	XMFLOAT3 p(x,y,z);
-	//XMStoreFloat3(&p, pos);
-	return p;
-}
-
-XMVECTOR& Transformable::dir2angles(XMVECTOR& dir)
-{
-	XMVECTOR q;
-	q = XMVector3Cross(base_dir, dir);
-
-	float a = XMVector3LengthSq(base_dir).vector4_f32[0];
-	float b = XMVector3LengthSq(dir).vector4_f32[0];
-	float dot = XMVector3Dot(base_dir, dir).vector4_f32[0];
-	q.vector4_f32[3] = sqrtf(a * b) + dot;
-
-	return XMQuaternionNormalize(q);
-}

@@ -13,7 +13,8 @@
 //#include "IndexBuffer.h"
 #include "Terrain.h"
 #include "debug.h"
-
+#include "Line.h"
+#include <vector>
 class Renderer
 {
 public:
@@ -21,16 +22,8 @@ public:
 	~Renderer();
 	void Render();
 
-	/* Для XNA math нужно выравнивание на 16 байтов */
-	/*void* operator new(size_t i)
-	{
-	return _aligned_malloc(i, 16);
-	}
+	//std::vector<std::pair<XMVECTOR, XMVECTOR>> lines;
 
-	void operator delete(void* p)
-	{
-	_aligned_free(p);
-	}*/
 	Transformable transform;
 	Transformable tr;
 	Camera camera;
@@ -38,8 +31,11 @@ public:
 	Terrain* terrain;
 	ConstantBuffer<DirLightBuffer>* light;
 	XMMATRIX projection;
+
+	std::shared_ptr<Line> lines;
 private:
 
+	void DrawLines();
 	VertexBuffer   *buf;
 	Texture        *tex, *normal;
 	//IndexBuffer  *ibuf;

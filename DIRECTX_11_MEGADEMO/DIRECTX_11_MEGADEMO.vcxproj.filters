@@ -80,6 +80,9 @@
     <ClCompile Include="Timer.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
+    <ClCompile Include="Line.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="debug.h">
@@ -142,6 +145,9 @@
     <ClInclude Include="Transformable.h">
       <Filter>h</Filter>
     </ClInclude>
+    <ClInclude Include="Line.h">
+      <Filter>h</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="monkey.mesh">
@@ -157,6 +163,12 @@
       <Filter>resources\terrains</Filter>
     </None>
     <None Include="packages.config" />
+    <None Include="basic.psh">
+      <Filter>resources\shaders</Filter>
+    </None>
+    <None Include="basic.vsh">
+      <Filter>resources\shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="grass.dds">

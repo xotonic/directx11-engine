@@ -84,6 +84,7 @@
     <ClCompile Include="DXResources.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Kernel.cpp" />
+    <ClCompile Include="Line.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Renderer2D.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
@@ -111,6 +112,7 @@
     <ClInclude Include="DXResources.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Kernel.h" />
+    <ClInclude Include="Line.h" />
     <ClInclude Include="Movable.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Renderer2D.h" />
@@ -123,6 +125,8 @@
     <ClInclude Include="VertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="basic.psh" />
+    <None Include="basic.vsh" />
     <None Include="monkey.mesh" />
     <None Include="out.terrain" />
     <None Include="packages.config" />

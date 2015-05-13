@@ -14,9 +14,11 @@
 #include <Windows.h>
 #include <string>
 #include <memory>
+#include <array>
 #include "debug.h"
 
 using namespace DirectX;
+using namespace Microsoft::WRL;
 
 struct WindowSize
 {
@@ -29,35 +31,47 @@ struct WindowDescriptor
 	WindowSize size;
 };
 
+//static const D3D11_INPUT_ELEMENT_DESC VertexDesc[] = { { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 } };
+//static const D3D11_INPUT_ELEMENT_DESC ColVertexDesc[] = {
+//	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+//	{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+//};
+//static const D3D11_INPUT_ELEMENT_DESC ColNormVertexDesc[] = {
+//	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+//	{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+//	{ "NORMAL", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+//};
+//
+//static const D3D11_INPUT_ELEMENT_DESC TexNormVertexDesc[] = {
+//	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+//	{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+//	{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+//};
+
 struct Vertex
 {
-	XMFLOAT3 pos = { 0.0, 0.0, 0.0 };
+	XMFLOAT3 pos = { 0.0f, 0.0f, 0.0f };
 };
 
 struct ColVertex
 {
 	XMFLOAT3 pos;
-	XMFLOAT4 color;
+	XMFLOAT4 color ;
+
 };
 
 struct ColNormVertex
 {
-	XMFLOAT3 pos;
-	XMFLOAT4 color;
-	XMFLOAT2 normal;
-};
-
-struct NormVertex
-{
-	XMFLOAT3 pos;
-	XMFLOAT3 normal;
+	XMFLOAT3 pos = { 0.0f, 0.0f, 0.0f };
+	XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	XMFLOAT3 normal = {0.0f, 0.0f, 0.0f};
 };
 
 struct TexNormVertex
 {
-	XMFLOAT3 pos;
-	XMFLOAT3 normal;
-	XMFLOAT2 uv;
+	XMFLOAT3 pos;// = { 0.0f, 0.0f, 0.0f };
+	XMFLOAT3 normal;// = { 0.0f, 0.0f, 0.0f };
+	XMFLOAT2 uv;// = { 0.0f, 0.0f };
 };
 
 struct MatrixBuffer

@@ -36,7 +36,7 @@ public:
 	const XMFLOAT3& Target() const { return mTarget; }
 	const XMFLOAT3 Up() { return to(to(mUp) - to(mPosition)); }
 	const XMFLOAT3 LookAtTarget() { return to(to(mTarget) - to(mPosition)); }
-	const XMFLOAT4X4 View() { return to(XMMatrixTranspose(to(mView))); }
+	const XMMATRIX View() { return XMMatrixTranspose(to(mView)); }
 
 	// Set view frustum's angle
 	void Angle(float angle);
@@ -46,7 +46,7 @@ public:
 	void NearestPlane(float nearest);
 	void FarthestPlane(float farthest);
 
-	const XMFLOAT4X4 Proj() { return to(XMMatrixTranspose(to(mProj))); }
+	const XMMATRIX Proj() { return XMMatrixTranspose(to(mProj)); }
 	const XMFLOAT4X4 Ortho() { return to(XMMatrixTranspose(to(mOrtho))); }
 
 private:

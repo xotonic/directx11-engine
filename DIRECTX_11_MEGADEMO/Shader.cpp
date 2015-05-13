@@ -1,6 +1,6 @@
 #include "Shader.h"
 
-Shader::Shader(ID3D11Device* dev, std::string vs_name, std::string ps_name)
+Shader::Shader(ID3D11Device* dev, std::string vs_name, std::string ps_name, bool color, bool normal, bool uv)
 	: DeviceDependent(dev)
 {
 
@@ -10,29 +10,35 @@ Shader::Shader(ID3D11Device* dev, std::string vs_name, std::string ps_name)
 	ID3D10Blob* psBlob = NULL;
 	compileFromFile(vs_name, VS_entryPoint, VS_model, &vsBlob);
 
-	dev->CreateVertexShader(
+	CHECK_HRESULT(
+		dev->CreateVertexShader(
 		vsBlob->GetBufferPointer(),
 		vsBlob->GetBufferSize(),
 		0,
-		&vertexShader);
+		&vertexShader),
+		"error creating vertex shader");
 
-	D3D11_INPUT_ELEMENT_DESC layout[] =
-	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-	};
+	std::vector<D3D11_INPUT_ELEMENT_DESC> desc;
+	desc.push_back({ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+	if (color)
+		desc.push_back({ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+	if (normal)
+		desc.push_back({ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+	if (uv)
+		desc.push_back({ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 });
 
-	dev->CreateInputLayout(layout, ARRAYSIZE(layout), vsBlob->GetBufferPointer(),
-		vsBlob->GetBufferSize(), &inputLayout);
+	CHECK_HRESULT(
+		dev->CreateInputLayout(desc.data(), desc.size(), vsBlob->GetBufferPointer(),
+		vsBlob->GetBufferSize(), &inputLayout), "error creating input layout");
 
 	vsBlob->Release();
 
 	compileFromFile(ps_name, PS_entryPoint, PS_model, &psBlob);
-	dev->CreatePixelShader(psBlob->GetBufferPointer(), psBlob->GetBufferSize(), NULL, &pixelShader);
+	CHECK_HRESULT(
+		dev->CreatePixelShader(psBlob->GetBufferPointer(), psBlob->GetBufferSize(), NULL, &pixelShader),
+		"error creating pixel shader");
 
 	psBlob->Release();
-	deviceContext->IASetInputLayout(inputLayout);
 }
 
 Shader::~Shader()
@@ -75,12 +81,8 @@ void Shader::compileFromFile(std::string fileName, const LPCSTR ep, const LPCSTR
 
 void Shader::bind()
 {
+	deviceContext->IASetInputLayout(inputLayout);
 	deviceContext->VSSetShader(vertexShader, 0, 0);
 	//deviceContext->VSSetConstantBuffers(0, 1, constBuf);
 	deviceContext->PSSetShader(pixelShader, 0, 0);
-}
-
-void Shader::setConstantBuffers(ID3D11Buffer** bufs)
-{
-
 }
