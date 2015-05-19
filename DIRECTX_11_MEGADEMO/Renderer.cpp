@@ -33,7 +33,7 @@ Renderer::Renderer(DXResources* dx) : angle(0)
 	light->bind_PS(0);
 
 	lines = std::make_shared<Line>(dx);
-	lines->SetLine(XMVectorSet(0, 0, 0, 0), XMVectorSet(5, 5, 5, 1));
+	//lines->SetLine(XMVectorSet(0, 2, 0, 0), XMVectorSet(20, 20, 20, 0));
 //	tr.Translate(4.0f, 4.0, 0.0);
 }
 

@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "common.h"
+#include "stdafx.h"
 #include "VertexBuffer.h"
 #include "DeviceDependent.h"
 

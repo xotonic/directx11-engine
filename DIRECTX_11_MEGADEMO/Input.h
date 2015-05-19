@@ -1,4 +1,4 @@
-#include "common.h"
+#include "stdafx.h"
 #include <vector>
 #include <map>
 #include <functional>

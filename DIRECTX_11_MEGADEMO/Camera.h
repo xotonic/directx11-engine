@@ -1,6 +1,6 @@
 #pragma once
 
-#include "common.h"
+#include "stdafx.h"
 
 
 class Camera 
@@ -49,6 +49,17 @@ public:
 	const XMMATRIX Proj() { return XMMatrixTranspose(to(mProj)); }
 	const XMFLOAT4X4 Ortho() { return to(XMMatrixTranspose(to(mOrtho))); }
 
+	VectorPair getRay(float x, float y)
+	{
+
+		XMVECTOR unprojA = Unproject(x, y, 0.0f);
+		XMVECTOR unprojB = Unproject(x, y, 1.0f);
+
+		XMVECTOR dir = XMVector3Normalize(unprojB - unprojA);
+		return std::make_pair(unprojA, unprojA + 1000 * dir);
+	}
+	
+
 private:
 	/*** Camera parameters ***/
 	XMFLOAT3 mPosition;		// Camera's coordinates
@@ -66,5 +77,31 @@ private:
 	XMFLOAT4X4	mProj;		// Projection matrix
 	XMFLOAT4X4	mOrtho;		// Ortho matrix for drawing without tranformation
 
+	XMVECTOR Unproject(const float& px, const float& py, const float& pz)
+	{
+		XMFLOAT2 res = {mClientWidth, mClientHeight};
+
+		XMVECTOR q = XMQuaternionRotationMatrix(to(mView));
+
+		XMVECTOR coords = XMVector3Unproject(XMVectorSet(px, py / tan(XMConvertToRadians(60.0)), pz, 0.0f),
+			0.0f, 0.0f,
+			res.x, res.y,
+			0, 1,
+			to(mProj), to(mView), XMMatrixIdentity());
+
+		return coords;
+	}
+
+	XMVECTOR Project(XMVECTOR v, XMMATRIX& world)
+	{
+		XMFLOAT2 res = { mClientWidth, mClientHeight };
+		XMVECTOR coords = XMVector3Project(v,
+			0.0f, 0.0f,
+			res.x, res.y,
+			0, 1,
+			to(mProj), to(mView), world);
+
+		return coords;
+	}
 };
 

@@ -4,7 +4,7 @@
 #include <string>
 #include <map>
 #include <list>
-#include "common.h"
+#include "stdafx.h"
 #include "DXResources.h"
 #include "debug.h"
 

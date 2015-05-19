@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <fstream>
-#include "common.h"
+#include "stdafx.h"
 #include "DeviceDependent.h"
 using namespace std;
 class VertexBuffer : private DeviceDependent

@@ -94,9 +94,6 @@
     <ClInclude Include="Renderer.h">
       <Filter>h</Filter>
     </ClInclude>
-    <ClInclude Include="common.h">
-      <Filter>h</Filter>
-    </ClInclude>
     <ClInclude Include="Input.h">
       <Filter>h</Filter>
     </ClInclude>
@@ -146,6 +143,9 @@
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="Line.h">
+      <Filter>h</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
       <Filter>h</Filter>
     </ClInclude>
   </ItemGroup>

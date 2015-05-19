@@ -2,7 +2,7 @@
 
 #include "debug.h"
 #include "DXResources.h"
-#include "common.h"
+#include "stdafx.h"
 #include "Console.h"
 class Renderer2D
 {

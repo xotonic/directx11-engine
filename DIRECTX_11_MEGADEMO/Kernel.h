@@ -1,5 +1,5 @@
 
-#include "common.h"
+#include "stdafx.h"
 #include "DXResources.h"
 #include "Renderer.h"
 #include "Renderer2D.h"

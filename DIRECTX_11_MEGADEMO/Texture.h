@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "common.h"
+#include "stdafx.h"
 #include "DeviceDependent.h"
 #include "DDSTextureLoader\DDSTextureLoader.h"
 class Texture : private DeviceDependent

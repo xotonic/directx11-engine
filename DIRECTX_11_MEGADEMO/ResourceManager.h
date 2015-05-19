@@ -2,7 +2,7 @@
 #include <map>
 #include <string>
 
-#include "common.h"
+#include "stdafx.h"
 #include "DeviceDependent.h"
 #include "VertexBuffer.h"
 #include "Texture.h"

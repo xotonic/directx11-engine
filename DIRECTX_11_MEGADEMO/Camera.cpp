@@ -91,6 +91,8 @@
 		mUp = to(to(mPosition) + to(look_at_up));
 
 		this->initViewMatrix();
+		
+		XMVECTOR w = XMVectorZero();
 	}
 
 	void Camera::Target(XMFLOAT3 new_target)

@@ -1,6 +1,4 @@
 #pragma once
-//#ifndef COMMON_H_
-//#define COMMON_H_
 #define _XM_NO_INTRINSICS_
 #include <wrl.h>
 #include <wrl/client.h>
@@ -20,6 +18,8 @@
 using namespace DirectX;
 using namespace Microsoft::WRL;
 
+typedef std::pair<XMVECTOR, XMVECTOR> VectorPair;
+
 struct WindowSize
 {
 	int width, height;
@@ -31,23 +31,6 @@ struct WindowDescriptor
 	WindowSize size;
 };
 
-//static const D3D11_INPUT_ELEMENT_DESC VertexDesc[] = { { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 } };
-//static const D3D11_INPUT_ELEMENT_DESC ColVertexDesc[] = {
-//	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-//	{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-//};
-//static const D3D11_INPUT_ELEMENT_DESC ColNormVertexDesc[] = {
-//	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-//	{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-//	{ "NORMAL", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-//};
-//
-//static const D3D11_INPUT_ELEMENT_DESC TexNormVertexDesc[] = {
-//	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-//	{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-//	{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-//};
-
 struct Vertex
 {
 	XMFLOAT3 pos = { 0.0f, 0.0f, 0.0f };
@@ -55,7 +38,7 @@ struct Vertex
 
 struct ColVertex
 {
-	XMFLOAT3 pos;
+	XMFLOAT4 pos;
 	XMFLOAT4 color ;
 
 };
@@ -102,6 +85,13 @@ inline XMFLOAT3 to(const XMVECTOR& x)
 {
 	XMFLOAT3 val;
 	XMStoreFloat3(&val, x);
+	return val;
+}
+
+inline XMFLOAT4 to2(const XMVECTOR& x)
+{
+	XMFLOAT4 val;
+	XMStoreFloat4(&val, x);
 	return val;
 }
 

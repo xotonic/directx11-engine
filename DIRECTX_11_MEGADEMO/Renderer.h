@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 
-#include "common.h"
+#include "stdafx.h"
 #include "Shader.h"
 #include "VertexBuffer.h"
 #include "ConstantBuffer.h"

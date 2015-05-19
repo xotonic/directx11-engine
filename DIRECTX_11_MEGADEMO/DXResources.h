@@ -1,5 +1,5 @@
 #pragma once
-#include "common.h"
+#include "stdafx.h"
 #include "debug.h"
 
 class DXResources

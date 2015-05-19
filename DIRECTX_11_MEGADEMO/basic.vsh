@@ -20,8 +20,8 @@ struct PS_INPUT
 PS_INPUT VS(VS_INPUT input)
 {
 	PS_INPUT output = (PS_INPUT)0;
-	output.Pos = mul(input.pos, World);
-	output.Pos = mul(output.Pos, View);
+	//output.Pos = mul(input.pos, World);
+	output.Pos = mul(input.pos, View);
 	output.Pos = mul(output.Pos, Projection);
 
 	output.color = input.color;

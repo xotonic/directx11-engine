@@ -1,5 +1,5 @@
 #pragma once
-#include "common.h"
+#include "stdafx.h"
 #include "Shader.h"
 #include "VertexBuffer.h"
 #include "DXResources.h"
@@ -13,7 +13,7 @@ public:
 	Line(DXResources* _dx);
 	~Line() { vertexBuffer->Release(); }
 	void Draw(Camera& cam);
-	void SetLine(XMVECTOR v1, XMVECTOR v2);
+	void SetLine(VectorPair& line);
 	std::shared_ptr<Shader> basic_shader;
 private:
 	DXResources* dx;

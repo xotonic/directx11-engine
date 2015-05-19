@@ -1,5 +1,5 @@
 #pragma once
-#include "common.h"
+#include "stdafx.h"
 #include "debug.h"
 #include "DeviceDependent.h"
 #include <vector>
