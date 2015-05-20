@@ -1,0 +1,5 @@
+m monkey mon.mesh
+s default shader.vsh shader.psh 0 1 1
+s basic basic.vsh basic.psh 1 0 0
+t grass grass.dds
+t grass_normal grass_normal.dds

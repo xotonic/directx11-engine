@@ -82,6 +82,7 @@
     <ClCompile Include="DDSTextureLoader\DDSTextureLoader.cpp" />
     <ClCompile Include="DeviceDependent.cpp" />
     <ClCompile Include="DXResources.cpp" />
+    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Kernel.cpp" />
     <ClCompile Include="Line.cpp" />
@@ -98,6 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Entity.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Console.h" />
     <ClInclude Include="ConstantBuffer.h" />
@@ -141,6 +143,9 @@
     <Image Include="grass_normal.dds" />
     <Image Include="normal.dds" />
     <Image Include="texture.dds" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="resources.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

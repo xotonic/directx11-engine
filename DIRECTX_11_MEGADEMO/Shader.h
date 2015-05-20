@@ -15,6 +15,10 @@ public:
 	ID3D11PixelShader* pixel() { return pixelShader; }
 	ID3D11InputLayout* layout() { return inputLayout; }
 	
+	bool HasColorComponent() { return colorComponent; }
+	bool HasNormalComponent() { return normalComponent; }
+	bool HasUVComponent() { return UVComponent; }
+
 private:
 
 	void compileFromFile(std::string fileName,
@@ -30,4 +34,6 @@ private:
 	ID3D11VertexShader* vertexShader = NULL;
 	ID3D11PixelShader* pixelShader = NULL;
 	ID3D11InputLayout* inputLayout = NULL;
+
+	bool colorComponent, UVComponent, normalComponent;
 };

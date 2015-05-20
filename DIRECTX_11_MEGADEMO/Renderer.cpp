@@ -11,17 +11,7 @@ Renderer::Renderer(DXResources* dx) : angle(0)
 	resMgr = new ResourceManager(dx->getDevice());
 
 	terrain = new Terrain(dx->getDevice(), "out.terrain");
-
-	resMgr->loadShader("simple", "shader.vsh", "shader.psh", false, true, true);
-	resMgr->loadMesh("cube", "mon.mesh");
-	resMgr->loadTexture("diffuse", "grass.dds");
-	resMgr->loadTexture("normal", "grass_normal.dds");
-
-	resMgr->mesh("cube")->bind();
-	resMgr->shader("simple")->bind();
-
-
-	//camera.Move(0.0f, 1.0, -5.0);
+	resMgr->readResources("resources.txt");
 
 	matrices = new ConstantBuffer < MatrixBuffer >(dx->getDevice());
 	light = new ConstantBuffer<DirLightBuffer>(dx->getDevice());
@@ -33,8 +23,9 @@ Renderer::Renderer(DXResources* dx) : angle(0)
 	light->bind_PS(0);
 
 	lines = std::make_shared<Line>(dx);
-	//lines->SetLine(XMVectorSet(0, 2, 0, 0), XMVectorSet(20, 20, 20, 0));
-//	tr.Translate(4.0f, 4.0, 0.0);
+
+	ent = new Entity(resMgr, "monkey", "default", "grass", "grass_normal");
+	ent->transform()->Move({1.0,1.0,1.0});
 }
 
 Renderer::~Renderer()
@@ -43,22 +34,15 @@ Renderer::~Renderer()
 	delete light;
 	delete terrain;
 	delete resMgr;
+	delete ent;
 
 }
 
 void Renderer::Render()
 {
-	/*float clearColor[4] = { 0.30f, 0.30f, 0.30f, 1.0f };
 
-	deviceContext->ClearRenderTargetView(renderTargetView, clearColor);
-	deviceContext->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0, 0);
-	*/
-	resMgr->shader("simple")->bind();
-
-	static float t = 0.0f;
-	t += 0.0005;
-
-	resMgr->mesh("cube")->bind();
+	resMgr->shader("default")->bind();
+	resMgr->mesh("monkey")->bind();
 
 	light->update();
 	light->bind_PS(0);
@@ -70,30 +54,10 @@ void Renderer::Render()
 	matrices->update();
 	matrices->bind_VS(0);
 
-	resMgr->texture("diffuse")->bind(0);
-	resMgr->texture("normal")->bind(1);
+	resMgr->texture("grass")->bind(0);
+	resMgr->texture("grass_normal")->bind(1);
 
-	//deviceContext->PSSetShaderResources(0, 1, &textureRV);
-	//deviceContext->PSSetSamplers(0, 0, 0);
-	resMgr->mesh("cube")->draw();
-
-
-
-	matrices->data.world = tr.World();//XMMatrixTranspose(world);
-	matrices->data.view = camera.View();// XMMatrixTranspose(view);
-	matrices->data.projection = projection;
-
-
-	matrices->update();
-	matrices->bind_VS(0);
-	light->bind_PS(0);
-
-
-	//light->update();
-
-	//light->update();
-	//light->bind(1);
-	resMgr->mesh("cube")->draw();
+	resMgr->mesh("monkey")->draw();
 
 	terrain->bind();
 
@@ -101,11 +65,11 @@ void Renderer::Render()
 	matrices->update();
 	matrices->bind_VS(0);
 
-	//lines->basic_shader->bind();
-
 	terrain->draw();
-	lines->Draw(camera);
-//	deviceContext->Draw(resMgr->mesh("cube")->getCount(), 0);
+	matrices->data.world = ent->transform()->World();
+	matrices->update();
+	matrices->bind_VS(0);
 
-	//swapChain->Present(0, 0);
+	ent->Draw();
+	lines->Draw(camera);
 }

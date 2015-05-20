@@ -83,6 +83,9 @@
     <ClCompile Include="Line.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="debug.h">
@@ -148,6 +151,9 @@
     <ClInclude Include="stdafx.h">
       <Filter>h</Filter>
     </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>h</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="monkey.mesh">
@@ -183,5 +189,10 @@
     <Image Include="texture.dds">
       <Filter>resources\textures</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="resources.txt">
+      <Filter>resources</Filter>
+    </Text>
   </ItemGroup>
 </Project>

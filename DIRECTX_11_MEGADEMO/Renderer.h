@@ -14,6 +14,7 @@
 #include "Terrain.h"
 #include "debug.h"
 #include "Line.h"
+#include "Entity.h"
 #include <vector>
 class Renderer
 {
@@ -22,8 +23,6 @@ public:
 	~Renderer();
 	void Render();
 
-	//std::vector<std::pair<XMVECTOR, XMVECTOR>> lines;
-
 	Transformable transform;
 	Transformable tr;
 	Camera camera;
@@ -31,6 +30,8 @@ public:
 	Terrain* terrain;
 	ConstantBuffer<DirLightBuffer>* light;
 	XMMATRIX projection;
+
+	Entity* ent;
 
 	std::shared_ptr<Line> lines;
 private:
