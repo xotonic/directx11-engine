@@ -208,25 +208,7 @@ bool Terrain::ReadFromFile(std::string filename)
 		}
 	}
 	model->finalize();
-
-	for (int x = 0; x < vx - 1; x++)
-		for (int y = 0; y < vy - 1; y++)
-		{
-			Quad q = getQuad(x, y);
-			
-			BoundingBox bb;
-			XMVECTOR p0 = q.top_left, p1 = q.bot_right;
-			p0 = XMVectorSetY(p0, -0.1);
-			p1 = XMVectorSetY(p1, q.maxHeigth());
-			BoundingBox::CreateFromPoints(bb, p0, p1);
-
-			boxes.push_back(bb);
-		}
-
-
-
 	filein.close();
-	
 	
 	return true;
 }

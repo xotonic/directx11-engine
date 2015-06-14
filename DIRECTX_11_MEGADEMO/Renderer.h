@@ -15,6 +15,7 @@
 #include "debug.h"
 #include "Line.h"
 #include "Entity.h"
+#include "Player.h"
 #include <vector>
 class Renderer
 {
@@ -32,8 +33,11 @@ public:
 	XMMATRIX projection;
 
 	Entity* ent;
+	Player* player;
 	std::shared_ptr<Line> camera_ray;
 	std::shared_ptr<Line> lines;
+	void DrawEntity(Entity* e);
+	void DrawTerrain();
 private:
 
 	void DrawLines();

@@ -1,10 +1,11 @@
-m head data/tank_head.mesh
+m head data/head.mesh
+m body data/body.mesh
 m mark data/mark.mesh
 s default shader.vsh shader.psh 0 1 1
 s basic basic.vsh basic.psh 1 0 0
-t head data/tank_head_diffuse.dds
-t head_normal data/tank_head_normal.dds
 t grass grass.dds
 t grass_normal grass_normal.dds
 t empty_diffuse data/empty_diffuse.dds
 t empty_normal data/empty_normal.dds
+t armor_diffuse data/armor_diffuse.dds
+t armor_normal data/armor_normal.dds

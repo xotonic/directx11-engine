@@ -86,6 +86,9 @@
     <ClCompile Include="Entity.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="debug.h">
@@ -152,6 +155,9 @@
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="Entity.h">
+      <Filter>h</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
       <Filter>h</Filter>
     </ClInclude>
   </ItemGroup>

@@ -26,10 +26,13 @@ Renderer::Renderer(DXResources* _dx) : angle(0), dx(_dx)
 	camera_ray = std::make_shared<Line>(dx, 2);
 	ent = new Entity(resMgr, "mark", "default", "empty_diffuse", "empty_normal");
 	ent->transform()->Move({10.0f,0.1f,1.0f});
+
+	player = new Player(resMgr);
 }
 
 Renderer::~Renderer()
 {
+	delete player;
 	delete matrices;
 	delete light;
 	delete terrain;
@@ -41,23 +44,36 @@ Renderer::~Renderer()
 void Renderer::Render()
 {
 
-	resMgr->shader("default")->bind();
-	resMgr->mesh("head")->bind();
-
 	light->update();
 	light->bind_PS(0);
 
-	matrices->data.world = transform.World();//XMMatrixTranspose(world);
-	matrices->data.view = camera.View();// XMMatrixTranspose(view);
+	matrices->data.view = camera.View();
 	matrices->data.projection = projection;
 
+	
+	DrawTerrain();
+	DrawEntity(ent);
+	DrawEntity(player->head);
+	DrawEntity(player->body);
+
+	lines->Draw(camera);
+	camera_ray->Draw(camera);
+}
+
+void Renderer::DrawEntity(Entity* e)
+{
+
+	matrices->data.world = e->transform()->World();
 	matrices->update();
 	matrices->bind_VS(0);
+	e->Draw();
+}
 
+void Renderer::DrawTerrain()
+{
+	resMgr->shader("default")->bind();
 	resMgr->texture("grass")->bind(0);
 	resMgr->texture("grass_normal")->bind(1);
-
-	resMgr->mesh("head")->draw();
 
 	terrain->bind();
 
@@ -66,14 +82,5 @@ void Renderer::Render()
 	matrices->bind_VS(0);
 
 	terrain->draw();
-	matrices->data.world = ent->transform()->World();
-	matrices->update();
-	matrices->bind_VS(0);
 
-	//ent->transform()->Scale(0.9f);
-	ent->Draw();
-
-	//for (auto line : lines)
-	lines->Draw(camera);
-	camera_ray->Draw(camera);
 }

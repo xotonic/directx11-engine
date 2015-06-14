@@ -104,67 +104,18 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h) //: input(w,h)
 	input->AddKeyboardHandler(KEY_S, pressed, [r]() -> void { r->camera.Move({0.f, 0.f, -0.5f});});
 	
 	input->AddKeyboardHandler(KEY_LEFT, pressed, [r, px, py]() -> void { 
-		r->ent->transform()->Move({ -0.1f, 0.f, 0.f });
-		Quad q = r->terrain->getQuad(r->ent->transform()->Position().x, r->ent->transform()->Position().z);
-		q.top_left += XMVectorSet(0, 0.1, 0, 0);
-		q.top_right += XMVectorSet(0, 0.1, 0, 0);
-		q.bot_right += XMVectorSet(0, 0.1, 0, 0);
-		q.bot_left += XMVectorSet(0, 0.1, 0, 0);
-		r->lines->SetLines({ 
-			q.top_left, 
-			q.top_right, 
-			q.bot_right, 
-			q.bot_left, 
-			q.top_left }); });
+		r->player->RotateHead(XMVectorZero());
+	 });
 	input->AddKeyboardHandler(KEY_UP, pressed, [r, px, py]() -> void {
-
-		r->ent->transform()->Move({ 0.f, 0.f, 0.1f });
-		Quad q = r->terrain->getQuad(r->ent->transform()->Position().x, r->ent->transform()->Position().z);
-		q.top_left += XMVectorSet(0, 0.1, 0, 0);
-		q.top_right += XMVectorSet(0, 0.1, 0, 0);
-		q.bot_right += XMVectorSet(0, 0.1, 0, 0);
-		q.bot_left += XMVectorSet(0, 0.1, 0, 0);
-		r->lines->SetLines({
-			q.top_left,
-			q.top_right,
-			q.bot_right,
-			q.bot_left,
-			q.top_left }); });
+ });
 	input->AddKeyboardHandler(KEY_RIGHT, pressed, [r, px, py]() -> void {
-		r->ent->transform()->Move({ 0.1f, 0.f, 0.f });
-		Quad q = r->terrain->getQuad(r->ent->transform()->Position().x, r->ent->transform()->Position().z);
-		q.top_left += XMVectorSet(0, 0.1, 0, 0);
-		q.top_right += XMVectorSet(0, 0.1, 0, 0);
-		q.bot_right += XMVectorSet(0, 0.1, 0, 0);
-		q.bot_left += XMVectorSet(0, 0.1, 0, 0);
-		r->lines->SetLines({
-			q.top_left,
-			q.top_right,
-			q.bot_right,
-			q.bot_left,
-			q.top_left }); });
+	});
 	input->AddKeyboardHandler(KEY_DOWN, pressed, [r, px, py]() -> void {
 		
-		r->ent->transform()->Move({ 0.f, 0.f, -0.1f });
-
-		Quad q = r->terrain->getQuad(r->ent->transform()->Position().x, r->ent->transform()->Position().z);
-		q.top_left += XMVectorSet(0, 0.1, 0, 0);
-		q.top_right += XMVectorSet(0, 0.1, 0, 0);
-		q.bot_right += XMVectorSet(0, 0.1, 0, 0);
-		q.bot_left += XMVectorSet(0, 0.1, 0, 0);
-		r->lines->SetLines({
-			q.top_left,
-			q.top_right,
-			q.bot_right,
-			q.bot_left,
-			q.top_left }); });
+		});
 
 
 	input->AddKeyboardHandler(KEY_1, pressed, [r, r2d]() -> void { 
-		/*XMVECTOR v = XMLoadFloat4(&r->light->data.dir);
-		v = XMVector3Rotate(v, XMVectorSet( 0.01f, 0.0f, 0.0f, 1.0f ));
-		XMStoreFloat4(&r->light->data.dir, v);
-*/
 
 	});
 
@@ -192,20 +143,6 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h) //: input(w,h)
 		XMVECTOR pos = r->terrain->findIntersection(ray, q, *r2d->console.get());
 		r->ent->transform()->Position(to(pos));
 		
-		//q = r->terrain->getQuad(10, 1);
-		q.top_left += XMVectorSet(0, 0.1, 0, 0);
-		q.top_right += XMVectorSet(0, 0.1, 0, 0);
-		q.bot_right += XMVectorSet(0, 0.1, 0, 0);
-		q.bot_left += XMVectorSet(0, 0.1, 0, 0);
-		
-		r->lines->SetLines({
-		q.top_left,
-		q.top_right,
-		q.bot_right,
-		q.bot_left,
-		q.top_left });
-
-		r->camera_ray->SetLines({ ray.first, ray.second });
 	});
 
 	input->AddMouseMoveHandler([r2d](const int dx, const int dy, const int x, const int y) -> void
@@ -224,11 +161,7 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h) //: input(w,h)
 		r2d->console->SetParam("cam", L"camera position", r->camera.Position());
 		r2d->console->SetParam("ldir", L"light dir", to(r->light->data.dir));
 
-		//r->lines->SetLine(XMVectorZero(), to(r->transform.Position()));
 	});
-
-	//r2d->console->SetParam("render proj",L"из renderer", r->projection);
-	//r2d->console->SetParam("cam proj", L"из camera", to(r->camera.Proj()));
 
 }
 

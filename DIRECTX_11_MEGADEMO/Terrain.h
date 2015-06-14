@@ -113,5 +113,5 @@ private:
 
 	int height, wight;
 	CollisionModel3D *model;
-	std::vector<BoundingBox> boxes;
+	
 };
