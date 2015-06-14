@@ -41,6 +41,24 @@ void Terrain::bind()
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
+//DirectX::XMVECTOR Terrain::findIntersection( const VectorPair& ray)
+//{
+//	XMVECTOR point = XMVectorZero();
+//	for (int i = 0; i < v_buf.size(); i += 3)
+//	{
+//		XMVECTOR t1 = to(v_buf[i].pos);
+//		XMVECTOR t2 = to(v_buf[i+1].pos);
+//		XMVECTOR t3 = to(v_buf[i+2].pos);
+//
+//		float dist = 0.0;
+//		if (TriangleTests::Intersects(ray.first, XMVector3Normalize(ray.second), t1, t2, t3, dist))
+//		{
+//			point = ray.first + dist*XMVector3Normalize(ray.second);
+//		}
+//	}
+//	return point;
+//}
+
 void Terrain::draw()
 {
 	deviceContext->Draw(getCount(), 0);
@@ -65,6 +83,8 @@ bool Terrain::ReadFromFile(std::string filename)
 
 	filein >> vx >> vy;
 	unique_vertices.reserve(vx * vy);
+
+	wight = vx; height = vy;
 
 	for (int i = 0; i < vx; i++)
 	{
@@ -130,6 +150,7 @@ bool Terrain::ReadFromFile(std::string filename)
 	// forming vertex buffer
 
 	v_buf.reserve(face_num * 3 * 2);
+	model = newCollisionModel3D();
 
 	for (int i = 0; i < vy - 1; i++)
 	{
@@ -162,7 +183,12 @@ bool Terrain::ReadFromFile(std::string filename)
 			v_buf.push_back({ { unique_vertices[index_2].pos }, { to(n2) }, { 1.0f, 0.0f } });
 			v_buf.push_back({ { unique_vertices[index_3].pos }, { to(n3) }, { 1.0f, 1.0f } });
 
-		/*	XMVECTOR edge3 = XMLoadFloat3(&(unique_vertices[index_1].pos - unique_vertices[index_4].pos));
+			
+			model->addTriangle(unique_vertices[index_1].pos.x, unique_vertices[index_1].pos.y, unique_vertices[index_1].pos.z,
+				unique_vertices[index_2].pos.x, unique_vertices[index_2].pos.y, unique_vertices[index_2].pos.z,
+				unique_vertices[index_3].pos.x, unique_vertices[index_3].pos.y, unique_vertices[index_3].pos.z);
+				
+				/*	XMVECTOR edge3 = XMunique_vertices[index_3].posLoadFloat3(&(unique_vertices[index_1].pos - unique_vertices[index_4].pos));
 			normal = XMVector3Cross(edge3, edge1);
 			normal = XMVector3Normalize(-normal);*/
 			/*float a41 = XMVector3AngleBetweenVectors(n1, n1).vector4_f32[0];
@@ -175,9 +201,32 @@ bool Terrain::ReadFromFile(std::string filename)
 			v_buf.push_back({ { unique_vertices[index_1].pos }, { to(n1) }, { 0.0f, 0.0f } });
 			v_buf.push_back({ { unique_vertices[index_3].pos }, { to(n3) }, { 1.0f, 1.0f } });
 			v_buf.push_back({ { unique_vertices[index_4].pos }, { to(n4) }, { 0.0f, 1.0f } });
+
+			model->addTriangle(unique_vertices[index_1].pos.x, unique_vertices[index_1].pos.y, unique_vertices[index_1].pos.z,
+				unique_vertices[index_3].pos.x, unique_vertices[index_3].pos.y, unique_vertices[index_3].pos.z,
+				unique_vertices[index_4].pos.x, unique_vertices[index_4].pos.y, unique_vertices[index_4].pos.z);
 		}
 	}
+	model->finalize();
+
+	for (int x = 0; x < vx - 1; x++)
+		for (int y = 0; y < vy - 1; y++)
+		{
+			Quad q = getQuad(x, y);
+			
+			BoundingBox bb;
+			XMVECTOR p0 = q.top_left, p1 = q.bot_right;
+			p0 = XMVectorSetY(p0, -0.1);
+			p1 = XMVectorSetY(p1, q.maxHeigth());
+			BoundingBox::CreateFromPoints(bb, p0, p1);
+
+			boxes.push_back(bb);
+		}
+
+
 
 	filein.close();
+	
+	
 	return true;
 }

@@ -88,20 +88,76 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h) //: input(w,h)
 	Timer* t = &timer;
 	HWND hwnd = hWnd;
 
+	int *px = &x, *py = &y;
+
 	r->camera.Move({0,25,0});
 	r->camera.Rotate({ 1, 0, 0 }, 60);
 	
+	
 	r->light->data.dir = {0.12f, 0.42f, -0.81f, 1.0f};
+
+
 
 	input->AddKeyboardHandler(KEY_D, pressed, [r]() -> void { r->camera.Move({0.5f, 0.f, 0.f });});
 	input->AddKeyboardHandler(KEY_W, pressed, [r]() -> void { r->camera.Move({0.0f, 0.f, 0.5f});});
 	input->AddKeyboardHandler(KEY_A, pressed, [r]() -> void { r->camera.Move({-0.5f, 0.f, 0.f});});
 	input->AddKeyboardHandler(KEY_S, pressed, [r]() -> void { r->camera.Move({0.f, 0.f, -0.5f});});
 	
-	input->AddKeyboardHandler(KEY_LEFT, pressed, [r]() -> void { r->transform.Move({ -0.5f, 0.f, 0.f }); });
-	input->AddKeyboardHandler(KEY_UP, pressed, [r]() -> void { r->transform.Move({ 0.f, 0.f, 0.5f }); });
-	input->AddKeyboardHandler(KEY_RIGHT, pressed, [r]() -> void { r->transform.Move({ 0.5f, 0.f, 0.f }); });
-	input->AddKeyboardHandler(KEY_DOWN, pressed, [r]() -> void { r->transform.Move({ 0.f, 0.f, -0.5f }); });
+	input->AddKeyboardHandler(KEY_LEFT, pressed, [r, px, py]() -> void { 
+		r->ent->transform()->Move({ -0.1f, 0.f, 0.f });
+		Quad q = r->terrain->getQuad(r->ent->transform()->Position().x, r->ent->transform()->Position().z);
+		q.top_left += XMVectorSet(0, 0.1, 0, 0);
+		q.top_right += XMVectorSet(0, 0.1, 0, 0);
+		q.bot_right += XMVectorSet(0, 0.1, 0, 0);
+		q.bot_left += XMVectorSet(0, 0.1, 0, 0);
+		r->lines->SetLines({ 
+			q.top_left, 
+			q.top_right, 
+			q.bot_right, 
+			q.bot_left, 
+			q.top_left }); });
+	input->AddKeyboardHandler(KEY_UP, pressed, [r, px, py]() -> void {
+
+		r->ent->transform()->Move({ 0.f, 0.f, 0.1f });
+		Quad q = r->terrain->getQuad(r->ent->transform()->Position().x, r->ent->transform()->Position().z);
+		q.top_left += XMVectorSet(0, 0.1, 0, 0);
+		q.top_right += XMVectorSet(0, 0.1, 0, 0);
+		q.bot_right += XMVectorSet(0, 0.1, 0, 0);
+		q.bot_left += XMVectorSet(0, 0.1, 0, 0);
+		r->lines->SetLines({
+			q.top_left,
+			q.top_right,
+			q.bot_right,
+			q.bot_left,
+			q.top_left }); });
+	input->AddKeyboardHandler(KEY_RIGHT, pressed, [r, px, py]() -> void {
+		r->ent->transform()->Move({ 0.1f, 0.f, 0.f });
+		Quad q = r->terrain->getQuad(r->ent->transform()->Position().x, r->ent->transform()->Position().z);
+		q.top_left += XMVectorSet(0, 0.1, 0, 0);
+		q.top_right += XMVectorSet(0, 0.1, 0, 0);
+		q.bot_right += XMVectorSet(0, 0.1, 0, 0);
+		q.bot_left += XMVectorSet(0, 0.1, 0, 0);
+		r->lines->SetLines({
+			q.top_left,
+			q.top_right,
+			q.bot_right,
+			q.bot_left,
+			q.top_left }); });
+	input->AddKeyboardHandler(KEY_DOWN, pressed, [r, px, py]() -> void {
+		
+		r->ent->transform()->Move({ 0.f, 0.f, -0.1f });
+
+		Quad q = r->terrain->getQuad(r->ent->transform()->Position().x, r->ent->transform()->Position().z);
+		q.top_left += XMVectorSet(0, 0.1, 0, 0);
+		q.top_right += XMVectorSet(0, 0.1, 0, 0);
+		q.bot_right += XMVectorSet(0, 0.1, 0, 0);
+		q.bot_left += XMVectorSet(0, 0.1, 0, 0);
+		r->lines->SetLines({
+			q.top_left,
+			q.top_right,
+			q.bot_right,
+			q.bot_left,
+			q.top_left }); });
 
 
 	input->AddKeyboardHandler(KEY_1, pressed, [r, r2d]() -> void { 
@@ -129,11 +185,27 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h) //: input(w,h)
 	input->AddMouseHandler(MOUSE_LEFT, released, [r, r2d, hwnd](const  int x, const  int y) -> void
 	{  
 		VectorPair ray = r->camera.getRay(x, y);
-		r->lines->SetLine(ray);
 		
-		XMVECTOR plane = XMPlaneFromPoints(XMVectorSet(1, 0, 0, 0), XMVectorSet(0, 0, 1, 0), XMVectorSet(1, 0, 1, 0));
-		XMVECTOR pos = XMPlaneIntersectLine(plane, ray.first, ray.second);
-		r->transform.Position(to(pos));
+		//XMVECTOR plane = XMPlaneFromPoints(XMVectorSet(1, 0, 0, 0), XMVectorSet(0, 0, 1, 0), XMVectorSet(1, 0, 1, 0));
+		//XMVECTOR pos = XMPlaneIntersectLine(plane, ray.first, ray.second);
+		Quad q;
+		XMVECTOR pos = r->terrain->findIntersection(ray, q, *r2d->console.get());
+		r->ent->transform()->Position(to(pos));
+		
+		//q = r->terrain->getQuad(10, 1);
+		q.top_left += XMVectorSet(0, 0.1, 0, 0);
+		q.top_right += XMVectorSet(0, 0.1, 0, 0);
+		q.bot_right += XMVectorSet(0, 0.1, 0, 0);
+		q.bot_left += XMVectorSet(0, 0.1, 0, 0);
+		
+		r->lines->SetLines({
+		q.top_left,
+		q.top_right,
+		q.bot_right,
+		q.bot_left,
+		q.top_left });
+
+		r->camera_ray->SetLines({ ray.first, ray.second });
 	});
 
 	input->AddMouseMoveHandler([r2d](const int dx, const int dy, const int x, const int y) -> void

@@ -1,6 +1,6 @@
 #include "Renderer.h"
 
-Renderer::Renderer(DXResources* dx) : angle(0)
+Renderer::Renderer(DXResources* _dx) : angle(0), dx(_dx)
 {
 	camera.InitProjMatrix(XM_PIDIV2, dx->winDesc.size.width, dx->winDesc.size.height, 0.01f, 1000.0f);
 
@@ -22,10 +22,10 @@ Renderer::Renderer(DXResources* dx) : angle(0)
 	light->update();
 	light->bind_PS(0);
 
-	lines = std::make_shared<Line>(dx);
-
-	ent = new Entity(resMgr, "monkey", "default", "grass", "grass_normal");
-	ent->transform()->Move({1.0,1.0,1.0});
+	lines = std::make_shared<Line>(dx,5);
+	camera_ray = std::make_shared<Line>(dx, 2);
+	ent = new Entity(resMgr, "mark", "default", "empty_diffuse", "empty_normal");
+	ent->transform()->Move({10.0f,0.1f,1.0f});
 }
 
 Renderer::~Renderer()
@@ -42,7 +42,7 @@ void Renderer::Render()
 {
 
 	resMgr->shader("default")->bind();
-	resMgr->mesh("monkey")->bind();
+	resMgr->mesh("head")->bind();
 
 	light->update();
 	light->bind_PS(0);
@@ -57,11 +57,11 @@ void Renderer::Render()
 	resMgr->texture("grass")->bind(0);
 	resMgr->texture("grass_normal")->bind(1);
 
-	resMgr->mesh("monkey")->draw();
+	resMgr->mesh("head")->draw();
 
 	terrain->bind();
 
-	matrices->data.world = tr.World();
+	matrices->data.world = XMMatrixTranspose(XMMatrixIdentity());
 	matrices->update();
 	matrices->bind_VS(0);
 
@@ -70,6 +70,10 @@ void Renderer::Render()
 	matrices->update();
 	matrices->bind_VS(0);
 
+	//ent->transform()->Scale(0.9f);
 	ent->Draw();
+
+	//for (auto line : lines)
 	lines->Draw(camera);
+	camera_ray->Draw(camera);
 }

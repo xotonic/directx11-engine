@@ -91,4 +91,8 @@ void Transformable::Position(XMFLOAT3& new_position)
 	//this->Target(target);
 }
 
+void Transformable::Scale(float value)
+{
+	mWorld *= XMMatrixScaling(value, value, value);
+}
 

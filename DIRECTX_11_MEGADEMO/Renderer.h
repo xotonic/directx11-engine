@@ -19,7 +19,7 @@
 class Renderer
 {
 public:
-	Renderer(DXResources* dx);
+	Renderer(DXResources* _dx);
 	~Renderer();
 	void Render();
 
@@ -32,11 +32,12 @@ public:
 	XMMATRIX projection;
 
 	Entity* ent;
-
+	std::shared_ptr<Line> camera_ray;
 	std::shared_ptr<Line> lines;
 private:
 
 	void DrawLines();
+	DXResources* dx;
 	VertexBuffer   *buf;
 	Texture        *tex, *normal;
 	//IndexBuffer  *ibuf;

@@ -55,8 +55,8 @@ public:
 		XMVECTOR unprojA = Unproject(x, y, 0.0f);
 		XMVECTOR unprojB = Unproject(x, y, 1.0f);
 
-		XMVECTOR dir = XMVector3Normalize(unprojB - unprojA);
-		return std::make_pair(unprojA, unprojA + 1000 * dir);
+		XMVECTOR dir = unprojB - unprojA;
+		return std::make_pair(unprojA, unprojA + XMVector3ClampLength(dir, 999,1000));
 	}
 	
 
@@ -83,7 +83,7 @@ private:
 
 		XMVECTOR q = XMQuaternionRotationMatrix(to(mView));
 
-		XMVECTOR coords = XMVector3Unproject(XMVectorSet(px, py / tan(XMConvertToRadians(60.0)), pz, 0.0f),
+		XMVECTOR coords = XMVector3Unproject(XMVectorSet(px, py / tan(XMConvertToRadians(60.0f)), pz, 0.0f),
 			0.0f, 0.0f,
 			res.x, res.y,
 			0, 1,

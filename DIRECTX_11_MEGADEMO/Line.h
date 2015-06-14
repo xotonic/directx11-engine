@@ -4,20 +4,20 @@
 #include "VertexBuffer.h"
 #include "DXResources.h"
 #include "ConstantBuffer.h"
-#include <array>
+#include <vector>
 #include "debug.h"
 #include "Camera.h"
 class Line
 {
 public:
-	Line(DXResources* _dx);
+	Line(DXResources* _dx, int count);
 	~Line() { vertexBuffer->Release(); }
 	void Draw(Camera& cam);
-	void SetLine(VectorPair& line);
+	void SetLines(const std::vector<XMVECTOR> &l);
 	std::shared_ptr<Shader> basic_shader;
 private:
 	DXResources* dx;
-	std::array<ColVertex,2> lines;
+	std::vector<ColVertex> lines;
 	ID3D11Buffer*   vertexBuffer;
 	std::shared_ptr<ConstantBuffer<MatrixBuffer>> matrices;
 	

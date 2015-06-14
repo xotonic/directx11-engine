@@ -111,3 +111,4 @@ inline XMFLOAT3 to(const XMFLOAT4& x)
 {
 	return XMFLOAT3(x.x,x.y, x.z);
 }
+

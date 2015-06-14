@@ -10,6 +10,7 @@ public:
 	void  Move(XMFLOAT3 direction);
 	void  Rotate(XMFLOAT3 axis, float degrees);
 	void  Position(XMFLOAT3& new_position);
+	void  Scale(float value);
 	const XMFLOAT3& Position() const { return mPosition; }
 	const XMMATRIX World() { return XMMatrixTranspose(mWorld); }
 	void initWorldMatrix();

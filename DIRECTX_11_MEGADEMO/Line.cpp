@@ -1,7 +1,8 @@
 #include "Line.h"
 
-Line::Line(DXResources* _dx) : dx(_dx)
+Line::Line(DXResources* _dx, int count) : dx(_dx)
 {
+	lines.resize(count);
 	matrices = std::make_shared<ConstantBuffer<MatrixBuffer>>(dx->device);
 	D3D11_BUFFER_DESC bd = { 0 };
 	bd.Usage = D3D11_USAGE_STAGING;
@@ -63,23 +64,36 @@ void Line::Draw(Camera& cam)
 	//delete p;
 }
 
-void Line::SetLine(VectorPair& line)
+void Line::SetLines(const std::vector<XMVECTOR> &l)
 {
 	
-	lines[0] = { { to2(line.first )}, { 1.0, 1.0, 1.0, 1.0 } };
-	lines[1] ={ { to2(line.second) }, { 1.0, 1.0, 1.0, 1.0 } };
+	//lines[0] = { { to2(line.first )}, { 1.0, 1.0, 1.0, 1.0 } };
+	//lines[1] ={ { to2(line.second) }, { 1.0, 1.0, 1.0, 1.0 } };
 
-	// updating vertex buffer
-	auto dc = dx->deviceContext;
+	if (l.size() == lines.size())
+	{
+		for (int i = 0; i < lines.size(); i++)
+			lines[i] = { { to2(l[i]) }, { 1.0, 1.0, 1.0, 1.0 } };
 
-	D3D11_MAPPED_SUBRESOURCE ms;
-	ZeroMemory(&ms, sizeof(ms));
+		// updating vertex buffer
+		auto dc = dx->deviceContext;
 
-	CHECK_HRESULT(
-		dc->Map(vertexBuffer, 0, D3D11_MAP_WRITE, 0, &ms),
-		"error mapping subresource");
+		D3D11_MAPPED_SUBRESOURCE ms;
+		ZeroMemory(&ms, sizeof(ms));
 
-	memcpy(ms.pData, lines.data(), lines.size()*sizeof(ColVertex));
+		CHECK_HRESULT(
+			dc->Map(vertexBuffer, 0, D3D11_MAP_WRITE, 0, &ms),
+			"error mapping subresource");
 
-	dc->Unmap(vertexBuffer, 0);
+		memcpy(ms.pData, lines.data(), lines.size()*sizeof(ColVertex));
+
+		dc->Unmap(vertexBuffer, 0);
+	}
+	else
+	{
+		ostringstream o;
+		o << "invalid lines count in SetLines argument\n" <<
+			"argument vector: " << l.size() << "\nlines vector: " << lines.size();
+		MESSAGE(o.str());
+	}
 }
