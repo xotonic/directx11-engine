@@ -42,7 +42,7 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h) //: input(w,h)
 	wcex.lpszMenuName = "MainMenu";    // name of menu resource
 	wcex.lpszClassName = "MainWClass";  // name of window class
 	wcex.hIconSm = 0;
-	if (!RegisterClassEx(&wcex)) MESSAGE("UNABLE TO REGISTER WINAPI CLASS\n");
+	if (!RegisterClassEx(&wcex)) Debug::message("UNABLE TO REGISTER WINAPI CLASS\n");
 
 	int y_max = GetSystemMetrics(SM_CYSCREEN);
 	int x_max = GetSystemMetrics(SM_CXSCREEN);
@@ -66,7 +66,7 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h) //: input(w,h)
 
 	SetWindowLong(hWnd, GWL_USERDATA, (long int)this);
 
-	if (!hWnd) MESSAGE("UNABLE TO CREATE WINDOW\n");
+	if (!hWnd) Debug::message("UNABLE TO CREATE WINDOW\n");
 
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);

@@ -15,7 +15,7 @@ Terrain::Terrain(ID3D11Device* dev, std::string file) : DeviceDependent(dev)
 	ZeroMemory(&sd, sizeof(sd));
 	sd.pSysMem = v_buf.data();
 
-	CHECK_HRESULT(device->CreateBuffer(&bd, &sd, &vertexBuffer), "Error creating vertex buffer");
+	Debug::if_failed(device->CreateBuffer(&bd, &sd, &vertexBuffer), "Error creating vertex buffer");
 }
 
 Terrain::~Terrain()
@@ -57,7 +57,7 @@ bool Terrain::ReadFromFile(std::string filename)
 	{
 		string msg("File not found: ");
 		msg.append(filename);
-		MESSAGE(msg);
+		Debug::message(msg);
 		return false;
 	}
 

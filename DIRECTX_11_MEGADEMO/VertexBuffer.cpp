@@ -15,7 +15,7 @@ v_buf(data)
 	ZeroMemory(&sd, sizeof(sd));
 	sd.pSysMem = data.data();
 
-	CHECK_HRESULT(device->CreateBuffer(&bd, &sd, &vertexBuffer), "Error creating vertex buffer");
+	Debug::if_failed(device->CreateBuffer(&bd, &sd, &vertexBuffer), "Error creating vertex buffer");
 }
 
 VertexBuffer::VertexBuffer(ID3D11Device* dev, string filename) : DeviceDependent(dev)
@@ -33,7 +33,7 @@ VertexBuffer::VertexBuffer(ID3D11Device* dev, string filename) : DeviceDependent
 	ZeroMemory(&sd, sizeof(sd));
 	sd.pSysMem = v_buf.data();
 
-	CHECK_HRESULT(device->CreateBuffer(&bd, &sd, &vertexBuffer), "Error creating vertex buffer from file");
+	Debug::if_failed(device->CreateBuffer(&bd, &sd, &vertexBuffer), "Error creating vertex buffer from file");
 }
 
 VertexBuffer::~VertexBuffer()
@@ -73,7 +73,7 @@ bool VertexBuffer::ReadFromOBJ(string filename)
 	{
 		string msg("File not found: ");
 		msg.append(filename);
-		MESSAGE(msg);
+		Debug::message(msg);
 		return false;
 	}
 

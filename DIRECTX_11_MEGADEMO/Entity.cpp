@@ -57,7 +57,7 @@ void Entity::Draw()
 		shader->bind();
 		vb->bind();
 	}
-	else MESSAGE("Entity " + (is_mesh ? string(" has not mesh") : string("has mesh"))
+	else Debug::message("Entity " + (is_mesh ? string(" has not mesh") : string("has mesh"))
 		+ (is_shader ? string("and has not shader") : string("and has shader, but something wrong")));
 	if (shader->HasUVComponent())
 	{
@@ -66,7 +66,7 @@ void Entity::Draw()
 			diffuse->bind(0);
 			normal->bind(1);
 		}
-		else MESSAGE("Entity hasn't textures");
+		else Debug::message("Entity hasn't textures");
 	}
 
 	vb->draw();

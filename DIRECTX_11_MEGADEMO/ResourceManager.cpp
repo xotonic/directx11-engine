@@ -64,14 +64,14 @@ void ResourceManager::readResources(string filename)
 		}
 		in.close();
 	}
-	else	MESSAGE("Resource file " + filename + " not found");
+	else	Debug::message("Resource file " + filename + " not found");
 }
 
 VertexBuffer* ResourceManager::mesh(string name)
 {
 	auto it = vertexBuffers.find(name);
 
-	if (it == vertexBuffers.end()) MESSAGE("Can't find mesh in resource manager : " + name);
+	if (it == vertexBuffers.end()) Debug::message("Can't find mesh in resource manager : " + name);
 
 	return it->second;
 }
@@ -80,7 +80,7 @@ Texture* ResourceManager::texture(string name)
 {
 	auto it = textures.find(name);
 
-	if (it == textures.end()) MESSAGE("Can't find texture in resource manager : " + name);
+	if (it == textures.end()) Debug::message("Can't find texture in resource manager : " + name);
 
 	return it->second;
 }
@@ -89,7 +89,7 @@ Shader* ResourceManager::shader(string name)
 {
 	auto it = shaders.find(name);
 
-	if (it == shaders.end()) MESSAGE("Can't find shader in resource manager : " + name);
+	if (it == shaders.end()) Debug::message("Can't find shader in resource manager : " + name);
 
 	return it->second;
 }

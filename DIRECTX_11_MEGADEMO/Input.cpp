@@ -4,7 +4,7 @@ Input::Input(HINSTANCE hinst, HWND _hwnd, int w, int h) : hwnd(_hwnd),
 width(w), height(h),
 x(0), y(0)
 {
-	CHECK_HRESULT(
+	Debug::if_failed(
 		DirectInput8Create(hinst,
 		DIRECTINPUT_VERSION,
 		IID_IDirectInput8,
@@ -15,42 +15,42 @@ x(0), y(0)
 
 	/* keyboard */
 
-	CHECK_HRESULT(
+	Debug::if_failed(
 		directInput->CreateDevice(GUID_SysKeyboard, &keyboard, 0),
 		"Error creating keyboard device");
 
-	CHECK_HRESULT(
+	Debug::if_failed(
 		keyboard->SetDataFormat(&c_dfDIKeyboard),
 		"Error setting data format for keyboard device"
 		);
-	CHECK_HRESULT(
+	Debug::if_failed(
 		keyboard->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE),
 		"Error setting cooperative level for keyboard device"
 		);
 
-	CHECK_HRESULT(
+	Debug::if_failed(
 		keyboard->Acquire(),
 		"Error acquire keyboard"
 		);
 
 	/* mouse */
 
-	CHECK_HRESULT(
+	Debug::if_failed(
 		directInput->CreateDevice(GUID_SysMouse, &mouse, 0),
 		"Error creating mouse device"
 		);
 
-	CHECK_HRESULT(
+	Debug::if_failed(
 		mouse->SetDataFormat(&c_dfDIMouse),
 		"Error setting data format for mouse device"
 		);
 
-	CHECK_HRESULT(
+	Debug::if_failed(
 		mouse->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE),
 		"Error setting cooperative level for mouse device"
 		);
 
-	CHECK_HRESULT(
+	Debug::if_failed(
 		mouse->Acquire(),
 		"Error acquire mouse"
 		);
@@ -147,7 +147,7 @@ void Input::ReadKeyboard()
 		{
 			keyboard->Acquire();
 		}
-		else MESSAGE("error getting keyboard device state");
+		else Debug::message("error getting keyboard device state");
 	}
 }
 
@@ -161,7 +161,7 @@ void Input::ReadMouse()
 		{
 			mouse->Acquire();
 		}
-		else MESSAGE("error getting mouse device state");
+		else Debug::message("error getting mouse device state");
 	}
 }
 
@@ -218,7 +218,7 @@ KeyState Input::CheckKey(KeyCode state)
 //
 //	//std::ostringstream i;
 //	//i << "x = " << new_x << " y = " << new_y;
-//	//MESSAGE(i.str());
+//	//Debug::message(i.str());
 //
 //	/* apply moving mouse actions */
 //

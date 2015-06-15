@@ -2,7 +2,7 @@
 
 Console::Console(DXResources* _dx) : dx(_dx)
 {
-	CHECK_HRESULT(dx->dwFactory->CreateTextFormat(L"Consolas", NULL,
+	Debug::if_failed(dx->dwFactory->CreateTextFormat(L"Consolas", NULL,
 		DWRITE_FONT_WEIGHT_NORMAL,
 		DWRITE_FONT_STYLE_NORMAL,
 		DWRITE_FONT_STRETCH_NORMAL,

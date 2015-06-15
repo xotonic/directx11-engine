@@ -42,7 +42,7 @@ public:
 		if (i + 5 > v_buf.size()) {
 			ostringstream o;
 			o << "index out\n x = " << x << "\n y = " << y;
-			MESSAGE(o.str());
+			Debug::message(o.str());
 		}
 		return{ to(v_buf[i].pos), to(v_buf[i + 1].pos), to(v_buf[i + 2].pos), to(v_buf[i + 5].pos) };
 	}

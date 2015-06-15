@@ -42,7 +42,7 @@ ConstantBuffer<T>::ConstantBuffer(ID3D11Device* dev) : DeviceDependent(dev)
 	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	bd.CPUAccessFlags = 0;
 
-	CHECK_HRESULT(device->CreateBuffer(&bd, NULL, &cbuf), "Error creating constant buffer");
+	Debug::if_failed(device->CreateBuffer(&bd, NULL, &cbuf), "Error creating constant buffer");
 }
 
 template <typename T>

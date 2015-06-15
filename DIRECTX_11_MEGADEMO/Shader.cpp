@@ -10,7 +10,7 @@ Shader::Shader(ID3D11Device* dev, std::string vs_name, std::string ps_name, bool
 	ID3D10Blob* psBlob = NULL;
 	compileFromFile(vs_name, VS_entryPoint, VS_model, &vsBlob);
 
-	CHECK_HRESULT(
+	Debug::if_failed(
 		dev->CreateVertexShader(
 		vsBlob->GetBufferPointer(),
 		vsBlob->GetBufferSize(),
@@ -27,14 +27,14 @@ Shader::Shader(ID3D11Device* dev, std::string vs_name, std::string ps_name, bool
 	if (_uv)
 		desc.push_back({ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 });
 
-	CHECK_HRESULT(
+	Debug::if_failed(
 		dev->CreateInputLayout(desc.data(), desc.size(), vsBlob->GetBufferPointer(),
 		vsBlob->GetBufferSize(), &inputLayout), "error creating input layout");
 
 	vsBlob->Release();
 
 	compileFromFile(ps_name, PS_entryPoint, PS_model, &psBlob);
-	CHECK_HRESULT(
+	Debug::if_failed(
 		dev->CreatePixelShader(psBlob->GetBufferPointer(), psBlob->GetBufferSize(), NULL, &pixelShader),
 		"error creating pixel shader");
 
@@ -61,13 +61,13 @@ void Shader::compileFromFile(std::string fileName, const LPCSTR ep, const LPCSTR
 	{
 		if (errorBlob != 0)
 		{
-			MESSAGE((char*)errorBlob->GetBufferPointer());
+			Debug::message((char*)errorBlob->GetBufferPointer());
 			errorBlob->Release();
 			return;
 		}
 		else
 		{
-			MESSAGE("error compiling shader from file");
+			Debug::message("error compiling shader from file");
 			return;
 		}
 	}

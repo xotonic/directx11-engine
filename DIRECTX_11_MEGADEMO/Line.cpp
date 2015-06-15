@@ -17,11 +17,11 @@ Line::Line(DXResources* _dx, int count) : dx(_dx)
 	sd.SysMemPitch = 0;
 	sd.SysMemSlicePitch = 0;
 
-	CHECK_HRESULT(dx->device->CreateBuffer(&bd, &sd, &vertexBuffer), "Error creating vertex buffer");
+	Debug::if_failed(dx->device->CreateBuffer(&bd, &sd, &vertexBuffer), "Error creating vertex buffer");
 
 	basic_shader = std::make_shared<Shader>(dx->device, "basic.vsh", "basic.psh", true, false, false);
 
-	//MESSAGE(sizeof(ColVertex));
+	//Debug::message(sizeof(ColVertex));
 }
 
 void Line::Draw(Camera& cam)
@@ -62,7 +62,7 @@ void Line::SetLines(const std::vector<XMVECTOR> &l)
 		D3D11_MAPPED_SUBRESOURCE ms;
 		ZeroMemory(&ms, sizeof(ms));
 
-		CHECK_HRESULT(
+		Debug::if_failed(
 			dc->Map(vertexBuffer, 0, D3D11_MAP_WRITE, 0, &ms),
 			"error mapping subresource");
 
@@ -75,6 +75,6 @@ void Line::SetLines(const std::vector<XMVECTOR> &l)
 		ostringstream o;
 		o << "invalid lines count in SetLines argument\n" <<
 			"argument vector: " << l.size() << "\nlines vector: " << lines.size();
-		MESSAGE(o.str());
+		Debug::message(o.str());
 	}
 }

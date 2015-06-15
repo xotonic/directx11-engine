@@ -3,7 +3,7 @@
 Texture::Texture(ID3D11Device* dev, std::string filename) : DeviceDependent(dev)
 {
 
-	CHECK_HRESULT(CreateDDSTextureFromFile(device, stringToWstring(filename).c_str(), nullptr, &textureRV),
+	Debug::if_failed(CreateDDSTextureFromFile(device, stringToWstring(filename).c_str(), nullptr, &textureRV),
 		"ERROR creating dds texture from file");
 }
 

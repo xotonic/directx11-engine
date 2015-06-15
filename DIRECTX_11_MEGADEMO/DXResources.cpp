@@ -56,15 +56,15 @@ DXResources::DXResources(WindowDescriptor& wd) : winDesc(wd) //: adapded(false)
 	}
 	if (FAILED(hr))
 	{
-		MESSAGE("CREATE DEVICE ERROR\n");
+		Debug::message("CREATE DEVICE ERROR\n");
 		return;
 	}
 
 	ID3D11Texture2D* pBackBuffer = NULL;
-	CHECK_HRESULT(swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer),
+	Debug::if_failed(swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer),
 		"error getting back buffer");
 
-	CHECK_HRESULT(device->CreateRenderTargetView(pBackBuffer, NULL, &renderTargetView),
+	Debug::if_failed(device->CreateRenderTargetView(pBackBuffer, NULL, &renderTargetView),
 		"error in creating render target view");
 	pBackBuffer->Release();
 
@@ -82,7 +82,7 @@ DXResources::DXResources(WindowDescriptor& wd) : winDesc(wd) //: adapded(false)
 	descDepth.CPUAccessFlags = 0;
 	descDepth.MiscFlags = 0;
 
-	CHECK_HRESULT(device->CreateTexture2D(&descDepth, nullptr, &depthTexture),
+	Debug::if_failed(device->CreateTexture2D(&descDepth, nullptr, &depthTexture),
 		"Error creating depth texture");
 
 	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
@@ -91,7 +91,7 @@ DXResources::DXResources(WindowDescriptor& wd) : winDesc(wd) //: adapded(false)
 	descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	descDSV.Texture2D.MipSlice = 0;
 
-	CHECK_HRESULT(device->CreateDepthStencilView(depthTexture, &descDSV, &depthStencilView),
+	Debug::if_failed(device->CreateDepthStencilView(depthTexture, &descDSV, &depthStencilView),
 		"Error creating depth stencil view");
 
 	deviceContext->OMSetRenderTargets(1, &renderTargetView, depthStencilView);
@@ -123,7 +123,7 @@ DXResources::~DXResources()
 
 void DXResources::Present()
 {
-	CHECK_HRESULT(swapChain->Present(1, 0), "Present() error");
+	Debug::if_failed(swapChain->Present(1, 0), "Present() error");
 }
 
 void DXResources::ClearView()
@@ -135,7 +135,7 @@ void DXResources::ClearView()
 
 void DXResources::Init2d()
 {
-	CHECK_HRESULT(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &d2dFactory), "");
+	Debug::if_failed(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &d2dFactory), "");
 
 	FLOAT dpiX;
 	FLOAT dpiY;
@@ -155,7 +155,7 @@ void DXResources::Init2d()
 		&d2dRT
 		);
 
-	CHECK_HRESULT(
+	Debug::if_failed(
 		DWriteCreateFactory(
 		DWRITE_FACTORY_TYPE_SHARED,
 		__uuidof(dwFactory),
