@@ -4,8 +4,8 @@ class DeviceDependent
 {
 protected:
 	DeviceDependent(ID3D11Device * dev);
-	
-	ID3D11Device* device= nullptr;
+
+	ID3D11Device* device = nullptr;
 	ID3D11DeviceContext *deviceContext = nullptr;
 
 	//std::wstring stringToWstring(std::string str)
@@ -22,4 +22,3 @@ protected:
 	//	return r;*/
 	//}
 };
-

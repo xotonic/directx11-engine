@@ -4,9 +4,8 @@ Shader::Shader(ID3D11Device* dev, std::string vs_name, std::string ps_name, bool
 	: DeviceDependent(dev), colorComponent(_color), normalComponent(_normal), UVComponent(_uv)
 
 {
-
 	//dev->GetImmediateContext(&deviceContext);
-	
+
 	ID3D10Blob* vsBlob = NULL;
 	ID3D10Blob* psBlob = NULL;
 	compileFromFile(vs_name, VS_entryPoint, VS_model, &vsBlob);
@@ -56,17 +55,12 @@ void Shader::compileFromFile(std::string fileName, const LPCSTR ep, const LPCSTR
 	HRESULT hr = S_OK;
 	ID3DBlob* errorBlob = NULL;
 
-	//MESSAGE(fileName);
-
-	//LPCWSTR s = (LPCWSTR)stringToLPCWSTR(fileName) + L'\0';
-	//std::wstring s(L"simple.fx");
 	hr = D3DCompileFromFile(stringToWstring(fileName).c_str(), 0, 0, ep, model, 0, 0, blob, &errorBlob);
 
 	if (FAILED(hr))
 	{
 		if (errorBlob != 0)
 		{
-			DEBUG((char*)errorBlob->GetBufferPointer());
 			MESSAGE((char*)errorBlob->GetBufferPointer());
 			errorBlob->Release();
 			return;
@@ -75,7 +69,6 @@ void Shader::compileFromFile(std::string fileName, const LPCSTR ep, const LPCSTR
 		{
 			MESSAGE("error compiling shader from file");
 			return;
-			//throw "can't compile shader from ";
 		}
 	}
 }
@@ -84,6 +77,5 @@ void Shader::bind()
 {
 	deviceContext->IASetInputLayout(inputLayout);
 	deviceContext->VSSetShader(vertexShader, 0, 0);
-	//deviceContext->VSSetConstantBuffers(0, 1, constBuf);
 	deviceContext->PSSetShader(pixelShader, 0, 0);
 }

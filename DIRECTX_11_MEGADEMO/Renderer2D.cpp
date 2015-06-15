@@ -1,9 +1,8 @@
 #include "Renderer2D.h"
 
-Renderer2D::Renderer2D(DXResources* _dx): dx(_dx)
+Renderer2D::Renderer2D(DXResources* _dx) : dx(_dx)
 {
 	console = std::make_shared<Console>(dx);
-
 }
 
 void Renderer2D::Render()
@@ -12,4 +11,3 @@ void Renderer2D::Render()
 	console->Update();
 	dx->d2dRT->EndDraw();
 }
-

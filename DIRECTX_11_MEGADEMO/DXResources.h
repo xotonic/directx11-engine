@@ -7,14 +7,14 @@ class DXResources
 public:
 	DXResources(WindowDescriptor& wd);
 	~DXResources();
-	
+
 	//Основные обьекты и обьекты для Direct3D
-	ID3D11Device          *        device           ;
-	ID3D11DeviceContext   *        deviceContext    ;
-	IDXGISwapChain        *        swapChain        ;
-	ID3D11RenderTargetView*        renderTargetView ;
-	ID3D11Texture2D       *        depthTexture     ;         // Текстура буфера глубин
-	ID3D11DepthStencilView*        depthStencilView ;     // Объект вида, буфер глубин
+	ID3D11Device          *        device;
+	ID3D11DeviceContext   *        deviceContext;
+	IDXGISwapChain        *        swapChain;
+	ID3D11RenderTargetView*        renderTargetView;
+	ID3D11Texture2D       *        depthTexture;         // Текстура буфера глубин
+	ID3D11DepthStencilView*        depthStencilView;     // Объект вида, буфер глубин
 
 	WindowDescriptor winDesc;
 
@@ -34,4 +34,3 @@ private:
 	DXGI_SWAP_CHAIN_DESC swapChainDescriptor;
 	D3D_DRIVER_TYPE driverType;
 };
-

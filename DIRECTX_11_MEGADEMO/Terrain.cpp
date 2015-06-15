@@ -41,23 +41,6 @@ void Terrain::bind()
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
-//DirectX::XMVECTOR Terrain::findIntersection( const VectorPair& ray)
-//{
-//	XMVECTOR point = XMVectorZero();
-//	for (int i = 0; i < v_buf.size(); i += 3)
-//	{
-//		XMVECTOR t1 = to(v_buf[i].pos);
-//		XMVECTOR t2 = to(v_buf[i+1].pos);
-//		XMVECTOR t3 = to(v_buf[i+2].pos);
-//
-//		float dist = 0.0;
-//		if (TriangleTests::Intersects(ray.first, XMVector3Normalize(ray.second), t1, t2, t3, dist))
-//		{
-//			point = ray.first + dist*XMVector3Normalize(ray.second);
-//		}
-//	}
-//	return point;
-//}
 
 void Terrain::draw()
 {
@@ -94,7 +77,7 @@ bool Terrain::ReadFromFile(std::string filename)
 			float ty = 0.0f;
 
 			filein >> y;
-			ty = 50*float(y) / 255.0f;
+			ty = 50 * float(y) / 255.0f;
 
 			float tx = float(i);
 			float tz = float(j);
@@ -121,8 +104,8 @@ bool Terrain::ReadFromFile(std::string filename)
 			int index_4 = (i + 1)*vy + j;
 
 			XMVECTOR edge1 = XMLoadFloat3(&(unique_vertices[index_1].pos - unique_vertices[index_3].pos)); // диагональ
-			XMVECTOR edge2 = XMLoadFloat3(&(unique_vertices[index_1].pos - unique_vertices[index_2].pos)); 
-			XMVECTOR edge3 = XMLoadFloat3(&(unique_vertices[index_1].pos - unique_vertices[index_4].pos)); 
+			XMVECTOR edge2 = XMLoadFloat3(&(unique_vertices[index_1].pos - unique_vertices[index_2].pos));
+			XMVECTOR edge3 = XMLoadFloat3(&(unique_vertices[index_1].pos - unique_vertices[index_4].pos));
 
 			XMVECTOR normal = XMVector3Cross(edge1, edge2);
 			normal = XMVector3Normalize(-normal);
@@ -135,7 +118,6 @@ bool Terrain::ReadFromFile(std::string filename)
 			normals[index_1] += normal;
 			normals[index_3] += normal;
 			normals[index_4] += normal;
-
 		}
 	}
 	// normalizing normals
@@ -146,11 +128,10 @@ bool Terrain::ReadFromFile(std::string filename)
 		XMStoreFloat3(&unique_vertices[i].normal, n);
 	}
 
-	
 	// forming vertex buffer
 
 	v_buf.reserve(face_num * 3 * 2);
-	
+
 	for (int i = 0; i < vy - 1; i++)
 	{
 		for (int j = 0; j < vx - 1; j++)
@@ -160,47 +141,23 @@ bool Terrain::ReadFromFile(std::string filename)
 			int index_3 = (i + 1)*vy + j + 1;
 			int index_4 = (i + 1)*vy + j;
 
-			//XMVECTOR edge1 = XMLoadFloat3(&(unique_vertices[index_1].pos - unique_vertices[index_3].pos)); // диагональ
-			//XMVECTOR edge2 = XMLoadFloat3(&(unique_vertices[index_1].pos - unique_vertices[index_2].pos));
-			//XMVECTOR normal = XMVector3Cross(edge1, edge2);
-			//normal = XMVector3Normalize(-normal);
 			XMVECTOR n1 = to(unique_vertices[index_1].normal);
 			XMVECTOR n2 = to(unique_vertices[index_2].normal);
 			XMVECTOR n4 = to(unique_vertices[index_4].normal);
 			XMVECTOR n3 = to(unique_vertices[index_3].normal);
-/*
-			float a12 = XMVector3AngleBetweenVectors(n1, n2).vector4_f32[0];
-			float a13 = XMVector3AngleBetweenVectors(n1, n3).vector4_f32[0];
-			float a23 = XMVector3AngleBetweenVectors(n2, n3).vector4_f32[0];
-
-			if (a12 > 0.7) if (a12 > a23) n1 = n2; else n2 = n1;
-			if (a13 > 0.7) if (a13 > a23) n1 = n3; else n3 = n1;
-			if (a23 > 0.7) if (a23 > a13) n2 = n3; else n3 = n2;
-*/
-
+		
 			v_buf.push_back({ { unique_vertices[index_1].pos }, { to(n1) }, { 0.0f, 0.0f } });
 			v_buf.push_back({ { unique_vertices[index_2].pos }, { to(n2) }, { 1.0f, 0.0f } });
 			v_buf.push_back({ { unique_vertices[index_3].pos }, { to(n3) }, { 1.0f, 1.0f } });
 
-				
-				/*	XMVECTOR edge3 = XMunique_vertices[index_3].posLoadFloat3(&(unique_vertices[index_1].pos - unique_vertices[index_4].pos));
-			normal = XMVector3Cross(edge3, edge1);
-			normal = XMVector3Normalize(-normal);*/
-			/*float a41 = XMVector3AngleBetweenVectors(n1, n1).vector4_f32[0];
-			float a43 = XMVector3AngleBetweenVectors(n4, n3).vector4_f32[0];
-
-			if (a41 > 0.7) if (a41 > a43) n1 = n4; else n4 = n1;
-			if (a13 > 0.7) if (a13 > a43) n1 = n3; else n3 = n1;
-			if (a43 > 0.7) if (a43 > a13) n4 = n3; else n3 = n4;
-*/
+		
 			v_buf.push_back({ { unique_vertices[index_1].pos }, { to(n1) }, { 0.0f, 0.0f } });
 			v_buf.push_back({ { unique_vertices[index_3].pos }, { to(n3) }, { 1.0f, 1.0f } });
 			v_buf.push_back({ { unique_vertices[index_4].pos }, { to(n4) }, { 0.0f, 1.0f } });
-
 		}
 	}
 
 	filein.close();
-	
+
 	return true;
 }

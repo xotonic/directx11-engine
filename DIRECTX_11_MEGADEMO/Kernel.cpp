@@ -14,8 +14,6 @@ void Kernel::Run()
 		{
 			timer.reset();
 			timer.doBefore();
-
-			//renderer2D->console->SetParam("cam", L"camera", renderer->camera.getPos());
 			input->Update();
 			dx->ClearView();
 			renderer->Render();
@@ -23,7 +21,6 @@ void Kernel::Run()
 			dx->Present();
 
 			timer.doAfter();
-
 		}
 	}
 }
@@ -45,7 +42,7 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h) //: input(w,h)
 	wcex.lpszMenuName = "MainMenu";    // name of menu resource
 	wcex.lpszClassName = "MainWClass";  // name of window class
 	wcex.hIconSm = 0;
-	if (!RegisterClassEx(&wcex)) DEBUG("UNABLE TO REGISTER WINAPI CLASS\n");
+	if (!RegisterClassEx(&wcex)) MESSAGE("UNABLE TO REGISTER WINAPI CLASS\n");
 
 	int y_max = GetSystemMetrics(SM_CYSCREEN);
 	int x_max = GetSystemMetrics(SM_CXSCREEN);
@@ -69,22 +66,18 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h) //: input(w,h)
 
 	SetWindowLong(hWnd, GWL_USERDATA, (long int)this);
 
-	if (!hWnd) DEBUG("UNABLE TO CREATE WINDOW\n");
+	if (!hWnd) MESSAGE("UNABLE TO CREATE WINDOW\n");
 
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
-	
-
 
 	WindowDescriptor wd = { hWnd, w, h };
 
-	
 	input = std::make_shared<Input>(hInstance, hWnd, w, h);
 	dx = std::make_shared<DXResources>(wd);
 	//SetWindowTextW(hWnd, L"Загрузка обьектов...");
 	renderer = std::make_shared<Renderer>(dx.get());
 	renderer2D = std::make_shared<Renderer2D>(dx.get());
-	SetWindowTextW(hWnd, L"~~КУРСАЧ~~");
 	Renderer* r = renderer.get();
 	Renderer2D* r2d = renderer2D.get();
 	Timer* t = &timer;
@@ -93,11 +86,9 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h) //: input(w,h)
 	int *px = &x, *py = &y;
 
 	r->camera.Move({ (float)r->terrain->wight / 2, 60, (float)r->terrain->height / 2 });
-	r->light->data.dir = {0.12f, 0.42f, -0.81f, 1.0f};
+	r->light->data.dir = { 0.12f, 0.42f, -0.81f, 1.0f };
 
-
-
-	input->AddKeyboardHandler(KEY_D, pressed, [r, r2d]() -> void { 
+	input->AddKeyboardHandler(KEY_D, pressed, [r, r2d]() -> void {
 		XMMATRIX m = to(r->camera.mView);
 		m *= XMMatrixTranslation(-0.5, 0, 0);
 		r->camera.mView = to(m);
@@ -107,14 +98,14 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h) //: input(w,h)
 		m *= XMMatrixTranslation(0, 0, -0.5);
 		r->camera.mView = to(m);
 	});
-	input->AddKeyboardHandler(KEY_A, pressed, [r]() -> void 
-	{ 
+	input->AddKeyboardHandler(KEY_A, pressed, [r]() -> void
+	{
 		XMMATRIX m = to(r->camera.mView);
 		m *= XMMatrixTranslation(0.5, 0, 0);
 		r->camera.mView = to(m);
 	});
-	input->AddKeyboardHandler(KEY_S, pressed, [r]() -> void 
-	{ 
+	input->AddKeyboardHandler(KEY_S, pressed, [r]() -> void
+	{
 		XMMATRIX m = to(r->camera.mView);
 		m *= XMMatrixTranslation(0, 0, 0.5);
 		r->camera.mView = to(m);
@@ -132,8 +123,7 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h) //: input(w,h)
 		m *= XMMatrixTranslation(0, -0.5, 0);
 		r->camera.mView = to(m);
 	});
-	
-	
+
 	input->AddKeyboardHandler(KEY_2, pressed, [r]() -> void {
 		XMVECTOR v = XMLoadFloat4(&r->light->data.dir);
 		v = XMVector3Rotate(v, XMVectorSet(0.0f, 0.01f, 0.0f, 1.0f));
@@ -148,8 +138,6 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h) //: input(w,h)
 
 	input->AddKeyboardHandler(KEY_ESCAPE, released, []() -> void { PostQuitMessage(0); });
 
-	
-
 	input->AddMouseMoveHandler([r, r2d](const int dx, const int dy, const int x, const int y) -> void
 	{
 		wostringstream os; os << L"dx : " << dx << L" dy : " << dy << endl
@@ -163,14 +151,12 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h) //: input(w,h)
 	}
 	);
 
-	timer.addAfterHandler("fps", [t, r2d, r]() -> void 
-	{ 
-		r2d->console->SetParam("fps", L"FPS: ", 1000/(!t->getDeltaTime() ? 1 : t->getDeltaTime()));
+	timer.addAfterHandler("fps", [t, r2d, r]() -> void
+	{
+		r2d->console->SetParam("fps", L"FPS: ", 1000 / (!t->getDeltaTime() ? 1 : t->getDeltaTime()));
 		r2d->console->SetParam("cam", L"camera position", r->camera.Position());
 		r2d->console->SetParam("ldir", L"light dir", to(r->light->data.dir));
-
 	});
-
 }
 
 long int _stdcall Kernel::WinMessage(HWND _window, unsigned int _message, WPARAM _wParam, LPARAM _lParam)
@@ -203,27 +189,6 @@ long int Kernel::Message(HWND _window, unsigned int _message, WPARAM _wParam, LP
 		PostQuitMessage(0);
 		break;
 
-	//	/*case WM_MOUSEMOVE:
-	//	case WM_LBUTTONUP:*/
-	//	//case WM_LBUTTONDOWN:
-	//	/*case WM_MBUTTONDOWN:
-	//	case WM_RBUTTONUP:
-	//	case WM_RBUTTONDOWN:
-	//	case WM_MOUSEWHEEL:*/
-	//	//case WM_MOUSEMOVE:
-	//		//input.RunMouse(_wParam, _lParam, MOUSE_NONE);
-	//		//SetCapture(hWnd);
-	//		//SetCursorPos(640, 480);
-	//		//break;
-	//	//case WM_LBUTTONUP:
-	//		//input.RunMouse(_wParam, _lParam, MOUSE_LEFT, released);
-	//		//break;
-	////case WM_KEYUP:
-	////case WM_KEYDOWN:
-	//	//input.Run(_message, _wParam, _lParam);
-	//	// TODO обработчик картой функций
-	//	//break;
-		
 	default:
 		return DefWindowProc(_window, _message, _wParam, _lParam);
 	}

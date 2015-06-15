@@ -1,6 +1,5 @@
 #include "Entity.h"
 
-
 Entity::Entity(ResourceManager* _rm, string mesh_name /*= 0*/, string shader_name /*= 0*/, string texture_diffuse /*= 0*/, string texture_normal /*= 0*/)
 	: rm(_rm)
 {
@@ -24,7 +23,6 @@ Entity::Entity(ResourceManager* _rm, string mesh_name /*= 0*/, string shader_nam
 				is_textures = true;
 			}
 		}
-
 	}
 }
 
@@ -38,7 +36,6 @@ void Entity::SetShader(string name)
 {
 	shader = rm->shader(name);
 	is_shader = true;
-
 }
 
 void Entity::SetDiffuse(string name)
@@ -53,18 +50,17 @@ void Entity::SetNormal(string name)
 
 void Entity::Draw()
 {
-	is_textures = diffuse != NULL & normal !=NULL;
-	
+	is_textures = diffuse != NULL & normal != NULL;
+
 	if (is_mesh & is_shader)
 	{
 		shader->bind();
 		vb->bind();
 	}
 	else MESSAGE("Entity " + (is_mesh ? string(" has not mesh") : string("has mesh"))
-			+ (is_shader ? string("and has not shader") : string("and has shader, but something wrong")));
+		+ (is_shader ? string("and has not shader") : string("and has shader, but something wrong")));
 	if (shader->HasUVComponent())
 	{
-
 		if (is_textures)
 		{
 			diffuse->bind(0);

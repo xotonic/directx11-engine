@@ -13,8 +13,8 @@ public:
 	inline int getDeltaTime()	{ return (duration_cast<milliseconds>(system_clock::now() - last).count()); }
 	inline void reset() { last = system_clock::now(); }
 
-	void addBeforeHandler(string name,function<void()> func)	{ functions_before.insert(make_pair(name,func)); }
-	void deleteBeforeHandler(string name) { 
+	void addBeforeHandler(string name, function<void()> func)	{ functions_before.insert(make_pair(name, func)); }
+	void deleteBeforeHandler(string name) {
 		auto f = functions_before.find(name);
 		if (f != functions_before.end()) functions_before.erase(name);
 	}
@@ -26,9 +26,8 @@ public:
 	}
 	inline void doBefore() { for (auto f : functions_before) f.second(); }
 	inline void doAfter() { for (auto f : functions_after) f.second(); }
-private: 
+private:
 	system_clock::time_point last;
-	map<string,function<void()>> functions_before;
+	map<string, function<void()>> functions_before;
 	map<string, function<void()>> functions_after;
 };
-

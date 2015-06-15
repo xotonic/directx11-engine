@@ -1,19 +1,18 @@
 #include "Input.h"
 
-
 Input::Input(HINSTANCE hinst, HWND _hwnd, int w, int h) : hwnd(_hwnd),
 width(w), height(h),
 x(0), y(0)
 {
 	CHECK_HRESULT(
 		DirectInput8Create(hinst,
-			DIRECTINPUT_VERSION,
-			IID_IDirectInput8,
-			(void**)&directInput,
-			NULL),
+		DIRECTINPUT_VERSION,
+		IID_IDirectInput8,
+		(void**)&directInput,
+		NULL),
 		"Error creating DirectInput main class"
 		);
-	
+
 	/* keyboard */
 
 	CHECK_HRESULT(
@@ -66,14 +65,13 @@ Input::~Input()
 	}
 
 	if (keyboard)
-	{	
+	{
 		keyboard->Unacquire();
 		keyboard->Release();
 	}
 
 	if (directInput) directInput->Release();
 }
-
 
 void Input::AddKeyboardHandler(KeyCode code, KeyState keyEvent, func_void func)
 {
@@ -93,7 +91,6 @@ void Input::AddKeyboardHandler(KeyCode code, KeyState keyEvent, func_void func)
 
 void Input::AddMouseHandler(MouseKeyCode code, KeyState state, func_coords func)
 {
-
 	if (code == MOUSE_LEFT)
 	{
 		if (state == pressed)
@@ -105,7 +102,6 @@ void Input::AddMouseHandler(MouseKeyCode code, KeyState state, func_coords func)
 			left_button_up_funcs.push_back(func);
 		}
 	}
-
 }
 
 void Input::AddMouseMoveHandler(func_move func)
@@ -131,7 +127,7 @@ void Input::Update()
 	}
 
 	for (auto it : move_funcs)
-		it(dx, dy,x,y);
+		it(dx, dy, x, y);
 	if (mouseState.rgbButtons[0] & 0x80)
 	{
 		for (auto it : left_button_down_funcs)
@@ -139,23 +135,20 @@ void Input::Update()
 		for (auto it : left_button_up_funcs)
 			it(x, y);
 	}
-
 }
 
 void Input::ReadKeyboard()
 {
-	
-HRESULT hr = keyboard->GetDeviceState(sizeof(keyboardState), (LPVOID)&keyboardState);
+	HRESULT hr = keyboard->GetDeviceState(sizeof(keyboardState), (LPVOID)&keyboardState);
 
-if (FAILED(hr))
-{
-	if ((hr == DIERR_INPUTLOST) || (hr == DIERR_NOTACQUIRED))
+	if (FAILED(hr))
 	{
-		keyboard->Acquire();
+		if ((hr == DIERR_INPUTLOST) || (hr == DIERR_NOTACQUIRED))
+		{
+			keyboard->Acquire();
+		}
+		else MESSAGE("error getting keyboard device state");
 	}
-	else MESSAGE("error getting keyboard device state");
-}
-		
 }
 
 void Input::ReadMouse()
@@ -176,7 +169,7 @@ void Input::ProcessInput()
 {
 	POINT point;
 	GetCursorPos(&point);
-	ScreenToClient(hwnd,&point);
+	ScreenToClient(hwnd, &point);
 
 	x = point.x;
 	y = point.y;
@@ -222,7 +215,7 @@ KeyState Input::CheckKey(KeyCode state)
 //{
 //	unsigned int new_x = GET_X_LPARAM(lParam),
 //		new_y = GET_Y_LPARAM(lParam);
-//	
+//
 //	//std::ostringstream i;
 //	//i << "x = " << new_x << " y = " << new_y;
 //	//MESSAGE(i.str());

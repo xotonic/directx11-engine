@@ -28,7 +28,7 @@ float4 PS(PS_INPUT input) : SV_TARGET
 	float3 tex_norm = (float3)ObjNormal.Sample(ObjSamplerState, input.UV);
 	input.Norm = normalize(input.Norm*tex_norm);
 
-	color += saturate(dot((float3)ldir, input.Norm) * lcol* ObjTexture.Sample(ObjSamplerState, input.UV));
-
+	color += saturate((dot((float3)ldir, input.Norm)) * lcol* ObjTexture.Sample(ObjSamplerState, input.UV));
+	color += saturate(0.5*ObjTexture.Sample(ObjSamplerState, input.UV));
 	return  color;
 }

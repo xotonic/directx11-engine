@@ -29,6 +29,4 @@ private:
 	Shader* shader;
 
 	bool is_mesh, is_shader, is_textures;
-
 };
-

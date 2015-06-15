@@ -77,9 +77,6 @@
     <ClCompile Include="Console.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
-    <ClCompile Include="Timer.cpp">
-      <Filter>cpp</Filter>
-    </ClCompile>
     <ClCompile Include="Line.cpp">
       <Filter>cpp</Filter>
     </ClCompile>

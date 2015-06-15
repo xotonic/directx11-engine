@@ -1,6 +1,5 @@
 #include "DXResources.h"
 
-
 DXResources::DXResources(WindowDescriptor& wd) : winDesc(wd) //: adapded(false)
 {
 	ZeroMemory(&swapChainDescriptor, sizeof(swapChainDescriptor));
@@ -64,12 +63,10 @@ DXResources::DXResources(WindowDescriptor& wd) : winDesc(wd) //: adapded(false)
 	ID3D11Texture2D* pBackBuffer = NULL;
 	CHECK_HRESULT(swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer),
 		"error getting back buffer");
-	
 
 	CHECK_HRESULT(device->CreateRenderTargetView(pBackBuffer, NULL, &renderTargetView),
 		"error in creating render target view");
 	pBackBuffer->Release();
-	
 
 	D3D11_TEXTURE2D_DESC descDepth;
 	ZeroMemory(&descDepth, sizeof(descDepth));
@@ -107,12 +104,11 @@ DXResources::DXResources(WindowDescriptor& wd) : winDesc(wd) //: adapded(false)
 	vp.TopLeftX = 0;
 	vp.TopLeftY = 0;
 	deviceContext->RSSetViewports(1, &vp);
-	
+
 	swapChain->GetBuffer(0, __uuidof(IDXGISurface2), (void**)&dxgiBackBuffer);
 
 	Init2d();
 }
-
 
 DXResources::~DXResources()
 {
@@ -123,7 +119,6 @@ DXResources::~DXResources()
 	if (swapChain) swapChain->Release();
 	if (deviceContext) deviceContext->Release();
 	if (device) device->Release();
-
 }
 
 void DXResources::Present()
@@ -140,9 +135,8 @@ void DXResources::ClearView()
 
 void DXResources::Init2d()
 {
-	
 	CHECK_HRESULT(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &d2dFactory), "");
-	
+
 	FLOAT dpiX;
 	FLOAT dpiY;
 	d2dFactory->GetDesktopDpi(&dpiX, &dpiY);

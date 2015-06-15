@@ -2,8 +2,7 @@
 
 #include "stdafx.h"
 
-
-class Camera 
+class Camera
 {
 public:
 	// Constructs default camera looking at 0,0,0
@@ -27,7 +26,6 @@ public:
 
 	void OnResize(uint32_t new_width, uint32_t new_height);
 
-	
 	void  Move(XMFLOAT3 direction);
 	void  Rotate(XMFLOAT3 axis, float degrees);
 	void  Position(XMFLOAT3& new_position);
@@ -52,14 +50,12 @@ public:
 
 	VectorPair getRay(float x, float y)
 	{
-
 		XMVECTOR unprojA = Unproject(x, y, 0.0f);
 		XMVECTOR unprojB = Unproject(x, y, 1.0f);
 
 		XMVECTOR dir = unprojB - unprojA;
-		return std::make_pair(unprojA, unprojA + XMVector3ClampLength(dir, 999,1000));
+		return std::make_pair(unprojA, unprojA + XMVector3ClampLength(dir, 999, 1000));
 	}
-	
 
 	XMFLOAT4X4  mView;		// View matrix
 private:
@@ -80,7 +76,7 @@ private:
 
 	XMVECTOR Unproject(const float& px, const float& py, const float& pz)
 	{
-		XMFLOAT2 res = {mClientWidth, mClientHeight};
+		XMFLOAT2 res = { mClientWidth, mClientHeight };
 
 		XMVECTOR q = XMQuaternionRotationMatrix(to(mView));
 
@@ -105,4 +101,3 @@ private:
 		return coords;
 	}
 };
-

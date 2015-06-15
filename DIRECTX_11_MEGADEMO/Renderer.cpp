@@ -1,4 +1,4 @@
-#include "Renderer.h"
+ï»¿#include "Renderer.h"
 
 Renderer::Renderer(DXResources* _dx) : angle(0), dx(_dx)
 {
@@ -10,9 +10,9 @@ Renderer::Renderer(DXResources* _dx) : angle(0), dx(_dx)
 
 	resMgr = new ResourceManager(dx->getDevice());
 
-	SetWindowTextW(dx->winDesc.hWnd, L"Çàãðóçêà ëàíäøàôòà...");
+	SetWindowTextW(dx->winDesc.hWnd, L"Ð—Ð°Ð³Ñ€ÑƒÐ·ÐºÐ° Ð»Ð°Ð½Ð´ÑˆÐ°Ñ„Ñ‚Ð°...");
 	terrain = new Terrain(dx->getDevice(), "out.terrain");
-	SetWindowTextW(dx->winDesc.hWnd, L"Çàãðóçêà îáúåêòîâ...");
+	SetWindowTextW(dx->winDesc.hWnd, L"Ð—Ð°Ð³Ñ€ÑƒÐ·ÐºÐ° Ð¾Ð±ÑŠÐµÐºÑ‚Ð¾Ð²...");
 	resMgr->readResources("resources.txt");
 
 	matrices = new ConstantBuffer < MatrixBuffer >(dx->getDevice());
@@ -24,16 +24,16 @@ Renderer::Renderer(DXResources* _dx) : angle(0), dx(_dx)
 	light->update();
 	light->bind_PS(0);
 
-	lines = std::make_shared<Line>(dx,5);
+	lines = std::make_shared<Line>(dx, 5);
 	camera_ray = std::make_shared<Line>(dx, 2);
 	ent = new Entity(resMgr, "mark", "default", "empty_diffuse", "empty_normal");
 	tree = new Entity(resMgr, "tree", "default", "bark", "bark_normal");
-	ent->transform()->Move({10.0f,0.1f,1.0f});
+	ent->transform()->Move({ 10.0f, 0.1f, 1.0f });
 
 	player = new Player(resMgr);
-	SetWindowTextW(dx->winDesc.hWnd, L"Ãåíåðàöèÿ ñöåíû...");
+	SetWindowTextW(dx->winDesc.hWnd, L"Ð“ÐµÐ½ÐµÑ€Ð°Ñ†Ð¸Ñ ÑÑ†ÐµÐ½Ñ‹...");
 	GenerateObjects();
-	SetWindowTextW(dx->winDesc.hWnd, L"~~ † Êóðñà× † ~~");
+	SetWindowTextW(dx->winDesc.hWnd, L"~ Kursach - Benchmark. Mangal Edition ~");
 }
 
 Renderer::~Renderer()
@@ -44,19 +44,16 @@ Renderer::~Renderer()
 	delete terrain;
 	delete resMgr;
 	delete ent;
-
 }
 
 void Renderer::Render()
 {
-
 	light->update();
 	light->bind_PS(0);
 
 	matrices->data.view = camera.View();
 	matrices->data.projection = projection;
 
-	
 	DrawTerrain();
 	DrawObjects();
 	DrawEntity(ent);
@@ -69,7 +66,6 @@ void Renderer::Render()
 
 void Renderer::DrawEntity(Entity* e)
 {
-
 	matrices->data.world = e->transform()->World();
 	matrices->update();
 	matrices->bind_VS(0);
@@ -78,16 +74,15 @@ void Renderer::DrawEntity(Entity* e)
 
 void Renderer::GenerateObjects()
 {
-
 	for (int i = 0; i < 1000; i++)
 	{
-		float x = std::rand()%(terrain->wight-1);
-		float z =  std::rand()%(terrain->height-1);
-		XMVECTOR origin = XMVectorSet(x, 100.0f, z,0.0f);
+		float x = std::rand() % (terrain->wight - 1);
+		float z = std::rand() % (terrain->height - 1);
+		XMVECTOR origin = XMVectorSet(x, 100.0f, z, 0.0f);
 		XMVECTOR dir = XMVectorSet(x, -1.0f, z, 0.0f);
 		float y = terrain->getQuad(x, z).maxHeigth();
 		XMMATRIX m = XMMatrixIdentity();
-		m *= XMMatrixRotationRollPitchYaw(-XM_PIDIV2, 0, (std::rand()%10));
+		m *= XMMatrixRotationRollPitchYaw(-XM_PIDIV2, 0, (std::rand() % 10));
 		m *= XMMatrixTranslation(x, y, z);
 		stones.push_back(m);
 	}
@@ -104,7 +99,6 @@ void Renderer::GenerateObjects()
 		m *= XMMatrixTranslation(x, y, z);
 		forest.push_back(m);
 	}
-
 }
 
 void Renderer::DrawObjects()
@@ -141,5 +135,4 @@ void Renderer::DrawTerrain()
 	matrices->bind_VS(0);
 
 	terrain->draw();
-
 }

@@ -45,10 +45,8 @@ ConstantBuffer<T>::ConstantBuffer(ID3D11Device* dev) : DeviceDependent(dev)
 	CHECK_HRESULT(device->CreateBuffer(&bd, NULL, &cbuf), "Error creating constant buffer");
 }
 
-
 template <typename T>
 void ConstantBuffer<T>::update()
 {
-
 	deviceContext->UpdateSubresource(cbuf, 0, 0, &data, 0, 0);
 }

@@ -39,15 +39,14 @@ struct Vertex
 struct ColVertex
 {
 	XMFLOAT4 pos;
-	XMFLOAT4 color ;
-
+	XMFLOAT4 color;
 };
 
 struct ColNormVertex
 {
 	XMFLOAT3 pos = { 0.0f, 0.0f, 0.0f };
 	XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	XMFLOAT3 normal = {0.0f, 0.0f, 0.0f};
+	XMFLOAT3 normal = { 0.0f, 0.0f, 0.0f };
 };
 
 struct TexNormVertex
@@ -104,11 +103,10 @@ inline XMFLOAT4X4 to(const XMMATRIX& x)
 
 inline XMMATRIX to(const XMFLOAT4X4& x)
 {
-	return XMLoadFloat4x4(&x);	
+	return XMLoadFloat4x4(&x);
 }
 
 inline XMFLOAT3 to(const XMFLOAT4& x)
 {
-	return XMFLOAT3(x.x,x.y, x.z);
+	return XMFLOAT3(x.x, x.y, x.z);
 }
-

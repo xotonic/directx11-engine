@@ -14,7 +14,7 @@ public:
 	ID3D11VertexShader* vertex() { return vertexShader; }
 	ID3D11PixelShader* pixel() { return pixelShader; }
 	ID3D11InputLayout* layout() { return inputLayout; }
-	
+
 	bool HasColorComponent() { return colorComponent; }
 	bool HasNormalComponent() { return normalComponent; }
 	bool HasUVComponent() { return UVComponent; }

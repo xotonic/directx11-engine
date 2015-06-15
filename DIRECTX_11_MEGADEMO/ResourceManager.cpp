@@ -1,6 +1,6 @@
 #include "ResourceManager.h"
 
-ResourceManager::ResourceManager(ID3D11Device *dev, string filename /*= "resources.txt"*/):
+ResourceManager::ResourceManager(ID3D11Device *dev, string filename /*= "resources.txt"*/) :
 DeviceDependent(dev)
 {
 	readResources(filename);
@@ -18,7 +18,7 @@ ResourceManager::~ResourceManager()
 
 void ResourceManager::loadMesh(string name, string filename)
 {
-	vertexBuffers.insert(pair<string, VertexBuffer*>(name, new VertexBuffer(device,filename)));
+	vertexBuffers.insert(pair<string, VertexBuffer*>(name, new VertexBuffer(device, filename)));
 }
 
 void ResourceManager::loadTexture(string name, string filename)
@@ -26,7 +26,7 @@ void ResourceManager::loadTexture(string name, string filename)
 	textures.insert(pair<string, Texture*>(name, new Texture(device, filename)));
 }
 
-void ResourceManager::loadShader(string name, string vs_name, string ps_name,bool color, bool normal, bool uv)
+void ResourceManager::loadShader(string name, string vs_name, string ps_name, bool color, bool normal, bool uv)
 {
 	shaders.insert(pair<string, Shader*>(name, new Shader(device, vs_name, ps_name, color, normal, uv)));
 }
@@ -70,7 +70,7 @@ void ResourceManager::readResources(string filename)
 VertexBuffer* ResourceManager::mesh(string name)
 {
 	auto it = vertexBuffers.find(name);
-	
+
 	if (it == vertexBuffers.end()) MESSAGE("Can't find mesh in resource manager : " + name);
 
 	return it->second;
@@ -93,4 +93,3 @@ Shader* ResourceManager::shader(string name)
 
 	return it->second;
 }
-

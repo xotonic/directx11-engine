@@ -20,6 +20,4 @@ private:
 	std::vector<ColVertex> lines;
 	ID3D11Buffer*   vertexBuffer;
 	std::shared_ptr<ConstantBuffer<MatrixBuffer>> matrices;
-	
 };
-

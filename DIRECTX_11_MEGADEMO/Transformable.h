@@ -18,12 +18,10 @@ public:
 private:
 
 	XMFLOAT3 dir;
-	
-	XMFLOAT3 mPosition;		
-	XMFLOAT3 mTarget;		
+
+	XMFLOAT3 mPosition;
+	XMFLOAT3 mTarget;
 	XMFLOAT3 mUp;
 
-	XMMATRIX  mWorld;		
-
+	XMMATRIX  mWorld;
 };
-

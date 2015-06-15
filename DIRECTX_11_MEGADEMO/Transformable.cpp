@@ -8,7 +8,6 @@ Transformable::Transformable(void)
 	this->initWorldMatrix();
 
 	mWorld = XMMatrixIdentity();
-
 }
 
 Transformable::Transformable(const Transformable& Transformable)
@@ -23,7 +22,7 @@ Transformable& Transformable::operator=(const Transformable& Transformable)
 	mUp = Transformable.mUp;
 
 	mWorld = Transformable.mWorld;
-	
+
 	return *this;
 }
 
@@ -42,11 +41,10 @@ void Transformable::initWorldMatrix()
 
 	if (XMVector3Equal(up, XMVectorZero()))
 	{
-	up = XMVectorSet(0.0f, 1.0f, 0.0f ,0.0f);
+		up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	}
 	mWorld = XMMatrixLookAtLH(pos, eye, up);
 }
-
 
 void Transformable::Move(XMFLOAT3 direction)
 {
@@ -54,8 +52,8 @@ void Transformable::Move(XMFLOAT3 direction)
 	//mPosition = to(to(mPosition) + v);
 	//mTarget = to(to(mTarget) + v);
 	//mUp = to(to(mUp) + v);
-	XMMATRIX m =XMMatrixTranslation(direction.x, direction.y, direction.z);
-	mPosition = to(XMVector3TransformCoord(to(mPosition),m));
+	XMMATRIX m = XMMatrixTranslation(direction.x, direction.y, direction.z);
+	mPosition = to(XMVector3TransformCoord(to(mPosition), m));
 	mWorld *= m;
 }
 
@@ -95,4 +93,3 @@ void Transformable::Scale(float value)
 {
 	mWorld *= XMMatrixScaling(value, value, value);
 }
-

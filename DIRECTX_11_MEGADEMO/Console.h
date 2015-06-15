@@ -14,21 +14,21 @@ class Console
 {
 public:
 	Console(DXResources* _dx);
-	
+
 	void SetParam(string name, wstring value);
 	void SetParam(string name, wstring caption, int value);
 	void SetParam(string name, wstring caption, float value);
 	void SetParam(string name, wstring caption, XMFLOAT3 xyz);
 	void SetParam(string name, wstring caption, XMMATRIX& mat);
 	void SetMessage(wstring value);
-	
+
 	void Update();
-	
+
 private:
 	// параметры, которые будут выводиться всегда
 	DXResources* dx;
 	map<string, wstring> params;
-	
+
 	// сообщения, которые будут исчезать через
 	// некоторое кол-во кадров
 	list<wstring> messages;
@@ -38,4 +38,3 @@ private:
 	IDWriteTextFormat* textFormat;
 	ID2D1SolidColorBrush* brush;
 };
-

@@ -3,7 +3,6 @@
 VertexBuffer::VertexBuffer(ID3D11Device* dev, vector<TexNormVertex> &data) : DeviceDependent(dev),
 v_buf(data)
 {
-	//dev->GetImmediateContext(&deviceContext);
 
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
@@ -22,8 +21,6 @@ v_buf(data)
 VertexBuffer::VertexBuffer(ID3D11Device* dev, string filename) : DeviceDependent(dev)
 {
 	ReadFromOBJ(filename);
-
-	//dev->GetImmediateContext(&deviceContext);
 
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
