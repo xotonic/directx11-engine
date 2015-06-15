@@ -133,7 +133,7 @@ void DXResources::Present()
 
 void DXResources::ClearView()
 {
-	float clearColor[4] = { 0.30f, 0.30f, 0.30f, 1.0f };
+	float clearColor[4] = { 0.49f, 0.80f, 1.0f, 1.0f };
 	deviceContext->ClearRenderTargetView(renderTargetView, clearColor);
 	deviceContext->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0, 0);
 }

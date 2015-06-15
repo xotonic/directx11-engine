@@ -78,11 +78,13 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h) //: input(w,h)
 
 	WindowDescriptor wd = { hWnd, w, h };
 
+	
 	input = std::make_shared<Input>(hInstance, hWnd, w, h);
 	dx = std::make_shared<DXResources>(wd);
+	//SetWindowTextW(hWnd, L"Загрузка обьектов...");
 	renderer = std::make_shared<Renderer>(dx.get());
 	renderer2D = std::make_shared<Renderer2D>(dx.get());
-
+	SetWindowTextW(hWnd, L"~~КУРСАЧ~~");
 	Renderer* r = renderer.get();
 	Renderer2D* r2d = renderer2D.get();
 	Timer* t = &timer;
@@ -90,35 +92,48 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h) //: input(w,h)
 
 	int *px = &x, *py = &y;
 
-	r->camera.Move({0,25,0});
-	r->camera.Rotate({ 1, 0, 0 }, 60);
-	
-	
+	r->camera.Move({ (float)r->terrain->wight / 2, 60, (float)r->terrain->height / 2 });
 	r->light->data.dir = {0.12f, 0.42f, -0.81f, 1.0f};
 
 
 
-	input->AddKeyboardHandler(KEY_D, pressed, [r]() -> void { r->camera.Move({0.5f, 0.f, 0.f });});
-	input->AddKeyboardHandler(KEY_W, pressed, [r]() -> void { r->camera.Move({0.0f, 0.f, 0.5f});});
-	input->AddKeyboardHandler(KEY_A, pressed, [r]() -> void { r->camera.Move({-0.5f, 0.f, 0.f});});
-	input->AddKeyboardHandler(KEY_S, pressed, [r]() -> void { r->camera.Move({0.f, 0.f, -0.5f});});
+	input->AddKeyboardHandler(KEY_D, pressed, [r, r2d]() -> void { 
+		XMMATRIX m = to(r->camera.mView);
+		m *= XMMatrixTranslation(-0.5, 0, 0);
+		r->camera.mView = to(m);
+	});
+	input->AddKeyboardHandler(KEY_W, pressed, [r]() -> void {
+		XMMATRIX m = to(r->camera.mView);
+		m *= XMMatrixTranslation(0, 0, -0.5);
+		r->camera.mView = to(m);
+	});
+	input->AddKeyboardHandler(KEY_A, pressed, [r]() -> void 
+	{ 
+		XMMATRIX m = to(r->camera.mView);
+		m *= XMMatrixTranslation(0.5, 0, 0);
+		r->camera.mView = to(m);
+	});
+	input->AddKeyboardHandler(KEY_S, pressed, [r]() -> void 
+	{ 
+		XMMATRIX m = to(r->camera.mView);
+		m *= XMMatrixTranslation(0, 0, 0.5);
+		r->camera.mView = to(m);
+	});
+
+	input->AddKeyboardHandler(KEY_SPACE, pressed, [r]() -> void
+	{
+		XMMATRIX m = to(r->camera.mView);
+		m *= XMMatrixTranslation(0, 0.5, 0);
+		r->camera.mView = to(m);
+	});
+	input->AddKeyboardHandler(KEY_E, pressed, [r]() -> void
+	{
+		XMMATRIX m = to(r->camera.mView);
+		m *= XMMatrixTranslation(0, -0.5, 0);
+		r->camera.mView = to(m);
+	});
 	
-	input->AddKeyboardHandler(KEY_LEFT, pressed, [r, px, py]() -> void { 
-		r->player->RotateHead(XMVectorZero());
-	 });
-	input->AddKeyboardHandler(KEY_UP, pressed, [r, px, py]() -> void {
- });
-	input->AddKeyboardHandler(KEY_RIGHT, pressed, [r, px, py]() -> void {
-	});
-	input->AddKeyboardHandler(KEY_DOWN, pressed, [r, px, py]() -> void {
-		
-		});
-
-
-	input->AddKeyboardHandler(KEY_1, pressed, [r, r2d]() -> void { 
-
-	});
-
+	
 	input->AddKeyboardHandler(KEY_2, pressed, [r]() -> void {
 		XMVECTOR v = XMLoadFloat4(&r->light->data.dir);
 		v = XMVector3Rotate(v, XMVectorSet(0.0f, 0.01f, 0.0f, 1.0f));
@@ -133,25 +148,18 @@ Kernel::Kernel(HINSTANCE hInst, int nCmdShow, int w, int h) //: input(w,h)
 
 	input->AddKeyboardHandler(KEY_ESCAPE, released, []() -> void { PostQuitMessage(0); });
 
-	input->AddMouseHandler(MOUSE_LEFT, released, [r, r2d, hwnd](const  int x, const  int y) -> void
-	{  
-		VectorPair ray = r->camera.getRay(x, y);
-		
-		//XMVECTOR plane = XMPlaneFromPoints(XMVectorSet(1, 0, 0, 0), XMVectorSet(0, 0, 1, 0), XMVectorSet(1, 0, 1, 0));
-		//XMVECTOR pos = XMPlaneIntersectLine(plane, ray.first, ray.second);
-		Quad q;
-		XMVECTOR pos = r->terrain->findIntersection(ray, q, *r2d->console.get());
-		r->ent->transform()->Position(to(pos));
-		
-	});
+	
 
-	input->AddMouseMoveHandler([r2d](const int dx, const int dy, const int x, const int y) -> void
-	{ 
-		//r->camera.Rotate({ 0, 1, 0 }, dx*0.1); r->camera.Rotate({ 1, 0, 0 }, dy*0.1); 
+	input->AddMouseMoveHandler([r, r2d](const int dx, const int dy, const int x, const int y) -> void
+	{
 		wostringstream os; os << L"dx : " << dx << L" dy : " << dy << endl
-			                  << L"x : " << x << L" y : " << y << endl;
+			<< L"x : " << x << L" y : " << y << endl;
 		r2d->console->SetParam("mouse", os.str());
 
+		XMMATRIX m = to(r->camera.mView);
+		m *= XMMatrixRotationRollPitchYaw(0, -dx*0.005, 0);
+		m *= XMMatrixRotationRollPitchYaw(-dy*0.005, 0, 0);
+		r->camera.mView = to(m);
 	}
 	);
 

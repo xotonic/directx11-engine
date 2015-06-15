@@ -1,11 +1,14 @@
 m head data/head.mesh
 m body data/body.mesh
-m mark data/mark.mesh
+m mark data/stone.mesh
+m tree data/tree.mesh
 s default shader.vsh shader.psh 0 1 1
 s basic basic.vsh basic.psh 1 0 0
-t grass grass.dds
-t grass_normal grass_normal.dds
-t empty_diffuse data/empty_diffuse.dds
-t empty_normal data/empty_normal.dds
+t grass data/grass.dds
+t grass_normal data/grass_normal.dds
+t empty_diffuse data/stone.dds
+t empty_normal data/stone_normal.dds
 t armor_diffuse data/armor_diffuse.dds
 t armor_normal data/armor_normal.dds
+t bark data/bark.dds
+t bark_normal data/bark_normal.dds

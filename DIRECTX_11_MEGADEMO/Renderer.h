@@ -33,14 +33,18 @@ public:
 	XMMATRIX projection;
 
 	Entity* ent;
+	Entity* tree;
 	Player* player;
 	std::shared_ptr<Line> camera_ray;
 	std::shared_ptr<Line> lines;
-	void DrawEntity(Entity* e);
-	void DrawTerrain();
 private:
-
+	void DrawTerrain();
+	void DrawEntity(Entity* e);
 	void DrawLines();
+	void GenerateObjects();
+	void DrawObjects();
+	std::vector<XMMATRIX> stones;
+	std::vector<XMMATRIX> forest;
 	DXResources* dx;
 	VertexBuffer   *buf;
 	Texture        *tex, *normal;

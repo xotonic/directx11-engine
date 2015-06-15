@@ -10,7 +10,9 @@ Renderer::Renderer(DXResources* _dx) : angle(0), dx(_dx)
 
 	resMgr = new ResourceManager(dx->getDevice());
 
+	SetWindowTextW(dx->winDesc.hWnd, L"Загрузка ландшафта...");
 	terrain = new Terrain(dx->getDevice(), "out.terrain");
+	SetWindowTextW(dx->winDesc.hWnd, L"Загрузка объектов...");
 	resMgr->readResources("resources.txt");
 
 	matrices = new ConstantBuffer < MatrixBuffer >(dx->getDevice());
@@ -25,9 +27,13 @@ Renderer::Renderer(DXResources* _dx) : angle(0), dx(_dx)
 	lines = std::make_shared<Line>(dx,5);
 	camera_ray = std::make_shared<Line>(dx, 2);
 	ent = new Entity(resMgr, "mark", "default", "empty_diffuse", "empty_normal");
+	tree = new Entity(resMgr, "tree", "default", "bark", "bark_normal");
 	ent->transform()->Move({10.0f,0.1f,1.0f});
 
 	player = new Player(resMgr);
+	SetWindowTextW(dx->winDesc.hWnd, L"Генерация сцены...");
+	GenerateObjects();
+	SetWindowTextW(dx->winDesc.hWnd, L"~~ † КурсаЧ † ~~");
 }
 
 Renderer::~Renderer()
@@ -52,6 +58,7 @@ void Renderer::Render()
 
 	
 	DrawTerrain();
+	DrawObjects();
 	DrawEntity(ent);
 	DrawEntity(player->head);
 	DrawEntity(player->body);
@@ -67,6 +74,58 @@ void Renderer::DrawEntity(Entity* e)
 	matrices->update();
 	matrices->bind_VS(0);
 	e->Draw();
+}
+
+void Renderer::GenerateObjects()
+{
+
+	for (int i = 0; i < 1000; i++)
+	{
+		float x = std::rand()%(terrain->wight-1);
+		float z =  std::rand()%(terrain->height-1);
+		XMVECTOR origin = XMVectorSet(x, 100.0f, z,0.0f);
+		XMVECTOR dir = XMVectorSet(x, -1.0f, z, 0.0f);
+		float y = terrain->getQuad(x, z).maxHeigth();
+		XMMATRIX m = XMMatrixIdentity();
+		m *= XMMatrixRotationRollPitchYaw(-XM_PIDIV2, 0, (std::rand()%10));
+		m *= XMMatrixTranslation(x, y, z);
+		stones.push_back(m);
+	}
+
+	for (int i = 0; i < 100; i++)
+	{
+		float x = std::rand() % (terrain->wight - 1);
+		float z = std::rand() % (terrain->height - 1);
+		XMVECTOR origin = XMVectorSet(x, 100.0f, z, 0.0f);
+		XMVECTOR dir = XMVectorSet(x, -1.0f, z, 0.0f);
+		float y = terrain->getQuad(x, z).maxHeigth();
+		XMMATRIX m = XMMatrixIdentity();
+		//m *= XMMatrixRotationRollPitchYaw(-XM_PIDIV2, 0, (std::rand() % 10));
+		m *= XMMatrixTranslation(x, y, z);
+		forest.push_back(m);
+	}
+
+}
+
+void Renderer::DrawObjects()
+{
+	for (auto m : stones)
+	{
+		matrices->data.world = XMMatrixTranspose(m);
+		matrices->update();
+		matrices->bind_VS(0);
+
+		ent->Draw();
+	}
+
+	for (auto m : forest)
+	{
+		matrices->data.world = XMMatrixTranspose(m);
+		matrices->update();
+		matrices->bind_VS(0);
+
+		tree->Draw();
+	}
 }
 
 void Renderer::DrawTerrain()

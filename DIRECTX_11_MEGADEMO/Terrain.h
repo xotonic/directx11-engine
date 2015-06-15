@@ -34,66 +34,7 @@ public:
 	void draw();
 	void bind();
 
-	XMVECTOR findIntersection(const VectorPair& ray, Quad& quad, Console& c)
-	{
 
-		//XMVECTOR point = XMVectorZero();
-
-		//float dx = XMVectorGetX(ray.first) - XMVectorGetX(ray.second);
-		//float dz = XMVectorGetZ(ray.first) - XMVectorGetZ(ray.second);
-
-		//int l = max(std::round(dx), std::round(dz)) + 1;
-
-		//float x = XMVectorGetX(ray.first), z = XMVectorGetZ(ray.first);
-
-		//for (auto bb : boxes)
-		//{
-		//	if (bb.Intersects(ray.first, XMVector3Normalize(ray.second), *new float))
-		//	{
-		//		Quad q = getQuad(bb.Center.x, bb.Center.z);
-		//		quad = q;
-		//		return to(bb.Center);
-		//	}
-		//}
-
-		//
-		//for (int x = 0; x < 253 ; x++)
-		//	for (int y = 0; y < 253; y++)
-		//{
-		//	
-		//	Quad q = getQuad(x, y);
-		//	quad = q;
-		//	float dist;
-		//	if (TriangleTests::Intersects(ray.first, XMVector3Normalize(ray.second), q.top_left, q.top_right, q.bot_right, dist))
-		//	{
-		//		//return  ray .first + XMVector3Normalize(ray.second)*dist;
-		//		return XMPlaneIntersectLine(XMPlaneFromPoints(q.top_left, q.top_right, q.bot_right), ray.first, ray.second);
-		//		
-		//	}
-		//	
-		//	if (TriangleTests::Intersects(ray.first, XMVector3Normalize(ray.second), q.top_left, q.bot_right, q.bot_left, dist))
-		//	{
-		//		//return ray.first + XMVector3Normalize(ray.second)*dist;
-		//		return	XMPlaneIntersectLine(XMPlaneFromPoints(q.top_left, q.bot_right, q.bot_left), ray.first, ray.second);
-		//		
-		//	}
-		//}
-
-		float origin[3] = { XMVectorGetX(ray.first), XMVectorGetY(ray.first), XMVectorGetZ(ray.first) };
-		float dir[3] = { XMVectorGetX(ray.second), XMVectorGetY(ray.second), XMVectorGetZ(ray.second) };
-		if (model->rayCollision(origin, dir))
-		{
-			float point[3] = { 0 };
-			model->getCollisionPoint(point);
-			XMVECTOR p = XMVectorSet(point[0], point[1], point[2], 0.0f) - 0.04*ray.first;
-			//p = p - (p - ray.first)*0.05;
-			return p;
-		}
-		else
-		{
-			return XMVectorZero();
-		}
-	}
 	Quad getQuad(int x, int y)
 	{
 		std::swap(x, y);
@@ -108,10 +49,8 @@ public:
 	Quad getQuad(float x, float y) { return getQuad((int)std::floor(x), (int)std::floor(y)); };
 
 	ID3D11Buffer*         vertexBuffer = nullptr;
+	int height, wight;
 private:
 	bool ReadFromFile(std::string name);
 
-	int height, wight;
-	CollisionModel3D *model;
-	
 };

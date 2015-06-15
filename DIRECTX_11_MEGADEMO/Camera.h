@@ -32,6 +32,7 @@ public:
 	void  Rotate(XMFLOAT3 axis, float degrees);
 	void  Position(XMFLOAT3& new_position);
 	const XMFLOAT3& Position() const { return mPosition; }
+	XMVECTOR& Rotation() { return XMQuaternionRotationMatrix(to(mView)); }
 	void  Target(XMFLOAT3 new_target);
 	const XMFLOAT3& Target() const { return mTarget; }
 	const XMFLOAT3 Up() { return to(to(mUp) - to(mPosition)); }
@@ -60,6 +61,7 @@ public:
 	}
 	
 
+	XMFLOAT4X4  mView;		// View matrix
 private:
 	/*** Camera parameters ***/
 	XMFLOAT3 mPosition;		// Camera's coordinates
@@ -73,7 +75,6 @@ private:
 	float mNearest;			// Nearest view frustum plane
 	float mFarthest;		// Farthest view frustum plane
 
-	XMFLOAT4X4  mView;		// View matrix
 	XMFLOAT4X4	mProj;		// Projection matrix
 	XMFLOAT4X4	mOrtho;		// Ortho matrix for drawing without tranformation
 

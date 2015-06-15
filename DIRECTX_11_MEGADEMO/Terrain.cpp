@@ -94,7 +94,7 @@ bool Terrain::ReadFromFile(std::string filename)
 			float ty = 0.0f;
 
 			filein >> y;
-			ty = 20*float(y) / 255.0f;
+			ty = 50*float(y) / 255.0f;
 
 			float tx = float(i);
 			float tz = float(j);
@@ -150,8 +150,7 @@ bool Terrain::ReadFromFile(std::string filename)
 	// forming vertex buffer
 
 	v_buf.reserve(face_num * 3 * 2);
-	model = newCollisionModel3D();
-
+	
 	for (int i = 0; i < vy - 1; i++)
 	{
 		for (int j = 0; j < vx - 1; j++)
@@ -183,10 +182,6 @@ bool Terrain::ReadFromFile(std::string filename)
 			v_buf.push_back({ { unique_vertices[index_2].pos }, { to(n2) }, { 1.0f, 0.0f } });
 			v_buf.push_back({ { unique_vertices[index_3].pos }, { to(n3) }, { 1.0f, 1.0f } });
 
-			
-			model->addTriangle(unique_vertices[index_1].pos.x, unique_vertices[index_1].pos.y, unique_vertices[index_1].pos.z,
-				unique_vertices[index_2].pos.x, unique_vertices[index_2].pos.y, unique_vertices[index_2].pos.z,
-				unique_vertices[index_3].pos.x, unique_vertices[index_3].pos.y, unique_vertices[index_3].pos.z);
 				
 				/*	XMVECTOR edge3 = XMunique_vertices[index_3].posLoadFloat3(&(unique_vertices[index_1].pos - unique_vertices[index_4].pos));
 			normal = XMVector3Cross(edge3, edge1);
@@ -202,12 +197,9 @@ bool Terrain::ReadFromFile(std::string filename)
 			v_buf.push_back({ { unique_vertices[index_3].pos }, { to(n3) }, { 1.0f, 1.0f } });
 			v_buf.push_back({ { unique_vertices[index_4].pos }, { to(n4) }, { 0.0f, 1.0f } });
 
-			model->addTriangle(unique_vertices[index_1].pos.x, unique_vertices[index_1].pos.y, unique_vertices[index_1].pos.z,
-				unique_vertices[index_3].pos.x, unique_vertices[index_3].pos.y, unique_vertices[index_3].pos.z,
-				unique_vertices[index_4].pos.x, unique_vertices[index_4].pos.y, unique_vertices[index_4].pos.z);
 		}
 	}
-	model->finalize();
+
 	filein.close();
 	
 	return true;
