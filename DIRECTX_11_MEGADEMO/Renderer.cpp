@@ -31,6 +31,9 @@ Renderer::Renderer(DXResources* _dx) : angle(0), dx(_dx)
 	ent->transform()->Move({ 10.0f, 0.1f, 1.0f });
 
 	player = new Player(resMgr);
+	Quad q = terrain->getQuad(terrain->wight / 2, terrain->height/2);
+	player->body->transform()->Move(to(q.top_left));
+	player->head->transform()->Move(to(q.top_left));
 	SetWindowTextW(dx->winDesc.hWnd, L"Генерация сцены...");
 	GenerateObjects();
 	SetWindowTextW(dx->winDesc.hWnd, L"~ Kursach - Benchmark. Mangal Edition ~");
