@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="DDS">
-      <UniqueIdentifier>{cb691057-42a6-4a25-a538-f362390f873a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="resources">
       <UniqueIdentifier>{17c5a1b2-d959-41a6-a057-c897b532cdc8}</UniqueIdentifier>
     </Filter>
@@ -27,6 +24,9 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
+    <Filter Include="h\DDS">
+      <UniqueIdentifier>{cb691057-42a6-4a25-a538-f362390f873a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -48,7 +48,7 @@
       <Filter>cpp</Filter>
     </ClCompile>
     <ClCompile Include="DDSTextureLoader\DDSTextureLoader.cpp">
-      <Filter>DDS</Filter>
+      <Filter>h\DDS</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>cpp</Filter>
@@ -107,7 +107,7 @@
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="DDSTextureLoader\DDSTextureLoader.h">
-      <Filter>DDS</Filter>
+      <Filter>h\DDS</Filter>
     </ClInclude>
     <ClInclude Include="ConstantBuffer.h">
       <Filter>h</Filter>
