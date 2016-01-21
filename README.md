@@ -1,7 +1,5 @@
-# directx11_game
-RTS on DirectX11 (not WinRT)
-
-With own primitive game engine.
+# directx11-engine
+Simple 3d engine on DirectX11
 
 Features:
  - Own mesh format (.mesh), terrain format(.terrain). For mesh created addon for Blender, for terrain was written python
